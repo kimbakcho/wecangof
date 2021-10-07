@@ -1,0 +1,3 @@
+
+.wc-envelope:before { content: '\e800'; } /* '' */
+.wc-envelopeopen:before { content: '\e801'; } /* '' */
