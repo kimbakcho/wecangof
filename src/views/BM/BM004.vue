@@ -17,7 +17,7 @@
     </div>
     <div class="content">
       <div class="travelCard">
-        <TravelCard1 :immigrationStatusCardDto="immigrationStatusCardResDto">
+        <TravelCard1 :immigrationStatusCardDto="immigrationStatusCardResDto" :is-alarm-active.sync="hasAlarmTravelFlag">
 
         </TravelCard1>
       </div>
@@ -46,6 +46,7 @@ import TravelBookMarkBtn from "@/components/Common/TravelBookMarkBtn.vue";
 import UserBookMarkingCountryUseCase from "@/Bis/UserBookMarkingCountry/Domain/UseCase/UserBookMarkingCountryUseCase";
 import {UserBookMarkingCountryResDto} from "@/Bis/UserBookMarkingCountry/Dto/UserBookMarkingCountryResDto";
 import NationDeatilInfo from "@/components/Common/NationDeatilInfo.vue";
+import AlarmTravelFlagUseCase from "@/Bis/AlarmTravelFlag/Domain/UseCase/AlarmTravelFlagUseCase";
 
 export default Vue.extend({
   components: {
@@ -63,16 +64,24 @@ export default Vue.extend({
     immigrationStatusCardResDto: {
       type: Object as PropType<ImmigrationStatusSimpleResDto>,
     },
-    bookMarking: [Object,String]
+    bookMarking: [Object,String],
+    pHasAlarmTravelFlag: {
+      type: Boolean,
+      required: true
+    }
   },
   data(){
     return {
-      bookMarkingFlag: false
+      bookMarkingFlag: false,
+      hasAlarmTravelFlag: false
     }
   },
   created() {
     if(this.bookMarking){
       this.bookMarkingFlag = true
+    }
+    if(this.pHasAlarmTravelFlag){
+      this.hasAlarmTravelFlag = true;
     }
   },
   methods: {
@@ -88,6 +97,14 @@ export default Vue.extend({
     const userBookMarkingCountryUseCase = new UserBookMarkingCountryUseCase()
     const bookMarking = await userBookMarkingCountryUseCase.isBookMarking(Number(to.params.nationId))
     const params:any =  to.params
+    let alarmTravelFlagUseCase = new AlarmTravelFlagUseCase();
+    let hasTravelFlag = await alarmTravelFlagUseCase.hasTravelFlag(Number(to.params.nationId));
+    if(hasTravelFlag){
+      params.pHasAlarmTravelFlag = true;
+    }else {
+      params.pHasAlarmTravelFlag = false;
+    }
+
     params["immigrationStatusDetailResDto"] = immigrationStatusDetailResDto
     let immigrationStatusCardDto = {} as ImmigrationStatusSimpleResDto
     Object.assign(immigrationStatusCardDto, immigrationStatusDetailResDto);

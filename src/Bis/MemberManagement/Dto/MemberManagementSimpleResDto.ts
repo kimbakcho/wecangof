@@ -1,4 +1,4 @@
-export default interface UserInfo{
+export interface MemberManagementSimpleResDto {
     uid: string;
     nickName: string;
     realName: string;

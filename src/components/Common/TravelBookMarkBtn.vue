@@ -5,14 +5,14 @@
     </div>
     <v-dialog v-model="dialog" max-width="80%">
       <div class="cardBg">
-        <div class="title">
+        <div class="dTitle">
           내 여행지에 저장되었습니다
         </div>
         <div class="alarmContent">
           업데이트 소식을 받아보실 수 있어요
         </div>
         <div class="actionBar">
-          <div @click="dialog=false">
+          <div @click="alarmReceiveClick">
             소식 받아보기
           </div>
           <div @click="dialog=false">
@@ -22,11 +22,30 @@
 
       </div>
     </v-dialog>
+
+    <v-dialog v-model="alarmDialog" max-width="80%">
+      <div class="cardBg">
+        <div class="dTitle1">
+          여행 가능 알림이 신청 되었어요
+        </div>
+        <div class="alarmContent">
+          업데이트 소식을 받아보실 수 있어요
+        </div>
+        <div class="alarmActionBar">
+          <div class="alarmConfirm" @click="alarmDialogConfirm">
+            확인
+          </div>
+        </div>
+
+      </div>
+    </v-dialog>
+
   </div>
 </template>
 <script lang="ts">
 import Vue from "vue"
 import UserBookMarkingCountryUseCase from "@/Bis/UserBookMarkingCountry/Domain/UseCase/UserBookMarkingCountryUseCase";
+import NationChangeAlarmUseCase from "@/Bis/NationChangeAlarm/Domain/NationChangeAlarmUseCase";
 
 export default Vue.extend({
 
@@ -42,7 +61,8 @@ export default Vue.extend({
   },
   data(){
     return {
-      dialog: false
+      dialog: false,
+      alarmDialog: false,
     }
   },
   methods:{
@@ -68,7 +88,17 @@ export default Vue.extend({
       }else {
         await userBookMarkingCountryUseCase.bookUnMarking(this.nationId);
       }
+    },
 
+    alarmReceiveClick() {
+      let nationChangeAlarmUseCase = new NationChangeAlarmUseCase();
+      nationChangeAlarmUseCase.save(this.nationId);
+      this.alarmDialog = true;
+    },
+
+    alarmDialogConfirm(){
+      this.dialog = false;
+      this.alarmDialog = false;
     }
   }
 
@@ -97,18 +127,24 @@ export default Vue.extend({
   height: 217px;
   border-radius: 10px;
   background-color: #fff;
+  padding: 25px;
 }
 
-.cardBg .title{
+.cardBg .dTitle{
   height: 26px;
   font-family: NotoSansKR;
-  font-size: 18px;
+  font-size: 19px;
   font-weight: bold;
   color: #242424;
   display: flex;
   justify-content: center;
   align-items: center;
   padding-top: 35px;
+}
+.dTitle1{
+  font-family: NotoSansKR;
+  font-size: 17px;
+  font-weight: bold;
 }
 .alarmContent{
   display: flex;
@@ -122,10 +158,10 @@ export default Vue.extend({
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 30px 25px;
+  padding: 30px 0px;
 }
 .actionBar div:nth-child(1){
-  width: 121px;
+  flex: 1;
   border-radius: 38px;
   border: solid 1px #242424;
   background-color: #fff;
@@ -136,10 +172,11 @@ export default Vue.extend({
   justify-content: center;
   font-family: NotoSansKR;
   font-size: 12px;
+  margin-right: 15px;
 }
 
 .actionBar div:nth-child(2){
-  width: 121px;
+  flex: 1;
   border-radius: 38px;
   background-color: #242424;
   height: 47px;
@@ -149,6 +186,22 @@ export default Vue.extend({
   justify-content: center;
   font-family: NotoSansKR;
   font-size: 12px;
+}
+
+.alarmActionBar{
+  width: 100%;
+
+}
+.alarmConfirm{
+  margin-top: 31px;
+  width: 100%;
+  height: 47px;
+  border-radius: 23.5px;
+  background: #242424;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: white;
 }
 </style>
 <style>

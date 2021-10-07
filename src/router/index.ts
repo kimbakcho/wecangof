@@ -33,21 +33,36 @@ const routes: Array<RouteConfig> = [
     component: () => import(/* webpackChunkName: "BM003" */ '../views/BM/BM003.vue')
   },
   {
+    path: '/BM0031',
+    name: 'BM0031',
+    component: () => import(/* webpackChunkName: "BM003" */ '../views/BM/BM0031.vue'),
+    props: true
+  },
+  {
     path: '/BM004/:nationId',
     name: 'BM004',
     component: () => import(/* webpackChunkName: "BM004" */ '../views/BM/BM004.vue'),
     props: true
   },
   {
+    path: '/AM002',
+    name: 'AM002',
+    component: () => import(/* webpackChunkName: "BM004" */ '../views/AM/AM002.vue')
+  },
+  {
     path: '/naverRedirect',
     name: 'naverRedirect',
     component: () => import(/* webpackChunkName: "naverRedirect" */ '../views/NaverLoginRedirect.vue'),
-
   },
   {
     path: '/googleRedirect',
     name: 'googleRedirect',
     component: () => import(/* webpackChunkName: "googleRedirect" */ '../views/GoogleLoginRedirect.vue'),
+  },
+  {
+    path: '/kakaoLoginRedirect',
+    name: 'kakaoLoginRedirect',
+    component: () => import(/* webpackChunkName: "kakaoLoginRedirect" */ '../views/KakaoLoginRedirect.vue'),
   }
 
 ]

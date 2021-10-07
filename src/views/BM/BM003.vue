@@ -6,7 +6,7 @@
       <div>
         국가별 출입국 현황
       </div>
-      <div>
+      <div @click="searchNation">
         <v-icon size="15" >
           fas fa-search
         </v-icon>
@@ -104,6 +104,11 @@ export default (Vue as VueConstructor<Vue & {
     goToNationInfo(infoItem: NationControlResDto) {
       this.$router.push({
         path: `/BM004/${infoItem.id}`
+      })
+    },
+    searchNation(){
+      this.$router.push({
+        path:"/BM0031"
       })
     }
   }

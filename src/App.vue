@@ -27,6 +27,9 @@ export default Vue.extend({
       if (to.path == "/BM003") {
         this.transitionName = 'sliderInRight'
       }
+      if (to.path == "/AM002") {
+        this.transitionName = 'sliderInRight'
+      }
       if (to.path.indexOf("/BM004")>=0) {
         this.transitionName = 'sliderInRight'
       }

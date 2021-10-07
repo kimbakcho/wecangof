@@ -1,7 +1,7 @@
 <template>
   <div class="mainRoot">
     <div class="top">
-      <img src="@/assets/login_ico.png"
+      <img :src="userProfileImageUrl()"
            class="login_ico" @click="onUserClick">
       <div class="logo">
         Logo
@@ -168,7 +168,7 @@ export default Vue.extend({
     },
     onUserClick() {
       this.$router.push({
-        path: "/UA001"
+        path: "/AM002"
       })
     },
     plusClick() {
@@ -195,6 +195,14 @@ export default Vue.extend({
         path: `/BM004/${item.nation.id}`,
 
       })
+    },
+    userProfileImageUrl(){
+      if(this.$store.state.isLogin){
+        if(this.$store.state.userInfo.profileImage){
+          return this.$store.state.userInfo.profileImage
+        }
+      }
+      return require("@/assets/login_ico.png")
     }
   },
   data() {
