@@ -21,6 +21,9 @@ export default Vue.extend({
   }),
   watch: {
     '$route'(to, from) {
+      if(to.path.indexOf("/WCAdmin")>=0 || from.path.indexOf("/WCAdmin")>=0){
+        return ;
+      }
       if (to.path == "/UA001") {
         this.transitionName = 'sliderInRight'
       }

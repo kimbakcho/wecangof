@@ -3,7 +3,7 @@ import axios, {AxiosResponse} from "axios";
 import Vue from "vue";
 
 export default class FileUploadService {
-    async upload(vm: Vue,file: File): Promise<UploadFileResDto|null>{
+    async upload(vm: Vue,file: File| Blob): Promise<UploadFileResDto|null>{
         if(file.size > 1048576){
             vm.$swal("파일사이즈가 너무 큽니다.")
             return null;

@@ -47,7 +47,34 @@ const routes: Array<RouteConfig> = [
   {
     path: '/AM002',
     name: 'AM002',
-    component: () => import(/* webpackChunkName: "BM004" */ '../views/AM/AM002.vue')
+    component: () => import(/* webpackChunkName: "AM002" */ '../views/AM/AM002.vue')
+  },
+  {
+    path: '/AdminLogin',
+    name: 'AdminLogin',
+    component: () => import(/* webpackChunkName: "AdminLogin" */ '../views/AdminLogin.vue'),
+    props:(route)=>({
+      error: route.query.error
+    })
+  },
+  {
+    path: '/WCAdmin',
+    name: 'WCAdmin',
+    component: () => import(/* webpackChunkName: "WCAdmin" */ '../views/Admin/AdminMain.vue'),
+    children:[
+      {
+        path:"CA001",
+        name: "CA001",
+        component: () => import(/* webpackChunkName: "CA001" */ '../views/CA/CA001.vue'),
+      },
+      {
+        path: "CB002/:nationId",
+        name: "CB002",
+        component: () => import(/* webpackChunkName: "CB002" */ '../views/CB/CB002.vue'),
+        props: true
+      }
+    ],
+    props: true
   },
   {
     path: '/naverRedirect',

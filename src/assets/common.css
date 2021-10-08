@@ -1,0 +1,18 @@
+.popupBox {
+    color: blue;
+    cursor: pointer;
+}
+.popupBox + p {
+    display: inline-block;
+    margin: 0px;
+    line-height: unset;
+}
+.innerLinkBox{
+    color: blue;
+    cursor: pointer;
+}
+.innerLinkBox + p {
+    display: inline-block;
+    margin: 0px;
+    line-height: unset;
+}
