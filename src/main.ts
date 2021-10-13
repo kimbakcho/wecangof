@@ -29,10 +29,10 @@ const apiKey = process.env.VUE_APP_KAKAOAPIKEY
 Vue.config.productionTip = false
 
 new Vue({
-  router,
-  store,
-  vuetify,
-  render: h => h(App)
+    router,
+    store,
+    vuetify,
+    render: h => h(App)
 }).$mount('#app')
 
-Vue.use(VueKakaoSdk, { apiKey })
+Vue.use(VueKakaoSdk, {apiKey})

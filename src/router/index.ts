@@ -50,6 +50,12 @@ const routes: Array<RouteConfig> = [
     component: () => import(/* webpackChunkName: "AM002" */ '../views/AM/AM002.vue')
   },
   {
+    path: '/BM002',
+    name: 'BM002',
+    component: () => import(/* webpackChunkName: "AM002" */ '../views/BM/BM002.vue'),
+    props: true
+  },
+  {
     path: '/AdminLogin',
     name: 'AdminLogin',
     component: () => import(/* webpackChunkName: "AdminLogin" */ '../views/AdminLogin.vue'),
@@ -72,6 +78,11 @@ const routes: Array<RouteConfig> = [
         name: "CB002",
         component: () => import(/* webpackChunkName: "CB002" */ '../views/CB/CB002.vue'),
         props: true
+      },
+      {
+        path: "CF001",
+        name: "CF001",
+        component: () => import(/* webpackChunkName: "CF001" */ '../views/CF/CF001.vue')
       }
     ],
     props: true

@@ -8,6 +8,9 @@
         <v-list-item to="/WCAdmin/CA001">
           국가 관리
         </v-list-item>
+        <v-list-item to="/WCAdmin/CF001">
+          알람
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
 

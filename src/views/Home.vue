@@ -6,13 +6,13 @@
       <div class="logo">
         Logo
       </div>
-      <div class="alarm">
+      <div class="alarm" @click="alarmClick">
         <v-icon size="20" class="alarmIcon" color="#2661f1">
           far fa-bell
         </v-icon>
-        <div class="alarmCount">
+        <div class="alarmCount" v-if="unReadCount > 0">
           <span>
-           1
+           {{unReadCountText()}}
           </span>
 
         </div>
@@ -58,7 +58,7 @@
 
 
       <div class="lastUpdate">
-        최신 업데이트 2021.08.15
+        {{ `최신 업데이트 ${lastCardUpdateTime}` }}
       </div>
       <div class="divider">
 
@@ -125,6 +125,8 @@ import NoneBookMarking from "@/components/Common/NoneBookMarking.vue";
 import UserBookMarkingList from "@/components/Common/UserBookMarkingList.vue";
 import ImmigrationStatusUseCase from "@/Bis/ImmigrationStatus/Domain/UseCase/ImmigrationStatusUseCase";
 import TravelCard3 from "@/components/Common/TravelCard3.vue";
+import UserAlarmUseCase from "@/Bis/UserAlarm/Domain/UseCase/UserAlarmUseCase";
+import {DateTime} from "luxon";
 
 export default Vue.extend({
   name: 'Home',
@@ -146,6 +148,9 @@ export default Vue.extend({
     },
     adminRecommendList: {
       type: Array as PropType<ImmigrationStatusSimpleResDto[]>,
+    },
+    unReadCount: {
+      type: Number,
     }
   },
 
@@ -161,7 +166,10 @@ export default Vue.extend({
     getCurrentSelect() {
       let item = localStorage.getItem("currentSelectNationItem");
       if (item != null) {
-        return JSON.parse(item) as UserBookMarkingCountryResDto
+        let selectItem = JSON.parse(item) as UserBookMarkingCountryResDto;
+        let lastUpdate = DateTime.fromISO(selectItem.immigrationStatusSimpleResDto.updateDateTime);
+        this.lastCardUpdateTime= lastUpdate.toFormat("yyyy-MM-dd");
+        return selectItem;
       } else {
         return null;
       }
@@ -178,6 +186,8 @@ export default Vue.extend({
     },
     bookMarkingSelect(item: UserBookMarkingCountryResDto) {
       localStorage.setItem("currentSelectNationItem", JSON.stringify(item))
+      let lastUpdate = DateTime.fromISO(item.immigrationStatusSimpleResDto.updateDateTime);
+      this.lastCardUpdateTime= lastUpdate.toFormat("yyyy-MM-dd");
       this.$forceUpdate();
     },
     inModeClick() {
@@ -203,12 +213,31 @@ export default Vue.extend({
         }
       }
       return require("@/assets/login_ico.png")
+    },
+    unReadCountText(){
+      if(this.unReadCount == 0){
+        return ""
+      }
+      if(this.unReadCount >= 10){
+        return "9+"
+      }
+      return this.unReadCount;
+    },
+    alarmClick(){
+      if(this.$store.state.isLogin){
+        this.$router.push({
+          path: "/BM002",
+        })
+      }else {
+        this.$swal("로그인이 필요합니다.")
+      }
     }
   },
   data() {
     return {
       inoutMode: true,
-      qAndAMode: false
+      qAndAMode: false,
+      lastCardUpdateTime: ""
     }
   },
 
@@ -235,9 +264,15 @@ export default Vue.extend({
 
     params.userBookMarkList = [];
     if (wSesstion) {
-      const {data} = await axios.get<UserBookMarkingCountryResDto[]>("/UserBookMarkingCountry/BookMarkings");
+      try{
+        const {data} = await axios.get<UserBookMarkingCountryResDto[]>("/UserBookMarkingCountry/BookMarkings");
+        params.userBookMarkList = data;
+        let userAlarmUseCase = new UserAlarmUseCase();
+        params.unReadCount = await userAlarmUseCase.unReadCount();
 
-      params.userBookMarkList = data;
+      }catch (ex) {
+        console.log(ex);
+      }
     }
 
     next(async (vm: Vue) => {
@@ -245,6 +280,10 @@ export default Vue.extend({
         let {data} = await axios.get("/MemberManagement/me");
         let userInfo = {};
         Object.assign(userInfo, data);
+        if(window.navigator.userAgent.indexOf("wecango") > 0){
+          let win: any = window
+          win.wecango(JSON.stringify(userInfo))
+        }
         vm.$store.commit(MutationTypes.SET_ISLOGIN, true)
         vm.$store.commit(MutationTypes.SET_ISUSERINFO, userInfo as UserInfo)
       } catch (e) {

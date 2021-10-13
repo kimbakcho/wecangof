@@ -2,9 +2,12 @@ module.exports = {
   transpileDependencies: [
     'vuetify'
   ],
-  publicPath: process.env.NODE_ENV === 'production'
-      ? '/wecango'
-      : '/',
+  publicPath: process.env.VUE_PUBLIC_URL
+
+
+
+
+
   // devServer: {
   //   historyApiFallback: true,
   //   proxy: {

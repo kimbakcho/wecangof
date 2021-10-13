@@ -19,7 +19,7 @@ export default Vue.extend({
       this.$store.commit(MutationTypes.SET_ISUSERINFO,{})
       let headers: any = axios.defaults.headers;
       headers['Authorization'] = ''
-      this.$cookies.remove("wSesstion")
+      this.$cookies.remove("wSesstion","/",process.env.VUE_APP_COOKIE_DOMAIN)
       this.$router.push({
         path: "/"
       })

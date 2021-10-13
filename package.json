@@ -5,6 +5,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "buildrealTest": "vue-cli-service build --mode testreal",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
@@ -12,8 +13,10 @@
     "@toast-ui/editor-plugin-color-syntax": "^3.0.1",
     "@toast-ui/editor-plugin-table-merged-cell": "^3.0.0",
     "@types/axios": "^0.14.0",
+    "@types/luxon": "^2.0.5",
     "axios": "^0.22.0",
     "core-js": "^3.6.5",
+    "luxon": "^2.0.2",
     "vue": "^2.6.11",
     "vue-cookies": "^1.7.4",
     "vue-kakao-sdk": "^0.2.0",

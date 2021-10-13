@@ -18,7 +18,7 @@ import tableMergedCell from '@toast-ui/editor-plugin-table-merged-cell';
 import FileUploadService from "@/Bis/Common/FileUploadService";
 import ImmigrationInfoManagementUseCase from "@/Bis/ImmigrationStatus/Domain/UseCase/ImmigrationInfoManagementUseCase";
 import {ImmigrationInfoManagementUpdateReqDto} from "@/Bis/ImmigrationStatus/Dto/ImmigrationInfoManagementUpdateReqDto";
-export default Vue.extend({
+const NationInfoEditor =  Vue.extend({
   props:{
     immigrationInfoManagementId:{
       type: Number,
@@ -75,6 +75,8 @@ export default Vue.extend({
     }
   }
 })
+export type NationInfoEditorType = InstanceType<typeof NationInfoEditor>
+export default NationInfoEditor;
 </script>
 <style scoped>
 
