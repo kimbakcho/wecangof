@@ -278,14 +278,25 @@ export default Vue.extend({
     next(async (vm: Vue) => {
       try {
         let {data} = await axios.get("/MemberManagement/me");
-        let userInfo = {};
-        Object.assign(userInfo, data);
-        if(window.navigator.userAgent.indexOf("wecango") > 0){
-          let win: any = window
-          win.wecango(JSON.stringify(userInfo))
+        if(data){
+          let userInfo = {};
+          Object.assign(userInfo, data);
+
+          vm.$store.commit(MutationTypes.SET_ISLOGIN, true)
+          vm.$store.commit(MutationTypes.SET_ISUSERINFO, userInfo as UserInfo)
+          if(window.navigator.userAgent.indexOf("wecango") > 0){
+            let win: any = window
+            try{
+              win.wecango.postMessage(JSON.stringify(userInfo))
+            }catch (e) {
+              console.log("wecangochannel")
+              console.log(e)
+            }
+
+          }
+        }else {
+          vm.$store.commit(MutationTypes.SET_ISLOGIN, false)
         }
-        vm.$store.commit(MutationTypes.SET_ISLOGIN, true)
-        vm.$store.commit(MutationTypes.SET_ISUSERINFO, userInfo as UserInfo)
       } catch (e) {
         vm.$store.commit(MutationTypes.SET_ISLOGIN, false)
       }finally {

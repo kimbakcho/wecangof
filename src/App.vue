@@ -59,10 +59,14 @@ export default Vue.extend({
       headers['Authorization'] = 'Bearer ' + wSesstion
       try{
         let { data } = await axios.get("/MemberManagement/me");
-        let userInfo = {};
-        Object.assign(userInfo, data);
-        this.$store.commit(MutationTypes.SET_ISLOGIN,true)
-        this.$store.commit(MutationTypes.SET_ISUSERINFO,userInfo as UserInfo)
+        if(data){
+          let userInfo = {};
+          Object.assign(userInfo, data);
+          this.$store.commit(MutationTypes.SET_ISLOGIN,true)
+          this.$store.commit(MutationTypes.SET_ISUSERINFO,userInfo as UserInfo)
+        }else {
+          this.$store.commit(MutationTypes.SET_ISLOGIN, false)
+        }
       }catch (e) {
         this.$store.commit(MutationTypes.SET_ISLOGIN,false)
       }
