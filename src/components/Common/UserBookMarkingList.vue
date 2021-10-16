@@ -1,6 +1,6 @@
 <template>
   <div class="bookMarkRoot">
-    <draggable v-model="userBookMarkList"  class="drag" :options="dragOptions" @change="itemChange" :force-fallback="true" :scroll-sensitivity="200">
+    <draggable v-model="userBookMarkList" class="drag" :options="dragOptions" @change="itemChange" :force-fallback="true">
       <CountryButton class="btn" v-for="item in userBookMarkList" :nation-control="item.nationId" :key="item.id" @tapNation="tapNation(item)" >
 
       </CountryButton>
@@ -12,7 +12,6 @@
 import Vue, {PropType} from "vue"
 import {UserBookMarkingCountryResDto} from "../../Bis/UserBookMarkingCountry/Dto/UserBookMarkingCountryResDto";
 import CountryButton from "@/components/Common/CountryButton.vue";
-import {NationControlResDto} from "@/Bis/NationControl/Dto/NationControlResDto";
 import draggable from 'vuedraggable'
 import UserBookMarkingCountryUseCase from "@/Bis/UserBookMarkingCountry/Domain/UseCase/UserBookMarkingCountryUseCase";
 
@@ -21,17 +20,21 @@ export default Vue.extend({
     CountryButton,draggable
   },
   props: {
-    userBookMarkList: {
+    initUserBookMarkList: {
       type: Array as PropType<UserBookMarkingCountryResDto[]>,
-      required: true
+      required: true,
     }
   },
-
+  mounted() {
+    this.userBookMarkList = this.initUserBookMarkList;
+  },
   data(){
     return {
       dragOptions: {
-          delay: 600
-      }
+          delay: 200,
+          touchStartThreshold: 5,
+      },
+      userBookMarkList: [] as UserBookMarkingCountryResDto[]
     }
   },
   methods:{
@@ -40,7 +43,6 @@ export default Vue.extend({
     },
     itemChange(evt: any){
       let userBookMarkingCountryUseCase = new UserBookMarkingCountryUseCase();
-      console.log(evt)
       userBookMarkingCountryUseCase.changeOrderIdx(evt.moved.oldIndex,evt.moved.newIndex);
 
     }
@@ -50,7 +52,6 @@ export default Vue.extend({
 <style scoped>
 .bookMarkRoot{
 
-  padding: 0px 25px;
 }
 .bookMarkRoot .drag{
   display: flex;

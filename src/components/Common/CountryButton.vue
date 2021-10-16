@@ -1,7 +1,7 @@
 <template>
   <div class="root" @click="tapNation">
     <div class="imgRoot">
-      <img :src="nationControl.flagImage" class="flagImg">
+      <img :src="nationControl.flagImage" class="flagImg" @contextmenu="contextMenuUp">
     </div>
 
     <div class="textRoot">
@@ -24,9 +24,19 @@ export default Vue.extend({
       required: true
     }
   },
+
   methods:{
     tapNation(){
       this.$emit("tapNation",this.nationControl)
+    },
+    contextMenuUp(event: any){
+      if (event.stopPropagation)
+        event.stopPropagation();
+
+      event.preventDefault()
+
+      event.cancelBubble = true;
+      return false;
     }
   }
 

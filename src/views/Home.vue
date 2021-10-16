@@ -1,85 +1,13 @@
 <template>
   <div class="mainRoot">
-    <div class="top">
-      <img :src="userProfileImageUrl()"
-           class="login_ico" @click="onUserClick">
-      <div class="logo">
-        Logo
-      </div>
-      <div class="alarm" @click="alarmClick">
-        <v-icon size="20" class="alarmIcon" color="#2661f1">
-          far fa-bell
-        </v-icon>
-        <div class="alarmCount" v-if="unReadCount > 0">
-          <span>
-           {{unReadCountText()}}
-          </span>
+    <div class="content" :class="{inOutDash: inoutMode, qAndAMode: qAndAMode }">
+        <InOutDash class="contentItem" :user-book-mark-list="userBookMarkList" :admin-recommend-list="adminRecommendList" :un-read-count="unReadCount">
 
-        </div>
-      </div>
-    </div>
-    <div class="content">
-      <div class="topDot dot">
+        </InOutDash>
 
-      </div>
-      <span class="interestTravel">
-      내가 관심있는 여행지
-    </span>
-      <div class="travelCardPosition">
-        <TravelCard2 v-if="hasCurrentSelect()"
-                     :immigration-status-card-dto="getCurrentSelect().immigrationStatusSimpleResDto" @tapCard="tapCard">
+        <CommunityHome class="contentItem" >
 
-        </TravelCard2>
-        <NoneTravelCard v-else>
-
-        </NoneTravelCard>
-      </div>
-      <NoneBookMarking v-if="userBookMarkList.length == 0">
-
-      </NoneBookMarking>
-
-      <UserBookMarkingList v-else :user-book-mark-list="userBookMarkList" @tapNation="bookMarkingSelect">
-
-      </UserBookMarkingList>
-
-
-      <!--      <draggable class="dragger" v-bind="dragOptions" v-model="myArray" group="people" @start="drag=true"-->
-      <!--                 @end="drag=false">-->
-      <!--        <div v-for="(item,index) in myArray" :key="index" class="countryButton">-->
-      <!--          <div>-->
-      <!--            {{ item.name }}-->
-      <!--          </div>-->
-      <!--        </div>-->
-
-      <!--        &lt;!&ndash;        <CountryButton v-for="(item,index) in myArray" :key="index" class="countryButton">&ndash;&gt;-->
-      <!--        &lt;!&ndash;          {{ i }}&ndash;&gt;-->
-      <!--        &lt;!&ndash;        </CountryButton>&ndash;&gt;-->
-      <!--      </draggable>-->
-
-
-      <div class="lastUpdate">
-        {{ `최신 업데이트 ${lastCardUpdateTime}` }}
-      </div>
-      <div class="divider">
-
-      </div>
-      <div class="secondaryDotList">
-        <div class="dot">
-
-        </div>
-        <div class="dot">
-
-        </div>
-      </div>
-      <div class="travelTitle2">
-        한국인 인기 여행지! 이 나라는 어때?
-      </div>
-      <div class="adminTravelCardList">
-        <TravelCard3 v-for="item in adminRecommendList" :key="item.id" class="travelItem"
-                     :immigration-status-card-dto="item" @tapCard="tapCard">
-
-        </TravelCard3>
-      </div>
+        </CommunityHome>
     </div>
     <div class="bottom">
       <div class="bottomNav">
@@ -113,34 +41,27 @@
 
 <script lang="ts">
 import Vue, {PropType} from 'vue'
-import TravelCard2 from "@/components/Common/TravelCard2.vue";
 import {Route} from "vue-router";
 import axios from "axios";
 import {MutationTypes} from "@/store/mutations";
 import UserInfo from "@/Bis/Common/UserInfo";
-import NoneTravelCard from "@/components/Common/NoneTravelCard.vue";
+
 import {ImmigrationStatusSimpleResDto} from "@/Bis/ImmigrationStatus/Dto/ImmigrationStatusSimpleResDto";
 import {UserBookMarkingCountryResDto} from "@/Bis/UserBookMarkingCountry/Dto/UserBookMarkingCountryResDto";
-import NoneBookMarking from "@/components/Common/NoneBookMarking.vue";
-import UserBookMarkingList from "@/components/Common/UserBookMarkingList.vue";
+
 import ImmigrationStatusUseCase from "@/Bis/ImmigrationStatus/Domain/UseCase/ImmigrationStatusUseCase";
-import TravelCard3 from "@/components/Common/TravelCard3.vue";
+
 import UserAlarmUseCase from "@/Bis/UserAlarm/Domain/UseCase/UserAlarmUseCase";
 import {DateTime} from "luxon";
+import InOutDash from "@/components/Home/InOutDash.vue";
+import CommunityHome from "@/components/Home/CommunityHome.vue";
+import {QABoardCategoryResDto} from "@/Bis/QABoardCategory/Dto/QABoardCategoryResDto";
+import {QABoardCategoryUseCase} from "@/Bis/QABoardCategory/Domain/QABoardCategoryUseCase";
 
 export default Vue.extend({
   name: 'Home',
-
-  components: {
-    TravelCard2, NoneTravelCard, NoneBookMarking, UserBookMarkingList, TravelCard3
-  },
-  computed: {
-    dragOptions() {
-      return {
-        delay: 1000,
-        ghostClass: 'ghost'
-      };
-    },
+  components:{
+    InOutDash, CommunityHome
   },
   props: {
     userBookMarkList: {
@@ -151,96 +72,44 @@ export default Vue.extend({
     },
     unReadCount: {
       type: Number,
+    },
+    qaBoardCategorys: {
+      type: Array as PropType<QABoardCategoryResDto[]>,
     }
   },
 
+  data(){
+    return {
+      inoutMode: true,
+      qAndAMode: false,
+    }
+  },
+  provide () {
+    // eslint-disable-next-line @typescript-eslint/no-this-alias
+    const _this: any = this;
+    return {
+      qaBoardCategorys: _this.qaBoardCategorys
+    }
+  },
   methods: {
-    hasCurrentSelect() {
-      let item = localStorage.getItem("currentSelectNationItem");
-      if (item) {
-        return true;
-      } else {
-        return false;
-      }
-    },
-    getCurrentSelect() {
-      let item = localStorage.getItem("currentSelectNationItem");
-      if (item != null) {
-        let selectItem = JSON.parse(item) as UserBookMarkingCountryResDto;
-        let lastUpdate = DateTime.fromISO(selectItem.immigrationStatusSimpleResDto.updateDateTime);
-        this.lastCardUpdateTime= lastUpdate.toFormat("yyyy-MM-dd");
-        return selectItem;
-      } else {
-        return null;
-      }
-    },
-    onUserClick() {
-      this.$router.push({
-        path: "/AM002"
-      })
-    },
     plusClick() {
       this.$router.push({
         path: "/BM003"
       })
-    },
-    bookMarkingSelect(item: UserBookMarkingCountryResDto) {
-      localStorage.setItem("currentSelectNationItem", JSON.stringify(item))
-      let lastUpdate = DateTime.fromISO(item.immigrationStatusSimpleResDto.updateDateTime);
-      this.lastCardUpdateTime= lastUpdate.toFormat("yyyy-MM-dd");
-      this.$forceUpdate();
     },
     inModeClick() {
       this.inoutMode = true;
       this.qAndAMode = false;
     },
     qAndAModeClick() {
-      this.$swal("준비중")
-      // return ;
-      // this.inoutMode = false;
-      // this.qAndAMode = true;
-    },
-    tapCard(item: ImmigrationStatusSimpleResDto) {
-      this.$router.push({
-        path: `/BM004/${item.nation.id}`,
-
-      })
-    },
-    userProfileImageUrl(){
-      if(this.$store.state.isLogin){
-        if(this.$store.state.userInfo.profileImage){
-          return this.$store.state.userInfo.profileImage
-        }
+      if(process.env.NODE_ENV == "production"){
+        this.$swal("준비중")
+        return ;
       }
-      return require("@/assets/login_ico.png")
+      this.inoutMode = false;
+      this.qAndAMode = true;
     },
-    unReadCountText(){
-      if(this.unReadCount == 0){
-        return ""
-      }
-      if(this.unReadCount >= 10){
-        return "9+"
-      }
-      return this.unReadCount;
-    },
-    alarmClick(){
-      if(this.$store.state.isLogin){
-        this.$router.push({
-          path: "/BM002",
-        })
-      }else {
-        this.$swal("로그인이 필요합니다.")
-      }
-    }
   },
-  data() {
-    return {
-      inoutMode: true,
-      qAndAMode: false,
-      lastCardUpdateTime: ""
-    }
-  },
-
   async beforeRouteEnter(to: Route, from: Route, next: any) {
     function getCookie(name: string) {
       const value = `; ${document.cookie}`;
@@ -261,6 +130,20 @@ export default Vue.extend({
     if(immigrationStatusSimpleResDtos){
       params.adminRecommendList = immigrationStatusSimpleResDtos;
     }
+
+    let qaBoardCategoryUseCase = new QABoardCategoryUseCase();
+
+    let qaBoardCategorysItems = await qaBoardCategoryUseCase.getList();
+    qaBoardCategorysItems.map(x=>{
+      x.active = false
+    })
+    let totalCate = {
+      categoryName: "전체",
+      orderIdx: 0,
+      active: true
+    } as QABoardCategoryResDto;
+
+    params.qaBoardCategorys = [totalCate ,...qaBoardCategorysItems]
 
     params.userBookMarkList = [];
     if (wSesstion) {
@@ -313,151 +196,14 @@ export default Vue.extend({
 }
 
 .content {
-  height: calc(100vh - 75px);
+  height: calc(100vh - 35px);
   overflow-y: auto;
-}
-
-.content::-webkit-scrollbar {
-  display: none;
-}
-
-.top {
-  width: 100%;
   display: flex;
-  padding-top: 30px;
-  justify-content: space-between;
-  align-items: center;
-  background-color: white;
+  flex-wrap: nowrap;
+  overflow-x: hidden;
+  width: 200vw;
 }
 
-.top .login_ico {
-  width: 18px;
-  height: 18px;
-  margin-left: 26px;
-  object-fit: contain;
-}
-
-.alarm {
-  margin-right: 32px;
-  position: relative;
-}
-
-.alarmCount {
-  position: absolute;
-  bottom: 0;
-  left: 80%;
-  width: 12px;
-  height: 12px;
-  background-color: #f5b400;
-  border-radius: 50%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.alarmCount span {
-  font-family: NotoSansCJKKR;
-  font-size: 8px;
-  font-weight: 500;
-  line-height: 8px;
-
-  color: #fff;
-}
-
-.topDot {
-  margin: 30px 103px 10px 25px;
-}
-
-.dot {
-  width: 10px;
-  height: 10px;
-  border: solid 1px #242424;
-  border-radius: 50%;
-}
-
-.interestTravel {
-  width: 175px;
-  height: 29px;
-  margin: 10px 16px 20px 25px;
-  font-family: NotoSansKR;
-  font-size: 20px;
-  font-weight: bold;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  text-align: left;
-  color: #242424;
-}
-
-.travelCardPosition {
-  margin: 20px 25px 25px;
-}
-
-.bookMarkList {
-  display: flex;
-  overflow-x: auto;
-  padding-left: 25px;
-}
-
-/*.bookMarkList .countryButton {*/
-/*  margin-right: 31px;*/
-/*}*/
-.countryButton {
-  min-width: 120px;
-}
-
-.lastUpdate {
-  margin: 15px 25px 30px 16px;
-  font-family: NotoSansKR;
-  font-size: 12px;
-  font-weight: normal;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  text-align: right;
-  color: #a7aab2;
-}
-
-.divider {
-  width: 100%;
-  height: 1px;
-  margin: 30px 0;
-  background-color: #e9ebf4;
-}
-
-.secondaryDotList {
-  display: flex;
-  padding-left: 25px;
-}
-
-.secondaryDotList .dot {
-  margin-right: 5px;
-}
-
-.travelTitle2 {
-  padding-left: 25px;
-  height: 29px;
-  margin: 10px 0 0;
-  font-family: NotoSansKR;
-  font-size: 20px;
-  font-weight: bold;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  text-align: left;
-  color: #242424;
-}
-
-.adminTravelCardList {
-  padding: 20px;
-}
-
-.adminTravelCardList .travelItem {
-  margin-bottom: 20px;
-}
 
 .notice {
   display: flex;
@@ -509,17 +255,6 @@ export default Vue.extend({
 
 }
 
-.dragger {
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: auto;
-}
-
-.ghost {
-  opacity: .5;
-  background: #C8EBFB;
-}
-
 .inout {
   width: 93px;
   height: 60px;
@@ -550,5 +285,21 @@ export default Vue.extend({
   margin-top: 5px;
   font-family: NotoSansKR;
   font-size: 8px;
+}
+.contentItem{
+  width: 100vw;
+  overflow-x: hidden;
+}
+
+.content.inOutDash{
+  transform: translateX(0vw);
+  transition: all 1s ease;
+}
+.content.qAndAMode{
+  transform: translateX(-100vw);
+  transition: all 1s ease;
+}
+.contentItem::-webkit-scrollbar {
+  display: none;
 }
 </style>
