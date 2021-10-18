@@ -21,8 +21,11 @@
         </div>
         <div class="plusBtn" @click="plusClick">
           <div class="inPlusBtn">
-            <v-icon color="white" size="30">
+            <v-icon v-if="inoutMode" color="white" size="30">
               fas fa-plus
+            </v-icon>
+            <v-icon v-if="qAndAMode" color="white" size="30">
+              wc-writepen
             </v-icon>
           </div>
         </div>
@@ -93,9 +96,19 @@ export default Vue.extend({
   },
   methods: {
     plusClick() {
-      this.$router.push({
-        path: "/BM003"
-      })
+      if(this.inoutMode){
+        this.$router.push({
+          path: "/BM003"
+        })
+      } else if(this.qAndAMode) {
+        if(this.$store.state.isLogin){
+          this.$router.push({
+            path: "/QA006"
+          })
+        }else {
+          this.$swal("로그인이 필요합니다.")
+        }
+      }
     },
     inModeClick() {
       this.inoutMode = true;

@@ -8,7 +8,6 @@
       <div>
         {{ nationControl.nationName }}
       </div>
-
     </div>
   </div>
 </template>

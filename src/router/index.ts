@@ -45,6 +45,18 @@ const routes: Array<RouteConfig> = [
     props: true
   },
   {
+    path: "/QA006",
+    name: "QA006",
+    component: () => import(/* webpackChunkName: "QA006" */ '../views/QA/QA006.vue'),
+    props: true
+  },
+  {
+    path: "/QA003/:qaBoardId",
+    name: "QA003",
+    component: () => import(/* webpackChunkName: "QA003" */ '../views/QA/QA003.vue'),
+    props: true
+  },
+  {
     path: '/AM002',
     name: 'AM002',
     component: () => import(/* webpackChunkName: "AM002" */ '../views/AM/AM002.vue')
@@ -52,7 +64,7 @@ const routes: Array<RouteConfig> = [
   {
     path: '/BM002',
     name: 'BM002',
-    component: () => import(/* webpackChunkName: "AM002" */ '../views/BM/BM002.vue'),
+    component: () => import(/* webpackChunkName: "BM002" */ '../views/BM/BM002.vue'),
     props: true
   },
   {

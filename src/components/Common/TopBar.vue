@@ -42,7 +42,7 @@ export default Vue.extend({
   justify-content: space-between;
   align-items: center;
 
-  height: 63px;
+  min-height: 63px;
   background-color: white;
 }
 

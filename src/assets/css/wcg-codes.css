@@ -2,3 +2,8 @@
 .wc-envelope:before { content: '\e800'; } /* '' */
 .wc-envelopeopen:before { content: '\e801'; } /* '' */
 .wc-bellalarm:before { content: '\e802'; } /* '' */
+.wc-writepen:before { content: '\e803'; } /* '' */
+.wc-addimage:before { content: '\e804'; } /* '' */
+.wc-imgdel:before { content: '\e805'; } /* '' */
+.wc-reply:before { content: '\e806'; } /* '' */
+.wc-view:before { content: '\e807'; } /* '' */
