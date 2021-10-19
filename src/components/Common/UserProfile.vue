@@ -1,5 +1,5 @@
 <template>
-  <div class="userProfile">
+  <div class="userProfile" :class="{textNewline: textNewline}">
     <img :src="userInfo.profileImage" >
     <div>
       {{ userInfo.nickName }}
@@ -15,6 +15,10 @@ export default Vue.extend({
     userInfo:{
       type: Object as PropType<MemberManagementSimpleResDto>,
       required: true
+    },
+    textNewline:{
+      type: Boolean,
+      default: false,
     }
   }
 })
@@ -23,6 +27,12 @@ export default Vue.extend({
 .userProfile{
   display: flex;
   align-items: center;
+  white-space: nowrap;
+}
+.userProfile.textNewline {
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 .userProfile img{
   border-radius: 50%;
@@ -36,5 +46,9 @@ export default Vue.extend({
   font-size: 10px;
   color: #242424;
   margin-left: 5px;
+}
+.userProfile.textNewline div{
+  margin-top: 4px;
+  margin-left: 0px;
 }
 </style>

@@ -38,8 +38,10 @@
       <div class="imageContent">
         <img v-for="(item,index) in getImageMeta()" :src="item.imageUrl" :key="index">
       </div>
-
-      <ReplyComponent :qa-board-reply-res-dtos="qaBoardReplys" :key="qaBoardReplys.length">
+      <div class="replyCount">
+        {{ `댓글 ${qaBoardResDto.replyCount}` }}
+      </div>
+      <ReplyComponent ref="ReplyComponent" :qa-board-reply-res-dtos="qaBoardReplys" :key="qaBoardReplys.length">
 
       </ReplyComponent>
 
@@ -55,7 +57,7 @@
   </div>
 </template>
 <script lang="ts">
-import Vue, {PropType} from "vue"
+import Vue, {PropType, VueConstructor} from "vue"
 import TopBar from "@/components/Common/TopBar.vue";
 import {QABoardResDto} from "@/Bis/QABoard/Dto/QABoardResDto";
 import {Route} from "vue-router";
@@ -65,10 +67,14 @@ import {DateTime} from "luxon";
 import WCTimeUtil from "@/Bis/Common/WCTimeUtil";
 import {UploadFileResDto} from "@/Bis/Common/UploadFileResDto";
 import QABoardReplyUseCase from "@/Bis/QABoardReply/Domain/UseCase/QABoardReplyUseCase";
-import ReplyComponent from "@/components/Reply/ReplyComponent.vue";
+import ReplyComponent, {ReplyComponentRootType} from "@/components/Reply/ReplyComponent.vue";
 import {QABoardReplyResDto} from "@/Bis/QABoardReply/Dto/QABoardReplyResDto";
 
-export default Vue.extend({
+export default (Vue as VueConstructor<Vue & {
+  $refs:{
+    ReplyComponent: ReplyComponentRootType
+  }
+}>).extend({
   components:{
     TopBar, UserProfile, ReplyComponent
   },
@@ -116,11 +122,15 @@ export default Vue.extend({
       })
       this.insertReplyText = '';
       this.qaBoardReplys.push(resDto);
+      this.qaBoardResDto.replyCount++;
+      await this.$nextTick();
+      this.$refs.ReplyComponent.getLastReplyDom().scrollIntoView();
     }
   },
   async beforeRouteEnter(to: Route, from: Route, next: any) {
     let qaBoardUseCase = new QABoardUseCase();
     let params: any = to.params;
+    await qaBoardUseCase.updateViewCount(params.qaBoardId);
     params.qaBoardResDto = await qaBoardUseCase.getDoc(params.qaBoardId);
     let qaBoardReplyUseCase = new QABoardReplyUseCase();
     params.qaBoardReplys = await qaBoardReplyUseCase.getQaDocReplys(params.qaBoardId);
@@ -218,6 +228,13 @@ export default Vue.extend({
   font-size: 15px;
   color: #215df1;
   margin-right: 23px;
+}
+.replyCount{
+  padding: 15px 25px;
+  font-family: "Noto Sans KR";
+  font-weight: bold;
+  font-size: 15px;
+  color: #2f2f2f;
 }
 </style>
 <style>

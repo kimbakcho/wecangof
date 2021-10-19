@@ -28,7 +28,8 @@ const apiKey = process.env.VUE_APP_KAKAOAPIKEY
 
 Vue.config.productionTip = false
 
-new Vue({
+const app = new Vue({
+    data: { loading: false },
     router,
     store,
     vuetify,
@@ -36,3 +37,12 @@ new Vue({
 }).$mount('#app')
 
 Vue.use(VueKakaoSdk, {apiKey})
+
+router.beforeEach((to, from, next) => {
+    app.loading = true
+    next()
+})
+
+router.afterEach(() => {
+    app.loading = false
+})

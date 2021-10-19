@@ -91,7 +91,8 @@ export default Vue.extend({
 
   },
   async beforeRouteEnter(to: Route, from: Route, next: any) {
-    console.log(to)
+
+
     let immigrationStatusUseCase = new ImmigrationStatusUseCase();
     const immigrationStatusDetailResDto = await immigrationStatusUseCase.getNationInfo(Number(to.params.nationId));
     const userBookMarkingCountryUseCase = new UserBookMarkingCountryUseCase()

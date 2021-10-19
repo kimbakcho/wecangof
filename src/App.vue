@@ -1,7 +1,15 @@
 <template>
   <v-app>
-      <transition :name="transitionName">
-        <router-view class="child-view"/>
+      <transition  :name="transitionName">
+        <router-view  class="child-view" v-if="!$root.$data.loading"/>
+        <div class="loadingRoot" v-if="$root.$data.loading">
+          <v-progress-circular
+              :size="70"
+              :width="7"
+              color="#dbe5fd"
+              indeterminate
+          ></v-progress-circular>
+        </div>
       </transition>
   </v-app>
 </template>
@@ -72,12 +80,20 @@ export default Vue.extend({
       }
     }
 
-
-
   }
 
 });
+
 </script>
+<style scoped>
+.loadingRoot{
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>
 <style>
 .child-view {
   position: absolute;

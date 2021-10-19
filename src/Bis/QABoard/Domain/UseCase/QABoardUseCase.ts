@@ -1,6 +1,8 @@
 import {QABoardInsertDto} from "@/Bis/QABoard/Dto/QABoardInsertDto";
 import axios, {AxiosResponse} from "axios";
 import {QABoardResDto} from "@/Bis/QABoard/Dto/QABoardResDto";
+import {QABoardFilterReqDto} from "@/Bis/QABoard/Dto/QABoardFilterReqDto";
+import {PageWrap} from "@/Bis/Common/PageWrap";
 
 export class QABoardUseCase {
 
@@ -17,4 +19,20 @@ export class QABoardUseCase {
         });
         return data;
     }
+
+    async updateViewCount(id: number){
+         await axios.post("/QABoard/viewCount",null,{
+             params:{
+                 id: id
+             }
+         });
+    }
+
+    async getFilterDoc(reqDto: QABoardFilterReqDto): Promise<PageWrap<QABoardResDto>> {
+        const { data } = await axios.post<QABoardFilterReqDto, AxiosResponse<any>>('/QABoard/getFilterDoc',reqDto)
+        return data;
+    }
+
+
+
 }
