@@ -139,7 +139,7 @@ export default Vue.extend({
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 15px;
   font-weight: bold;
 }

@@ -6,7 +6,7 @@ export interface ImmigrationStatusDetailResDto {
     nation: NationControlResDto;
     continent?: string;
     travelFlag?: boolean;
-    mandatoryQuarantine?: number;
+    mandatoryQuarantine?: string;
     updateDateTime: string;
     recommendedCountry: boolean;
     recommendedCountryOrder: number;

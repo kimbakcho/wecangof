@@ -41,7 +41,6 @@ export default Vue.extend({
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   min-height: 63px;
   background-color: white;
 }
@@ -51,8 +50,9 @@ export default Vue.extend({
   height: 15px;
   margin-left: 25px;
 }
+
 .topBar .topTitle{
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 15px;
   font-weight: bold;
   position: absolute;

@@ -37,11 +37,11 @@
           v-model="igsd.recommendedCountry"
       ></v-select>
 
-      <v-text-field type="number" label="우선 순위" v-model="igsd.recommendedCountryOrder">
+      <v-text-field type="number" label="우선 순위" multiple v-model="igsd.recommendedCountryOrder">
 
       </v-text-field>
 
-      <v-file-input accept="image/*" label="대표 이미지" v-model="recommendedCountryImage">
+      <v-file-input accept="image/*" label="대표 이미지" multiple v-model="recommendedCountryImage">
 
       </v-file-input>
 
@@ -93,7 +93,7 @@
       <div>
         의무 격리 기간
       </div>
-      <v-text-field type="number" clearable v-model="igsd.mandatoryQuarantine"> </v-text-field>
+      <v-select :items="mandatoryQuarantineItems" clearable v-model="igsd.mandatoryQuarantine"> </v-select>
     </div>
 
     <div class="possibleExempted">
@@ -194,7 +194,7 @@ export default (Vue as VueConstructor<Vue & {
       contentInfoTab: 0,
       flagImage: null as File[] | null,
       flagImageUrl: "",
-      recommendedCountryImage: null as File[] | null,
+      recommendedCountryImage: null as File[] | null ,
       recommendedCountryImageUrl: "",
 
       recommendItems: [
@@ -242,6 +242,9 @@ export default (Vue as VueConstructor<Vue & {
       ],
       benefitsVaccinationItems:[
         "격리면제 및 단축","코로나 검사 면제"
+      ],
+      mandatoryQuarantineItems: [
+          "없음","즉시 검사 후 음성 결과까지 약 24시간","6일 이내","1주~2주","2주 이상"
       ],
       possibleExemptedItems: [
         {
@@ -291,14 +294,19 @@ export default (Vue as VueConstructor<Vue & {
       let immigrationStatusUpdateReqDto = new ImmigrationStatusUpdateReqDto();
       Object.assign<ImmigrationStatusUpdateReqDto,ImmigrationStatusDetailResDto>(immigrationStatusUpdateReqDto,this.igsd)
       let fileUploadService = new FileUploadService();
+
       if(this.flagImage && this.flagImage.length>0 && this.flagImage[0].size > 0){
         let flagResDto = await fileUploadService.upload(this,this.flagImage[0]);
+
         if(flagResDto){
           immigrationStatusUpdateReqDto.nationFlagImageUrl = flagResDto?.imageUrl;
         }
         immigrationStatusUpdateReqDto.nationFlagImageFileName = this.flagImage[0].name
       }
+
       if(this.recommendedCountryImage && this.recommendedCountryImage.length>0 && this.recommendedCountryImage[0].size > 0){
+        console.log("recommendedCountryImage");
+        console.log(this.recommendedCountryImage);
         let recommendedCountryImageResDto = await fileUploadService.upload(this,this.recommendedCountryImage[0]);
         immigrationStatusUpdateReqDto.recommendedCountryImageUrl = recommendedCountryImageResDto?.imageUrl;
         immigrationStatusUpdateReqDto.recommendedCountryImageFileName = this.recommendedCountryImage[0].name

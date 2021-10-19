@@ -108,7 +108,7 @@ export default Vue.extend({
 
 .infoText{
   margin-left: auto;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 13px;
   color: #242424;
 }

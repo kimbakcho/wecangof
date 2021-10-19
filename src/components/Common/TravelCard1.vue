@@ -199,7 +199,7 @@ export default Vue.extend({
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 13px;
   color: #15171c;
 }
@@ -216,7 +216,7 @@ export default Vue.extend({
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 13px;
   color: #a7aab2;
 }

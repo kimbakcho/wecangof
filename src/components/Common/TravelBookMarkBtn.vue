@@ -75,7 +75,11 @@ export default Vue.extend({
     },
     async bookMarkClick(){
       if(!this.$store.state.isLogin) {
-        this.$swal('로그인이 필요 합니다.');
+        this.$swal("로그인이 필요 합니다.").then((x)=>{
+          this.$router.push({
+            path:"/UA001"
+          })
+        })
         return ;
       }
       if(!this.hasBookMark){
@@ -113,7 +117,7 @@ export default Vue.extend({
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 14px;
   color: #545454;
 }
@@ -132,7 +136,7 @@ export default Vue.extend({
 
 .cardBg .dTitle{
   height: 26px;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 19px;
   font-weight: bold;
   color: #242424;
@@ -142,7 +146,7 @@ export default Vue.extend({
   padding-top: 35px;
 }
 .dTitle1{
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 17px;
   font-weight: bold;
 }
@@ -150,7 +154,7 @@ export default Vue.extend({
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: NotoSansKRRegular;
+  font-family: "Noto Sans KR";
   font-size: 13px;
   padding-top: 30px;
 }
@@ -170,7 +174,7 @@ export default Vue.extend({
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 12px;
   margin-right: 15px;
 }
@@ -184,7 +188,7 @@ export default Vue.extend({
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 12px;
 }
 

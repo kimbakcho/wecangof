@@ -60,7 +60,7 @@
         </div>
         <div class="mandatoryQuarantine">
           <div class="mandatoryQuarantineTitle">
-            의무 격리기간
+            의무 격리기간 (다중선택 가능)
           </div>
           <div class="mandatoryQuarantineList">
             <div v-for="item in mandatoryQuarantine" class="mandatoryQuarantineItem" :key="item.name"  :class="{ active: item.active }" @click="mandatoryQuarantineBtnClick(item)">
@@ -212,40 +212,41 @@ const FilterDialog = Vue.extend({
 
     },
     travelBtnClick(item: any){
-      this.travelFilters.forEach(x=>{
-        x.active = false
+      item.active = !item.active;
+
+      let otherBtns = this.travelFilters.filter(x=>{
+        return x.name != item.name;
       });
-      item.active = true;
+      otherBtns.forEach(x=>{
+        x.active= false
+      })
     },
     visaBtnClick(item: any){
-      this.visaFilters.forEach(x=>{
-        x.active = false
-      });
-      item.active = true;
-    },
+      item.active = !item.active;
 
-    covidTestBtnClick(item: any){
-      this.covidTestFilter.forEach(x=>{
-        x.active = false
+      let otherBtns = this.visaFilters.filter(x=>{
+        return x.name != item.name;
       });
-      item.active = true;
+      otherBtns.forEach(x=>{
+        x.active= false
+      })
+    },
+    covidTestBtnClick(item: any){
+      item.active = !item.active;
+
+      let otherBtns = this.covidTestFilter.filter(x=>{
+        return x.name != item.name;
+      });
+      otherBtns.forEach(x=>{
+        x.active= false
+      })
     },
     benefitsVaccinationBtnClick(item: any){
       item.active = !item.active;
     },
     mandatoryQuarantineBtnClick(item: any){
+      item.active = !item.active;
 
-      let curitem = this.mandatoryQuarantine.find(x=>{
-        return x.active == true
-      })
-      if(curitem == item){
-        item.active = !item.active;
-        return ;
-      }
-      this.mandatoryQuarantine.forEach(x=>{
-        x.active = false
-      });
-      item.active = true;
     },
     initFilter(){
       this.continents.forEach(x=>{
@@ -275,6 +276,7 @@ const FilterDialog = Vue.extend({
       let nationControlReqDto: NationControlReqDto = {}
       nationControlReqDto.continent = []
       nationControlReqDto.benefitsVaccination = []
+      nationControlReqDto.mandatoryQuarantine = []
       this.continents.forEach(x=>{
         if(x.name != '전체'){
           if(x.active){
@@ -282,20 +284,25 @@ const FilterDialog = Vue.extend({
           }
         }
       })
-
-      if(this.travelFilters[0].active){
+      if(!this.travelFilters[0].active && !this.travelFilters[1].active){
+        nationControlReqDto.travelFlag = null;
+      } else if(this.travelFilters[0].active){
         nationControlReqDto.travelFlag = true
       }else {
         nationControlReqDto.travelFlag = false
       }
 
-      if(this.visaFilters[0].active){
+      if(!this.visaFilters[0].active && !this.visaFilters[1].active){
+        nationControlReqDto.visaFlag = null;
+      } else if(this.visaFilters[0].active){
         nationControlReqDto.visaFlag = true
       }else {
         nationControlReqDto.visaFlag = false
       }
 
-      if(this.covidTestFilter[0].active){
+      if(!this.covidTestFilter[0].active && !this.covidTestFilter[1].active){
+        nationControlReqDto.covidTest= null
+      }else if(this.covidTestFilter[0].active){
         nationControlReqDto.covidTest= true
       }else {
         nationControlReqDto.covidTest = false
@@ -307,13 +314,11 @@ const FilterDialog = Vue.extend({
         }
       })
 
-      let item = this.mandatoryQuarantine.find(x=>{
-        return x.active  == true
-      });
-      if(item){
-        nationControlReqDto.mandatoryQuarantineFrom = item.between[0];
-        nationControlReqDto.mandatoryQuarantineTo = item.between[1];
-      }
+      this.mandatoryQuarantine.forEach(x=>{
+        if(x.active){
+          nationControlReqDto.mandatoryQuarantine?.push(x.name);
+        }
+      })
       this.$emit("search",nationControlReqDto)
       this.dialog = false;
     }
@@ -336,7 +341,7 @@ export default FilterDialog;
 }
 
 .title {
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 18px;
   font-weight: bold;
   color: #242424;
@@ -344,7 +349,7 @@ export default FilterDialog;
 
 
 .continentTitle {
-  font-family: NotoSansKRRegular;
+  font-family: "Noto Sans KR";
   font-size: 13px;
   color: #242424;
   margin-bottom: 10px;
@@ -357,7 +362,7 @@ export default FilterDialog;
   padding: 10px 15px;
   border-radius: 5px;
   border: solid 1px #e9ebf4;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 12px;
   color: #8c8f95;
   background-color: white;
@@ -371,7 +376,7 @@ export default FilterDialog;
 }
 
 .travelTitle{
-  font-family: NotoSansKRRegular;
+  font-family: "Noto Sans KR";
   font-size: 13px;
   color: #242424;
   margin-bottom: 10px;
@@ -387,7 +392,7 @@ export default FilterDialog;
   height: 37px;
   border-radius: 5px;
   border: solid 1px #e9ebf4;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 12px;
   background-color: white;
   color: #8c8f95;
@@ -399,7 +404,7 @@ export default FilterDialog;
   border: unset;
 }
 .visaTitle, .covidTestTitle, .benefitsVaccinationTitle, .mandatoryQuarantineTitle {
-  font-family: NotoSansKRRegular;
+  font-family: "Noto Sans KR";
   font-size: 13px;
   color: #242424;
   margin: 10px 0px;
@@ -419,7 +424,7 @@ export default FilterDialog;
   margin: 0 19px 0 0;
   border-radius: 38px;
   border: solid 1px #242424;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 12px;
   color: #242424;
 }
@@ -432,7 +437,7 @@ export default FilterDialog;
   margin: 0 0 0 19px;
   border-radius: 38px;
   background-color: #242424;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 12px;
   color: #fff;
 }

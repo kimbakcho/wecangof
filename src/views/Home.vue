@@ -296,7 +296,7 @@ export default Vue.extend({
 
 .menuText {
   margin-top: 5px;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 8px;
 }
 .contentItem{

@@ -66,7 +66,7 @@ export default Vue.extend({
 
 .chip .text {
   margin-left: 5px;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 12px;
   color: #fff;
 }

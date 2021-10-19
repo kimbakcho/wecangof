@@ -132,9 +132,7 @@ export default Vue.extend({
         "redirect_uri": process.env.VUE_APP_GOOGLE_REDIRECT_URL
       })
     });
-
   }
-
 })
 </script>
 <style scoped>
@@ -159,7 +157,7 @@ export default Vue.extend({
 
 .title span {
   height: 21px;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 15px;
   font-weight: bold;
   font-stretch: normal;
@@ -178,7 +176,7 @@ export default Vue.extend({
 
 .id span, .pw span {
   height: 19px;
-  font-family: NotoSansKRRegular;
+  font-family: "Noto Sans KR";
   font-size: 13px;
   font-weight: normal;
   font-stretch: normal;
@@ -207,7 +205,7 @@ export default Vue.extend({
   justify-content: center;
   align-items: center;
   color: white;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 12px;
 }
 
@@ -216,7 +214,7 @@ export default Vue.extend({
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 15px;
 }
 
@@ -225,7 +223,7 @@ export default Vue.extend({
 }
 
 .snsTitle {
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 15px;
   color: #242424;
   text-align: center;
@@ -239,7 +237,7 @@ export default Vue.extend({
   margin: 23px 25px 15px 25px;
   height: 61px;
   border-radius: 38px;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 15px;
   background-color: #fbe54d;
   color: #3b1f1e;
@@ -260,7 +258,7 @@ export default Vue.extend({
   margin: 0px 25px 15px 25px;
   border-radius: 38px;
   background-color: #3bac37;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 15px;
   color: white;
 }
@@ -280,7 +278,7 @@ export default Vue.extend({
   margin: 0px 25px 15px 25px;
   border-radius: 38px;
   background-color: #fff;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 15px;
   border: solid 1px #a7aab2;
 }

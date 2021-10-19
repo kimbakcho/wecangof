@@ -40,7 +40,7 @@
         <v-tabs-items v-model="exitTab" >
           <v-tab-item eager>
             <div class="updateTime">
-              {{ `최신 업데이트 ${immigrationStatusDetailResDto.vaccinatedLeavesCountry.updateDateTime}` }}
+              {{ `최신 업데이트 ${getUpdateDateFormatText(immigrationStatusDetailResDto.vaccinatedLeavesCountry.updateDateTime)}` }}
             </div>
             <div id="exitVaccinated" class="contentViewer">
 
@@ -48,7 +48,7 @@
           </v-tab-item>
           <v-tab-item eager>
             <div class="updateTime">
-              {{ `최신 업데이트 ${immigrationStatusDetailResDto.unvaccinatedLeavesCountry.updateDateTime}` }}
+              {{ `최신 업데이트 ${getUpdateDateFormatText(immigrationStatusDetailResDto.unvaccinatedLeavesCountry.updateDateTime)}` }}
             </div>
             <div id="exitNotVaccinated" class="contentViewer">
 
@@ -72,7 +72,7 @@
         <v-tabs-items v-model="returnHome" >
           <v-tab-item eager >
             <div class="updateTime">
-              {{ `최신 업데이트 ${immigrationStatusDetailResDto.vaccinatedReturnHome.updateDateTime}` }}
+              {{ `최신 업데이트 ${ getUpdateDateFormatText(immigrationStatusDetailResDto.vaccinatedReturnHome.updateDateTime)}` }}
             </div>
             <div id="returnHomeVaccinated" class="contentViewer">
 
@@ -80,7 +80,7 @@
           </v-tab-item>
           <v-tab-item eager >
             <div class="updateTime">
-              {{ `최신 업데이트 ${immigrationStatusDetailResDto.unvaccinatedReturnHome.updateDateTime}` }}
+              {{ `최신 업데이트 ${getUpdateDateFormatText(immigrationStatusDetailResDto.unvaccinatedReturnHome.updateDateTime)}` }}
             </div>
             <div id="returnHomeNotVaccinated" class="contentViewer">
 
@@ -97,11 +97,14 @@ import {ImmigrationStatusDetailResDto} from "../../Bis/ImmigrationStatus/Dto/Imm
 import {popupPlugin} from "@/toustuiplugin/popupPlugin";
 import {innerLinkPlugin} from "@/toustuiplugin/innerLinkPlugin";
 import Viewer from "@toast-ui/editor/dist/toastui-editor-viewer";
+import {DateTime} from "luxon";
 
-// import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css';
-// import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
-// import '@toast-ui/editor-plugin-table-merged-cell/dist/toastui-editor-plugin-table-merged-cell.css';
-// import  tableMergedCell from '@toast-ui/editor-plugin-table-merged-cell';
+import '@toast-ui/editor/dist/toastui-editor.css';
+import 'tui-color-picker/dist/tui-color-picker.css';
+import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css';
+import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
+import '@toast-ui/editor-plugin-table-merged-cell/dist/toastui-editor-plugin-table-merged-cell.css';
+import tableMergedCell from '@toast-ui/editor-plugin-table-merged-cell';
 
 export default Vue.extend({
   props:{
@@ -155,6 +158,10 @@ export default Vue.extend({
       this.isExit = false;
       this.isReturnHome = true;
     },
+    getUpdateDateFormatText(dateStr: string){
+      return DateTime.fromISO(dateStr).toFormat("yyyy-MM-dd")
+
+    },
 
   }
 
@@ -205,7 +212,7 @@ export default Vue.extend({
 .updateTime{
   display: flex;
   justify-content: right;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 12px;
   color: #a7aab2;
   margin: 15px 25px;
@@ -213,4 +220,13 @@ export default Vue.extend({
 .contentViewer{
   padding: 0px 25px 15px;
 }
+
+</style>
+<style>
+@media (min-width: 320px) {
+  .contentViewer img {
+    width: calc(100vw - 50px);
+  }
+}
+
 </style>

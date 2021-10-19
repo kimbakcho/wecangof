@@ -4,7 +4,7 @@ export default class  ImmigrationStatusUpdateReqDto {
     nationFlagImageFileName!: string;
     continent?: string;
     travelFlag?: boolean;
-    mandatoryQuarantine?: number;
+    mandatoryQuarantine?: string;
     recommendedCountry!: boolean;
     recommendedCountryOrder!: number;
     recommendedCountryImageUrl?: string;

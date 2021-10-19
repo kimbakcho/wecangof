@@ -50,7 +50,7 @@ export default Vue.extend({
   margin-top: 5px;
   display: flex;
   justify-content: center;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 13px;
 }
 .flagImg{

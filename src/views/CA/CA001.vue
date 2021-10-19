@@ -19,6 +19,13 @@
         <template v-slot:item.travelFlag="{ item }" >
           {{ item.travelFlag ? "가능" : "불가능" }}
         </template>
+        <template v-slot:item.nation.displayFlag="{ item }" >
+          <div>
+            <v-checkbox v-model="item.nation.displayFlag" hide-details dense @change="displayFlagChange(item)">
+
+            </v-checkbox>
+          </div>
+        </template>
         <template v-slot:item.preview="{ item }" >
           <button @click="preview(item)">
             조회
@@ -40,6 +47,7 @@ import Vue from "vue"
 import {ImmigrationStatusSimpleResDto} from "@/Bis/ImmigrationStatus/Dto/ImmigrationStatusSimpleResDto";
 import ImmigrationStatusUseCase from "@/Bis/ImmigrationStatus/Domain/UseCase/ImmigrationStatusUseCase";
 import {DataTableHeader} from "vuetify";
+import NationControlUseCase from "@/Bis/NationControl/Domain/UseCase/NationControlUseCase";
 
 export default Vue.extend({
 
@@ -66,6 +74,10 @@ export default Vue.extend({
           text: "마지막 업데이트"
         },
         {
+          value: "nation.displayFlag",
+          text: "표시"
+        },
+        {
           value: "preview",
           text: "미리보기"
         },
@@ -85,7 +97,12 @@ export default Vue.extend({
       this.$router.push({
         path: `/WCAdmin/CB002/${item.nation.id}`
       })
+    },
+    async displayFlagChange(item :ImmigrationStatusSimpleResDto ){
+      let nationControlUseCase = new NationControlUseCase();
+      await nationControlUseCase.setDisplayFlag(item.nation.id,item.nation.displayFlag);
     }
+
   },
   async mounted() {
     let immigrationStatusUseCase = new ImmigrationStatusUseCase();

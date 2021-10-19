@@ -7,3 +7,4 @@
 .wc-imgdel:before { content: '\e805'; } /* '' */
 .wc-reply:before { content: '\e806'; } /* '' */
 .wc-view:before { content: '\e807'; } /* '' */
+.wc-filter:before { content: '\e808'; } /* '' */

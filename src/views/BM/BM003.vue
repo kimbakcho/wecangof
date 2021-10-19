@@ -22,7 +22,7 @@
       </div>
       <div class="detailFilter" :class="{active :isDetailFilter}" @click="detailFilterClick">
         <v-icon size="15">
-          fas fa-filter
+          wc-filter
         </v-icon>
       </div>
     </div>
@@ -84,10 +84,12 @@ export default (Vue as VueConstructor<Vue & {
       this.isTravelFilter = false;
       this.isMandatoryQuarantine = true;
       this.isDetailFilter = false;
+
       this.nationControlList = await this.nationControlUseCase.getFilter({
-        mandatoryQuarantineFrom:0,
-        mandatoryQuarantineTo: 0,
+        mandatoryQuarantine: ["없음"]
       });
+
+
     },
     detailFilterClick() {
       this.$refs.filterDialog.open();
@@ -129,7 +131,7 @@ export default (Vue as VueConstructor<Vue & {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 15px;
   font-weight: bold;
 }
@@ -162,7 +164,7 @@ export default (Vue as VueConstructor<Vue & {
   align-items: center;
   border-radius: 5px;
 
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 16px;
   font-weight: 500;
   color: #545454;
@@ -177,7 +179,7 @@ export default (Vue as VueConstructor<Vue & {
 }
 
 .count {
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 16px;
   margin-left: 25px;
   margin-top: 17px;
@@ -194,7 +196,23 @@ export default (Vue as VueConstructor<Vue & {
 .nationItem {
   margin-bottom: 25px;
 }
+.detailFilter{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+}
+.detailFilter i{
+  color: #15171C;
+}
+
+.detailFilter.active {
+  background-color: #2661F1;
+  border-radius: 50%;
+
+}
 .detailFilter.active i{
-  color: #2661f1;
+  color: white;
 }
 </style>

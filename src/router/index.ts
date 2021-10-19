@@ -76,6 +76,14 @@ const routes: Array<RouteConfig> = [
     })
   },
   {
+    path: '/linkBoard',
+    name: 'LinkBoard',
+    component: () => import(/* webpackChunkName: "LinkBoard" */ '../views/LinkBoard.vue'),
+    props: (route) =>({
+      linkUrl: route.query.linkUrl
+    })
+  },
+  {
     path: '/WCAdmin',
     name: 'WCAdmin',
     component: () => import(/* webpackChunkName: "WCAdmin" */ '../views/Admin/AdminMain.vue'),

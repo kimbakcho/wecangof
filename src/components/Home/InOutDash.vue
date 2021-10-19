@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="top">
-      <img :src="userProfileImageUrl()"
+      <img src='@/assets/login_ico.png'
            class="login_ico" @click="onUserClick">
       <div class="logo">
         Logo
@@ -108,7 +108,31 @@ export default Vue.extend({
       lastCardUpdateTime: ""
     }
   },
+  mounted() {
+    this.initSelectCard();
+  },
   methods:{
+    initSelectCard(){
+      if(this.hasCurrentSelect()){
+        if(this.userBookMarkList){
+          let item = localStorage.getItem("currentSelectNationItem");
+          if(item){
+            let selectItem = JSON.parse(item) as UserBookMarkingCountryResDto;
+            let findIndex = this.userBookMarkList.findIndex(x=>{
+              return x.nationId.id == selectItem.nationId.id
+            })
+            if(findIndex < 0){
+              localStorage.setItem("currentSelectNationItem","");
+            }
+          }else {
+            localStorage.setItem("currentSelectNationItem","");
+          }
+        }else {
+          localStorage.setItem("currentSelectNationItem","");
+        }
+      }
+      this.$forceUpdate()
+    },
     hasCurrentSelect() {
       let item = localStorage.getItem("currentSelectNationItem");
       if (item) {
@@ -163,7 +187,6 @@ export default Vue.extend({
     tapCard(item: ImmigrationStatusSimpleResDto) {
       this.$router.push({
         path: `/BM004/${item.nation.id}`,
-
       })
     },
     onUserClick() {
@@ -233,7 +256,7 @@ export default Vue.extend({
   width: 175px;
   height: 29px;
   margin: 10px 16px 20px 25px;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 20px;
   font-weight: bold;
   font-stretch: normal;
@@ -263,7 +286,7 @@ export default Vue.extend({
 
 .lastUpdate {
   margin: 15px 25px 30px 16px;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 12px;
   font-weight: normal;
   font-stretch: normal;
@@ -294,7 +317,7 @@ export default Vue.extend({
   padding-left: 25px;
   height: 29px;
   margin: 10px 0 0;
-  font-family: NotoSansKR;
+  font-family: "Noto Sans KR";
   font-size: 20px;
   font-weight: bold;
   font-stretch: normal;

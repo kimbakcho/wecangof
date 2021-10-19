@@ -1,17 +1,19 @@
 <template>
   <div class="linkBoard">
-    <div>
-      <v-btn @click="back">
-        뒤로가기
-      </v-btn>
-    </div>
+    <TopBar >
+
+    </TopBar>
     <iframe width="100%" height="100%" :src="linkUrl"></iframe>
   </div>
 </template>
 
 <script lang="ts">
 import Vue,{PropType} from "vue"
+import TopBar from "@/components/Common/TopBar.vue";
 export default Vue.extend({
+  components:{
+    TopBar
+  },
   props:{
     linkUrl:{
       type: String
