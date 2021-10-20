@@ -441,6 +441,7 @@ export default FilterDialog;
   font-size: 12px;
   color: #fff;
 }
+
 .contentRoot {
   max-height: calc(90vh - 150px);
   overflow-y: auto;

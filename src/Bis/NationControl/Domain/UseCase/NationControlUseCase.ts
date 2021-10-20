@@ -17,4 +17,23 @@ export default class NationControlUseCase {
             }
         })
     }
+
+    async checkNickName(nickName: string){
+        const { data } = await axios.get("/MemberManagement/checkNickName",{
+            params:{
+                nickName: nickName
+            }
+        });
+        return data;
+    }
+
+    async changeNickName(nickName: string){
+        const { data } = await axios.post("/MemberManagement/changeNickName",null,{
+            params:{
+                nickName: nickName
+            }
+        });
+        return data;
+    }
+
 }

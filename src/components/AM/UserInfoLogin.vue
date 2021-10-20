@@ -74,7 +74,7 @@ export default Vue.extend({
     },
     mainBtnClick(){
       if(this.isLogin()){
-        console.log("페이지 이동")
+        this.$emit("reqNickNameOpen")
       }else {
         this.$router.push({
           path:"/UA001"

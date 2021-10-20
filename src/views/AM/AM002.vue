@@ -5,28 +5,39 @@
     </TopBar>
     <div class="amContent">
       <div>
-        <UserInfoLogin></UserInfoLogin>
+        <UserInfoLogin @reqNickNameOpen="nickNameOpen"></UserInfoLogin>
         <TermsConditions class="termsConditions"></TermsConditions>
         <Logout v-if="isLogin()" class="logout"></Logout>
       </div>
     </div>
+    <NickNameSheet ref="NickNameSheet">
+
+    </NickNameSheet>
   </div>
 </template>
 <script lang="ts">
-import Vue from "vue"
+import Vue, {VueConstructor} from "vue"
 import TopBar from "@/components/Common/TopBar.vue";
 import UserInfoLogin from "@/components/AM/UserInfoLogin.vue";
 import TermsConditions from "@/components/AM/TermsConditions.vue";
 import Logout from "@/components/AM/Logout.vue";
+import NickNameSheet, {NickNameSheetType} from "@/components/AM/NickNameSheet.vue";
 
-export default Vue.extend({
+export default (Vue as VueConstructor<Vue & {
+  $refs:{
+    NickNameSheet: NickNameSheetType
+  }
+}>).extend({
   components:{
-    TopBar, UserInfoLogin, TermsConditions, Logout
+    TopBar, UserInfoLogin, TermsConditions, Logout, NickNameSheet
   },
   methods: {
     isLogin(){
       return this.$store.state.isLogin;
     },
+    nickNameOpen(){
+      this.$refs.NickNameSheet.open();
+    }
   }
 })
 </script>
