@@ -7,8 +7,10 @@ export function popupPlugin (context: PluginContext,options: any ): PluginInfo{
         _this.$swal.fire({
             title: title,
             // text: value,
-            html: value
+            html: value,
+            heightAuto: false
         })
+
     }
     return {
         toHTMLRenderers: {

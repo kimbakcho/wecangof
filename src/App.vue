@@ -133,3 +133,4 @@ export default Vue.extend({
   transition: all 1s cubic-bezier(.55,0,.1,1);
 }
 </style>
+

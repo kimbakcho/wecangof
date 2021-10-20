@@ -132,6 +132,7 @@ export default Vue.extend({
   left: 0;
   width: 100%;
   background-color: white;
+  z-index: 100;
 }
 .topBar {
   margin-top: 12px;
