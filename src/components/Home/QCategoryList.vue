@@ -33,6 +33,11 @@ export default (Vue as VueConstructor<Vue & {
   display: flex;
   width: 100%;
   flex-wrap: nowrap;
+  overflow-x: auto;
+}
+
+.qCategoryListRoot::-webkit-scrollbar{
+  display: none;
 }
 
 .qCategoryListRoot .item {
@@ -42,6 +47,7 @@ export default (Vue as VueConstructor<Vue & {
   border: 1px solid #e6e6e6;
   padding: 8px 14px;
   display: flex;
+  white-space: nowrap;
   align-items: center;
   justify-content: center;
   margin-left: 14px;

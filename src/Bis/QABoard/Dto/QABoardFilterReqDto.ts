@@ -5,7 +5,8 @@ export interface QABoardFilterReqDto {
     title?: string | null;
     writer?: string | null;
     content?: string | null;
-    nation?: string | null;
+    nation?: number | null;
     category?: string | null;
     pageReqDto: PageReqDto;
+    withComment: boolean;
 }

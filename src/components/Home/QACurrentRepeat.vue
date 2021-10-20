@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="row" v-for="(item,index) in items" :key="index">
+    <div class="row" v-for="(item,index) in items" :key="index" @click="itemClick(item)">
       <div class="top">
         <div class="QTitle">
           <span class="inTitle">
@@ -25,24 +25,38 @@
           {{ getUploadTimeText(item.updateDateTime) }}
         </div>
       </div>
+      <div class="replyInfo">
+        <div class="replyCount">
+          <v-icon color="#2661F1" size="15">
+            wc-replya
+          </v-icon>
+          <div>
+            {{ item.replyCount }}
+          </div>
+        </div>
+        <div class="replyText">
+          {{ getReplyText(item) }}
+        </div>
+      </div>
 
     </div>
   </div>
 </template>
 <script lang="ts">
 import Vue, {PropType} from "vue"
-import {QABoardResDto} from "@/Bis/QABoard/Dto/QABoardResDto";
 import WCTimeUtil from "@/Bis/Common/WCTimeUtil";
 import {DateTime} from "luxon";
 import UserProfile from "@/components/Common/UserProfile.vue";
+import {QABoardComResDto} from "@/Bis/QABoard/Dto/QABoardComResDto";
+import {QABoardReplyResDto} from "@/Bis/QABoardReply/Dto/QABoardReplyResDto";
 
 export default Vue.extend({
   components: {
-    UserProfile
+    UserProfile,
   },
   props: {
     items: {
-      type: Array as PropType<QABoardResDto[]>,
+      type: Array as PropType<QABoardComResDto[]>,
       required: true
     }
   },
@@ -50,6 +64,19 @@ export default Vue.extend({
     getUploadTimeText(isoValue: string) {
       return WCTimeUtil.timeForToday(DateTime.fromISO(isoValue).toJSDate());
     },
+    getReplyText(item: QABoardComResDto){
+      if(item.qaBoardReplyResDto){
+        return item.qaBoardReplyResDto.content
+      }else {
+        return ""
+      }
+
+    },
+    itemClick(item: QABoardComResDto){
+      this.$router.push({
+        path: `/QA003/${item.id}`
+      })
+    }
   }
 })
 </script>
@@ -109,5 +136,33 @@ export default Vue.extend({
 }
 .info1 div:nth-child(3){
   margin-left: 10px;
+}
+
+.replyInfo{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.replyInfo .replyCount {
+  display: flex;
+  align-items: end;
+  font-family: "Noto Sans KR";
+  font-weight: 500;
+  font-size: 15px;
+  color: #2661f1;
+}
+.replyInfo{
+  margin-top: 30px;
+}
+.replyInfo .replyText {
+  font-family: "Noto Sans KR";
+  font-weight: normal;
+  font-size: 12px;
+  color: #2661f1;
+  margin-left: 21px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 </style>

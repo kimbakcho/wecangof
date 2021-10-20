@@ -1,13 +1,19 @@
 <template>
   <div class="QARepeatRoot">
-    <div v-for="item in items" :key="item.id" class="row">
-      <div class="itemCategory">
-        {{ item.classificationQuestions }}
-      </div>
-      <div class="itemTitle">
-        {{ item.title }}
+    <div v-if="items.length > 0" >
+      <div v-for="item in items" :key="item.id" class="row" @click="itemClick(item)">
+        <div class="itemCategory">
+          {{ item.classificationQuestions }}
+        </div>
+        <div class="itemTitle">
+          {{ item.title }}
+        </div>
       </div>
     </div>
+    <div v-else class="emptyBlock">
+      게시물이 없습니다.
+    </div>
+
   </div>
 </template>
 <script lang="ts">
@@ -19,6 +25,13 @@ export default Vue.extend({
     items: {
       type: Array as PropType<QABoardResDto[]>,
       required: true
+    }
+  },
+  methods:{
+    itemClick(item: QABoardResDto) {
+      this.$router.push({
+        path: `/QA003/${item.id}`
+      })
     }
   }
 })
@@ -54,5 +67,17 @@ export default Vue.extend({
 }
 .row:last-child {
   border-bottom: unset;
+}
+.emptyBlock{
+  font-family: "Noto Sans KR";
+  height: 143px;
+  border-radius: 10px;
+  background: #f4f5fc;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  font-size: 12px;
+  color: #a7aab2;
 }
 </style>

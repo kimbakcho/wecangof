@@ -16,10 +16,10 @@
 
 <script lang="ts">
 import Vue from 'vue';
-import {Route} from "vue-router";
 import axios from "axios";
 import {MutationTypes} from "@/store/mutations";
 import UserInfo from "@/Bis/Common/UserInfo";
+import {QABoardFilterReqDto} from "@/Bis/QABoard/Dto/QABoardFilterReqDto";
 
 export default Vue.extend({
   name: 'App',
@@ -56,6 +56,16 @@ export default Vue.extend({
     }
   },
   async mounted() {
+    this.$store.commit(MutationTypes.SET_QBOARD_FILTER,{
+      pageReqDto: {
+        page: 0,
+        size: 5,
+        sorts: [{
+          column: "updateDateTime",
+          direction: "Desc"
+        }]
+      }
+    } as QABoardFilterReqDto)
     function getCookie(name: string) {
       const value = `; ${document.cookie}`;
       const parts: any = value.split(`; ${name}=`);

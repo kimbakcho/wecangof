@@ -55,7 +55,6 @@ import {UserBookMarkingCountryResDto} from "@/Bis/UserBookMarkingCountry/Dto/Use
 import ImmigrationStatusUseCase from "@/Bis/ImmigrationStatus/Domain/UseCase/ImmigrationStatusUseCase";
 
 import UserAlarmUseCase from "@/Bis/UserAlarm/Domain/UseCase/UserAlarmUseCase";
-import {DateTime} from "luxon";
 import InOutDash from "@/components/Home/InOutDash.vue";
 import CommunityHome from "@/components/Home/CommunityHome.vue";
 import {QABoardCategoryResDto} from "@/Bis/QABoardCategory/Dto/QABoardCategoryResDto";
@@ -80,11 +79,12 @@ export default Vue.extend({
       type: Array as PropType<QABoardCategoryResDto[]>,
     }
   },
-
-  data(){
-    return {
-      inoutMode: true,
-      qAndAMode: false,
+  computed:{
+    inoutMode(): boolean{
+      return this.$store.state.inoutMode
+    },
+    qAndAMode(): boolean{
+      return this.$store.state.qAndAMode
     }
   },
   provide () {
@@ -111,16 +111,14 @@ export default Vue.extend({
       }
     },
     inModeClick() {
-      this.inoutMode = true;
-      this.qAndAMode = false;
+      this.$store.commit(MutationTypes.SET_INOUTMODE)
     },
     qAndAModeClick() {
       if(process.env.NODE_ENV == "production"){
         this.$swal("준비중")
         return ;
       }
-      this.inoutMode = false;
-      this.qAndAMode = true;
+      this.$store.commit(MutationTypes.SET_QANDAMODE)
     },
   },
   async beforeRouteEnter(to: Route, from: Route, next: any) {

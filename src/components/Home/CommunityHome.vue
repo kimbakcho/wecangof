@@ -1,12 +1,12 @@
 <template>
   <div class="CommunityHomeRoot">
     <div class="top">
-      <div class="search">
+      <div class="search" @click="searchPage">
         <v-icon size="13">
           fas fa-search
         </v-icon>
       </div>
-      <QCategoryList>
+      <QCategoryList @change="categoryChange">
 
       </QCategoryList>
       <div class="divider">
@@ -27,44 +27,70 @@
         </QARepeat>
       </div>
       <div class="QACurrentRepeat">
-        <QACurrentRepeat :items="qaCurrentRepeatResDto" :key="qaCurrentRepeatResDto.length">
+        <QACurrentRepeat :items="qaCurrentRepeatList" :key="qaCurrentRepeatList.length">
 
         </QACurrentRepeat>
       </div>
 
-      <infinite-loading direction="bottom" @infinite="infiniteHandler"></infinite-loading>
+      <infinite-loading  :identifier="infiniteId" direction="bottom" @infinite="infiniteHandler" ></infinite-loading>
       <div class="bottomLoading">
       </div>
     </div>
+    <QA002 ref="QA002" @filterSearch="filterSearch">
 
+    </QA002>
   </div>
 </template>
 <script lang="ts">
-import Vue from "vue"
+import Vue, {VueConstructor} from "vue"
 import QCategoryList from "@/components/Home/QCategoryList.vue";
 import {QABoardResDto} from "@/Bis/QABoard/Dto/QABoardResDto";
 import {QABoardUseCase} from "@/Bis/QABoard/Domain/UseCase/QABoardUseCase";
 import QARepeat from "@/components/Home/QARepeat.vue";
 import QACurrentRepeat from "@/components/Home/QACurrentRepeat.vue";
 import InfiniteLoading from "vue-infinite-loading";
+import {MutationTypes} from "@/store/mutations";
+import {QABoardFilterReqDto} from "@/Bis/QABoard/Dto/QABoardFilterReqDto";
+import {PageWrap} from "@/Bis/Common/PageWrap";
+import {QABoardCategoryResDto} from "@/Bis/QABoardCategory/Dto/QABoardCategoryResDto";
+import QA002, {QA002Type} from "@/views/QA/QA002.vue";
+import {FilterSearch} from "@/views/QA/Dto/FilterSearch";
 
-export default Vue.extend({
+export default (Vue as VueConstructor<Vue & {
+  $refs:{
+    QA002: QA002Type
+  }
+}>).extend({
   components: {
-    QCategoryList, QARepeat, QACurrentRepeat, InfiniteLoading
+    QCategoryList, QARepeat, QACurrentRepeat, InfiniteLoading, QA002
   },
   data() {
     return {
       loading: false,
       qaRepeatResDto: [] as QABoardResDto[],
-      qaCurrentRepeatResDto: [] as QABoardResDto[],
-      bottomLoading: false
+      bottomLoading: false,
+      qaBoardUseCase: new QABoardUseCase(),
+      infiniteId: Date.now()
     }
   },
   async mounted() {
     this.loading = true
-    let qaBoardUseCase = new QABoardUseCase();
-    this.qaRepeatResDto = (await qaBoardUseCase.getFilterDoc({
-      pageReqDto: {
+
+    await this.getQARepeat();
+    //
+    // await this.getCurrentQAFilterPage();
+
+    this.loading = false
+  },
+  computed:{
+    qaCurrentRepeatList(): QABoardResDto[]{
+        return this.$store.state.qaCurrentRepeatList
+    }
+  },
+  methods: {
+    async getQARepeat() {
+      let reqDto = JSON.parse(JSON.stringify(this.$store.state.qaBoardFilter)) as QABoardFilterReqDto
+      reqDto.pageReqDto = {
         page: 0,
         size: 3,
         sorts: [{
@@ -75,41 +101,69 @@ export default Vue.extend({
           direction: "Desc"
         }]
       }
-    })).content;
-
-
-    this.qaCurrentRepeatResDto = (await qaBoardUseCase.getFilterDoc({
-      pageReqDto: {
-        page: 0,
-        size: 5,
-        sorts: [{
-          column: "updateDateTime",
-          direction: "Desc"
-        }]
+      reqDto.withComment = false;
+      this.qaRepeatResDto = (await this.qaBoardUseCase.getFilterDoc(reqDto)).content;
+    },
+    async getCurrentQAFilterPage(): Promise<PageWrap<QABoardResDto>> {
+      let qaBoardFilter = this.$store.state.qaBoardFilter;
+      qaBoardFilter.withComment = true
+      let currentSearchPage = qaBoardFilter.pageReqDto.page;
+      let qaBoardResDtoPageWrap = await this.qaBoardUseCase.getFilterDoc(qaBoardFilter);
+      if(currentSearchPage == 0) {
+        let content = qaBoardResDtoPageWrap.content;
+        this.$store.commit(MutationTypes.SET_QACURRENTREPEAT_LIST,content)
+      } else {
+        let content = qaBoardResDtoPageWrap.content;
+        content = this.$store.state.qaCurrentRepeatList.concat(...content);
+        this.$store.commit(MutationTypes.SET_QACURRENTREPEAT_LIST,content)
       }
-    })).content
+      this.$store.commit(MutationTypes.SET_QACURRENTREPEAT_PAGESTATUS,qaBoardResDtoPageWrap)
 
-    this.loading = false
-  },
-  methods: {
-    infiniteHandler($state: any) {
-      console.log("loaded")
-      //example Code
-      // setTimeout(async ()=>{
-      //   $state.loaded();
-      //   let qaBoardUseCase = new QABoardUseCase();
-      //   let qaCurrentRepeatResDto = (await qaBoardUseCase.getFilterDoc({
-      //     pageReqDto: {
-      //       page: 0,
-      //       size: 5,
-      //       sorts: [{
-      //         column: "updateDateTime",
-      //         direction: "Desc"
-      //       }]
-      //     }
-      //   })).content
-      //   this.qaCurrentRepeatResDto.push(...qaCurrentRepeatResDto)
-      // },1500)
+      return qaBoardResDtoPageWrap;
+    },
+    async infiniteHandler($state: any) {
+      await this.getCurrentQAFilterPage()
+      let pageReqDto = this.$store.state.qaBoardFilter.pageReqDto;
+      pageReqDto.page = pageReqDto.page+1
+      if(this.$store.state.qaCurrentRepeatPageState.last){
+        $state.complete();
+      }else {
+        $state.loaded();
+      }
+    },
+    async categoryChange(item: QABoardCategoryResDto){
+      let qaBoardFilter = this.$store.state.qaBoardFilter;
+      let pageReqDto = qaBoardFilter.pageReqDto;
+      this.infiniteId = Date.now()
+      pageReqDto.page = 0
+      qaBoardFilter.mode=null;
+      qaBoardFilter.nation=null;
+      qaBoardFilter.title=null;
+      qaBoardFilter.content=null;
+      qaBoardFilter.writer=null;
+      if(item.categoryName === '전체'){
+        qaBoardFilter.category = null;
+      }else {
+        qaBoardFilter.category = item.categoryName;
+      }
+      await this.getQARepeat()
+      await this.getCurrentQAFilterPage()
+    },
+    searchPage(){
+      this.$refs.QA002.open();
+    },
+    async filterSearch(payload: FilterSearch) {
+      let qaBoardFilter = this.$store.state.qaBoardFilter;
+      let pageReqDto = qaBoardFilter.pageReqDto;
+      this.infiniteId = Date.now()
+      pageReqDto.page = 0
+      qaBoardFilter.mode=payload.searchMode;
+      qaBoardFilter.title=payload.text;
+      qaBoardFilter.content=payload.text;
+      qaBoardFilter.nation = payload.nationId;
+      await this.getQARepeat()
+      await this.getCurrentQAFilterPage()
+
     }
   }
 })
