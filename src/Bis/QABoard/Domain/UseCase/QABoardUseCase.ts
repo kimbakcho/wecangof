@@ -33,6 +33,16 @@ export class QABoardUseCase {
         return data;
     }
 
+    async changeRepresentative(docNumber: number,changeOrder :number): Promise<void>{
+        await axios.post("/QABoard/changeRepresentative",null,{
+            params:{
+                docNumber: docNumber,
+                changeOrder: changeOrder
+
+            }
+        })
+    }
+
 
 
 }

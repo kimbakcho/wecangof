@@ -1,6 +1,9 @@
 <template>
   <div>
     <div class="row" v-for="(item,index) in items" :key="index" @click="itemClick(item)">
+      <div v-if="isAdmin" @click="setRepresentative($event,item)">
+        우선 순위 {{ item.representative }}
+      </div>
       <div class="top">
         <div class="QTitle">
           <span class="inTitle">
@@ -49,6 +52,7 @@ import {DateTime} from "luxon";
 import UserProfile from "@/components/Common/UserProfile.vue";
 import {QABoardComResDto} from "@/Bis/QABoard/Dto/QABoardComResDto";
 import {QABoardReplyResDto} from "@/Bis/QABoardReply/Dto/QABoardReplyResDto";
+import {QABoardUseCase} from "@/Bis/QABoard/Domain/UseCase/QABoardUseCase";
 
 export default Vue.extend({
   components: {
@@ -60,9 +64,39 @@ export default Vue.extend({
       required: true
     }
   },
+  computed:{
+    isAdmin(): boolean{
+      if(this.$store.state.isLogin){
+        return this.$store.state.userInfo.role.indexOf("Admin") >= 0
+      }else {
+        return false;
+      }
+
+    }
+  },
   methods: {
     getUploadTimeText(isoValue: string) {
       return WCTimeUtil.timeForToday(DateTime.fromISO(isoValue).toJSDate());
+    },
+    async setRepresentative(event: any,item: QABoardComResDto ){
+      if (event.stopPropagation)
+        event.stopPropagation();
+
+      event.preventDefault()
+      let orderIndex: any = ""
+      let result: any = await this.$swal(
+          {
+            title: '우선순위 변경',
+            input: 'number',
+          }
+      );
+      if(result.value.length > 0) {
+        let qaBoardUseCase = new QABoardUseCase();
+        await qaBoardUseCase.changeRepresentative(item.id,Number(result.value));
+        item.representative = Number(result.value);
+        this.$forceUpdate()
+      }
+
     },
     getReplyText(item: QABoardComResDto){
       if(item.qaBoardReplyResDto){
@@ -70,7 +104,6 @@ export default Vue.extend({
       }else {
         return ""
       }
-
     },
     itemClick(item: QABoardComResDto){
       this.$router.push({

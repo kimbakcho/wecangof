@@ -17,4 +17,13 @@ export default class QABoardReplyUseCase {
         const { data } = await axios.post<QABoardReplyInsertReqDto,AxiosResponse<QABoardReplyResDto>>("/QABoardReply",reqDto);
         return data;
     }
+
+    async changeRepresentativeComment(replyNumber: number,changeOrder: number): Promise<void> {
+        await axios.post("/QABoardReply/changeRepresentativeComment",null,{
+            params:{
+                replyNumber: replyNumber,
+                changeOrder: changeOrder
+            }
+        })
+    }
 }
