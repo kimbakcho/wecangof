@@ -58,6 +58,8 @@ export default Vue.extend({
   height: 50px;
   border-radius: 50%;
   border: solid 1px #e9ebf4;
+  -webkit-user-select: none !important; /* disable selection/Copy of UIWebView */
+  -webkit-touch-callout: none !important; /* disable the IOS popup when long-press on a link */
 }
 .root{
   max-width: 72px;

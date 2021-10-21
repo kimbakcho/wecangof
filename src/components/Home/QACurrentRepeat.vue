@@ -22,7 +22,7 @@
            {{ item.classificationQuestions }}
         </div>
         <div>
-          {{ item.nationName.nationName }}
+          {{ item.nationName ? item.nationName.nationName : "" }}
         </div>
         <div>
           {{ getUploadTimeText(item.updateDateTime) }}

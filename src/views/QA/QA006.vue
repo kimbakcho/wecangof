@@ -146,14 +146,16 @@ export default (Vue as VueConstructor<Vue & {
           }
         }
       }
-      await qaBoardUseCase.insert({
+      let qaBoardResDto = await qaBoardUseCase.insert({
         title: this.title,
         contentText: this.contentText,
         classificationQuestions: this.selectQaCategory.categoryName,
         nationName: this.selectNation.nationName,
         contentImageUrl: JSON.stringify(uploadFileResDtos)
+      });
+      await this.$router.replace({
+        path:`/QA003/${qaBoardResDto.id}`
       })
-
     }
   },
   async beforeRouteEnter(to: Route, from: Route, next: any) {

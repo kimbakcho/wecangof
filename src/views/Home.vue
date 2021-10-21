@@ -114,10 +114,10 @@ export default Vue.extend({
       this.$store.commit(MutationTypes.SET_INOUTMODE)
     },
     qAndAModeClick() {
-      if(process.env.NODE_ENV == "production"){
-        this.$swal("준비중")
-        return ;
-      }
+      // if(process.env.NODE_ENV == "production"){
+      //   this.$swal("준비중")
+      //   return ;
+      // }
       this.$store.commit(MutationTypes.SET_QANDAMODE)
     },
   },
