@@ -1,12 +1,23 @@
 
 .wc-envelope:before { content: '\e800'; } /* '' */
 .wc-envelopeopen:before { content: '\e801'; } /* '' */
-.wc-bellalarm:before { content: '\e802'; } /* '' */
 .wc-writepen:before { content: '\e803'; } /* '' */
 .wc-addimage:before { content: '\e804'; } /* '' */
 .wc-imgdel:before { content: '\e805'; } /* '' */
 .wc-reply:before { content: '\e806'; } /* '' */
 .wc-view:before { content: '\e807'; } /* '' */
+.wc-inandout:before { content: '\e808'; } /* '' */
 .wc-replya:before { content: '\e809'; } /* '' */
-.wc-login:before { content: '\e80a'; } /* '' */
-.wc-filter-1:before { content: '\e80b'; } /* '' */
+.wc-share:before { content: '\e80a'; } /* '' */
+.wc-inject:before { content: '\e80b'; } /* '' */
+.wc-userinfo:before { content: '\e80c'; } /* '' */
+.wc-vaccinecard:before { content: '\e80d'; } /* '' */
+.wc-backarrow:before { content: '\e80e'; } /* '' */
+.wc-calender:before { content: '\e80f'; } /* '' */
+.wc-check:before { content: '\e810'; } /* '' */
+.wc-filter:before { content: '\e811'; } /* '' */
+.wc-search:before { content: '\e812'; } /* '' */
+.wc-filter-1:before { content: '\e813'; } /* '' */
+.wc-plus:before { content: '\e814'; } /* '' */
+.wc-commnuity:before { content: '\e815'; } /* '' */
+.wc-alarmbell:before { content: '\e816'; } /* '' */

@@ -1,14 +1,18 @@
 <template>
   <div>
     <div class="top">
-      <img src='@/assets/login_ico.png'
-           class="login_ico" @click="onUserClick">
+      <div @click="onUserClick">
+        <v-icon color="#215DF1" size="18" class="userInfo">
+          wc-userinfo
+        </v-icon>
+      </div>
+
       <div class="logo">
         Logo
       </div>
       <div class="alarm" @click="alarmClick">
         <v-icon size="20" class="alarmIcon" color="#2661f1">
-          wc-bellalarm
+          wc-alarmbell
         </v-icon>
         <div class="alarmCount" v-if="unReadCount > 0">
           <span>
@@ -216,14 +220,14 @@ export default Vue.extend({
 }
 
 .alarm {
-  margin-right: 32px;
+  margin-right: 25px;
   position: relative;
 }
 
 .alarmCount {
   position: absolute;
   bottom: 0;
-  left: 80%;
+  left: 60%;
   width: 12px;
   height: 12px;
   background-color: #f5b400;
@@ -356,4 +360,7 @@ export default Vue.extend({
   display: none;
 }
 
+.userInfo{
+  padding-left: 25px;
+}
 </style>

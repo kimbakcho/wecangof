@@ -19,7 +19,7 @@
           <div class="vaccinationTitle">
             <div>
               <v-icon color="#a7aab2" size="5">
-                fas fa-capsules
+                wc-inject
               </v-icon>
             </div>
             <div class="text">
@@ -40,7 +40,7 @@
           <div class="pcrTestTitle">
             <div>
               <v-icon color="#a7aab2" size="5">
-                fas fa-capsules
+                wc-vaccinecard
               </v-icon>
             </div>
             <div class="text">
@@ -58,7 +58,7 @@
           <div class="mandatoryQuarantineTitle">
             <div>
               <v-icon color="#a7aab2" size="5">
-                far fa-calendar-plus
+                wc-calender
               </v-icon>
             </div>
             <div class="text">
@@ -191,7 +191,15 @@ export default Vue.extend({
 .vaccinationTitle .text, .pcrTestTitle .text, .mandatoryQuarantineTitle .text{
   margin-left: 5px;
 }
-
+.vaccinationTitle i {
+  margin-right: 4px;
+}
+.pcrTestTitle i {
+  margin-right: 4px;
+}
+.mandatoryQuarantineTitle i {
+  margin-right: 4px;
+}
 .vaccinationNeed {
   width: 8px;
   height: 8px;

@@ -1,13 +1,13 @@
 <template>
   <div class="bookMarkRoot">
-    <draggable v-model="userBookMarkList" class="drag" :options="dragOptions" @change="itemChange" :force-fallback="true">
+    <draggable v-model="userBookMarkList" class="drag" :options="dragOptions" @change="itemChange" :force-fallback="true" ref="drag">
       <CountryButton class="btn" v-for="item in userBookMarkList" :nation-control="item.nationId" :key="item.id" @tapNation="tapNation(item)" >
       </CountryButton>
     </draggable>
   </div>
 </template>
 <script lang="ts">
-import Vue, {PropType} from "vue"
+import Vue, {PropType, VueConstructor} from "vue"
 import {UserBookMarkingCountryResDto} from "../../Bis/UserBookMarkingCountry/Dto/UserBookMarkingCountryResDto";
 import CountryButton from "@/components/Common/CountryButton.vue";
 import draggable from 'vuedraggable'
@@ -62,6 +62,10 @@ export default Vue.extend({
 }
 .btn {
   min-width: 70px;
+}
+
+.drag .btn:nth-child(1){
+  margin-left: 25px;
 }
 </style>
 <style>

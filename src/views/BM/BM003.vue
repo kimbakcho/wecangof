@@ -7,8 +7,8 @@
         국가별 출입국 현황
       </div>
       <div @click="searchNation">
-        <v-icon size="15" >
-          fas fa-search
+        <v-icon size="15" color="#323232">
+          wc-search
         </v-icon>
       </div>
     </div>

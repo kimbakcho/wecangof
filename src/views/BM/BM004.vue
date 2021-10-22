@@ -2,14 +2,17 @@
   <div class="root">
     <div class="topFix">
       <div class="topBar">
-        <img src="@/assets/back_button.png"
-             class="back_button" @click="back">
+        <div @click="back">
+          <v-icon size="19" color="#323232">
+            wc-backarrow
+          </v-icon>
+        </div>
         <div>
           여행 준비하기
         </div>
         <div>
-          <v-icon size="15">
-            fas fa-share-alt
+          <v-icon size="16" color="#242424">
+            wc-share
           </v-icon>
         </div>
       </div>

@@ -2,22 +2,14 @@
   <div>
     <div class="topTabBar">
       <div class="exitBtn" :class="{ active: isExit }" @click="exitModeClick">
-        <div >
-          <v-icon size="15">
-            fas fa-fighter-jet
-          </v-icon>
-        </div>
+        🛫
         <div class="text">
           출국하기
         </div>
 
       </div>
       <div class="returnHomeBtn" :class="{ active: isReturnHome }" @click="returnHomeModeClick">
-        <div>
-          <v-icon size="15">
-            fas fa-fighter-jet
-          </v-icon>
-        </div>
+        🛬
         <div class="text">
           귀국하기
         </div>
@@ -182,7 +174,14 @@ export default Vue.extend({
   justify-content: center;
   align-items: center;
 }
-
+.exitBtn img{
+  width: 16px;
+  height: 16px;
+}
+.returnHomeBtn img{
+  width: 16px;
+  height: 16px;
+}
 .exitBtn, .returnHomeBtn{
 
   box-shadow: inset 0 -2px 1px rgba(0, 0 ,0, 0.13);

@@ -1,7 +1,7 @@
 <template>
   <div class="barRoot" @click="clickAlarmBar">
-    <v-icon color="#2661F1">
-      wc-bellalarm
+    <v-icon color="#2661F1" size="18">
+      wc-alarmbell
     </v-icon>
     <div class="messageText">
       {{alarmDto.message}}

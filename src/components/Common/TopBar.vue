@@ -1,7 +1,10 @@
 <template>
   <div class="topBar" :style="{backgroundColor: bgColor}">
-    <img src="@/assets/back_button.png"
-         class="back_button" @click="back">
+    <div class="back" @click="back">
+      <v-icon size="15" color="#323232">
+        wc-backarrow
+      </v-icon>
+    </div>
     <div class="topTitle">
       {{title}}
     </div>
@@ -44,6 +47,9 @@ export default Vue.extend({
   min-height: 63px;
   background-color: white;
 }
+.back{
+  margin-left: 24px;
+}
 
 .topBar img {
   width: 19px;
@@ -66,6 +72,6 @@ export default Vue.extend({
   background-color: #e9ebf4;
 }
 .endItem{
-  margin-right: 15px;
+  margin-right: 24px;
 }
 </style>

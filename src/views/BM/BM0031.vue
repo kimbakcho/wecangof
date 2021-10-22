@@ -2,9 +2,11 @@
   <div class="bm0031Root">
     <TopBar title="국가 검색" bg-color="#E9EBF4">
       <template v-slot:endSlot >
-        <v-icon size="20" @click="gotoDetailNation">
-          fas fa-search
-        </v-icon>
+        <div @click="gotoDetailNation">
+          <v-icon size="15" color="#323232">
+            wc-search
+          </v-icon>
+        </div>
       </template>
     </TopBar>
     <section class="bm0031content">

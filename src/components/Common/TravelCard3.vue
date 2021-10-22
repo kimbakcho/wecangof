@@ -13,7 +13,7 @@
       <div class="pcrTest">
         <div>
           <v-icon size="15" color="#A7AAB2">
-            fas fa-capsules
+            wc-vaccinecard
           </v-icon>
         </div>
         <div class="infoTitle">
@@ -26,7 +26,7 @@
       <div class="mandatoryQuarantine">
         <div>
           <v-icon color="#a7aab2" size="15">
-            far fa-calendar-plus
+            wc-calender
           </v-icon>
         </div>
         <div class="infoTitle">

@@ -1,12 +1,12 @@
 <template>
   <div class="chip" :class="{ active: canTravel}">
     <div v-if="canTravel" >
-      <v-icon color="white" size="5">
-        fas fa-check
+      <v-icon color="white" size="7">
+        wc-check
       </v-icon>
     </div>
     <div v-else>
-      <v-icon color="white" size="5">
+      <v-icon color="white" size="7">
         fas fa-times
       </v-icon>
     </div>
@@ -69,5 +69,8 @@ export default Vue.extend({
   font-family: "Noto Sans KR";
   font-size: 12px;
   color: #fff;
+}
+.chip i {
+  margin-right: 4px;
 }
 </style>

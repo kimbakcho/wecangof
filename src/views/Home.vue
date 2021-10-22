@@ -13,7 +13,7 @@
       <div class="bottomNav">
         <div class="inout" :class="{ active: inoutMode }" @click="inModeClick">
           <v-icon>
-            fas fa-paper-plane
+            wc-inandout
           </v-icon>
           <div class="menuText">
             IN & OUT
@@ -22,16 +22,17 @@
         <div class="plusBtn" @click="plusClick">
           <div class="inPlusBtn">
             <v-icon v-if="inoutMode" color="white" size="30">
-              fas fa-plus
+              wc-plus
             </v-icon>
             <v-icon v-if="qAndAMode" color="white" size="30">
               wc-writepen
             </v-icon>
           </div>
         </div>
-        <div class="qAnda" :class="{ active: qAndAMode }">
-          <v-icon @click="qAndAModeClick">
-            far fa-comments
+
+        <div class="qAnda" :class="{ active: qAndAMode }" @click="qAndAModeClick">
+          <v-icon >
+            wc-commnuity
           </v-icon>
           <div class="menuText">
             Q & A
