@@ -7,5 +7,6 @@
 .wc-imgdel:before { content: '\e805'; } /* '' */
 .wc-reply:before { content: '\e806'; } /* '' */
 .wc-view:before { content: '\e807'; } /* '' */
-.wc-filter:before { content: '\e808'; } /* '' */
 .wc-replya:before { content: '\e809'; } /* '' */
+.wc-login:before { content: '\e80a'; } /* '' */
+.wc-filter-1:before { content: '\e80b'; } /* '' */

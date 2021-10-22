@@ -1,7 +1,7 @@
 <template>
   <div class="NoneBookMarkingRoot" :style="{ backgroundImage: 'url(' + require('@/assets/bookmarkingempty.png') + ')' }">
     <div class="text">
-      아래 ➕ 버튼을 눌라 가고 싶은 나라를 살펴봅시다
+      아래 ➕ 버튼을 눌러 가고 싶은 나라를 살펴봅시다
     </div>
   </div>
 </template>

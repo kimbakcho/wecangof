@@ -2,10 +2,8 @@
   <div class="bookMarkRoot">
     <draggable v-model="userBookMarkList" class="drag" :options="dragOptions" @change="itemChange" :force-fallback="true">
       <CountryButton class="btn" v-for="item in userBookMarkList" :nation-control="item.nationId" :key="item.id" @tapNation="tapNation(item)" >
-
       </CountryButton>
     </draggable>
-
   </div>
 </template>
 <script lang="ts">
@@ -44,7 +42,6 @@ export default Vue.extend({
     itemChange(evt: any){
       let userBookMarkingCountryUseCase = new UserBookMarkingCountryUseCase();
       userBookMarkingCountryUseCase.changeOrderIdx(evt.moved.oldIndex,evt.moved.newIndex);
-
     }
   }
 })

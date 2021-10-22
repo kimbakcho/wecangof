@@ -168,6 +168,7 @@ export default Vue.extend({
 .nation img {
   width: 35px;
   height: 20px;
+  border-radius: 4px;
 }
 
 .nation div {

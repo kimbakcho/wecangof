@@ -11,8 +11,9 @@ import {innerLinkPlugin} from "@/toustuiplugin/innerLinkPlugin";
 import '@toast-ui/editor/dist/toastui-editor.css';
 import 'tui-color-picker/dist/tui-color-picker.css';
 import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css';
-import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
 import '@toast-ui/editor-plugin-table-merged-cell/dist/toastui-editor-plugin-table-merged-cell.css';
+import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
+
 import tableMergedCell from '@toast-ui/editor-plugin-table-merged-cell';
 
 import FileUploadService from "@/Bis/Common/FileUploadService";

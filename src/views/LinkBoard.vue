@@ -1,6 +1,6 @@
 <template>
   <div class="linkBoard">
-    <TopBar >
+    <TopBar :title="''" v-if="!hasWeCanGoUrl()">
 
     </TopBar>
     <iframe width="100%" height="100%" :src="linkUrl"></iframe>
@@ -22,6 +22,13 @@ export default Vue.extend({
   methods: {
     back() {
       this.$router.back();
+    },
+    hasWeCanGoUrl() {
+      if(this.linkUrl?.indexOf("wecango.org")>=0 || this.linkUrl?.indexOf("app.thkomeet.com")>=0){
+        return true;
+      }else {
+        return false;
+      }
     }
   },
 })

@@ -56,6 +56,7 @@ export default Vue.extend({
 .flagImg{
   width: 50px;
   height: 50px;
+  object-fit: cover;
   border-radius: 50%;
   border: solid 1px #e9ebf4;
   -webkit-user-select: none !important; /* disable selection/Copy of UIWebView */

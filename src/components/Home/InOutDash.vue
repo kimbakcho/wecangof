@@ -8,7 +8,7 @@
       </div>
       <div class="alarm" @click="alarmClick">
         <v-icon size="20" class="alarmIcon" color="#2661f1">
-          far fa-bell
+          wc-bellalarm
         </v-icon>
         <div class="alarmCount" v-if="unReadCount > 0">
           <span>

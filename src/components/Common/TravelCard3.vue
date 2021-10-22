@@ -12,7 +12,7 @@
       </div>
       <div class="pcrTest">
         <div>
-          <v-icon size="15">
+          <v-icon size="15" color="#A7AAB2">
             fas fa-capsules
           </v-icon>
         </div>
@@ -93,6 +93,7 @@ export default Vue.extend({
   width: 26px;
   height: 15px;
   margin-right: 10px;
+  border-radius: 4px;
 }
 .nationInfo .text {
   font-family: Noto Sans KR;

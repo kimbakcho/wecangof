@@ -22,7 +22,7 @@
       </div>
       <div class="detailFilter" :class="{active :isDetailFilter}" @click="detailFilterClick">
         <v-icon size="15">
-          wc-filter
+          wc-filter-1
         </v-icon>
       </div>
     </div>

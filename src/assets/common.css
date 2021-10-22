@@ -3,7 +3,7 @@
     cursor: pointer;
 }
 .popupBox + p {
-    display: inline-block;
+    /*display: inline-block;*/
     margin: 0px;
     line-height: unset;
 }
@@ -12,7 +12,7 @@
     cursor: pointer;
 }
 .innerLinkBox + p {
-    display: inline-block;
+    /*display: inline-block;*/
     margin: 0px;
     line-height: unset;
 }

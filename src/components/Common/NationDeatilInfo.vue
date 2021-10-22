@@ -26,12 +26,14 @@
     <div class="contentBody">
       <div v-show="isExit">
         <v-tabs fixed-tabs v-model="exitTab" background-color="white" color="#15171c" slider-color="#215df1" slider-size="5">
-          <v-tab>
+          <v-tab :transition="true" :reverse-transition="true"
+                 :ripple="false">
             <div class="tabText">
               백신 접종자
             </div>
           </v-tab>
-          <v-tab>
+          <v-tab :transition="true" :reverse-transition="true"
+                 :ripple="false">
             <div class="tabText">
               미 접종자
             </div>
@@ -58,12 +60,14 @@
       </div>
       <div v-show="isReturnHome">
         <v-tabs fixed-tabs v-model="returnHome" background-color="white" color="#15171c" slider-color="#215df1" slider-size="5">
-          <v-tab>
+          <v-tab :transition="true" :reverse-transition="true"
+                 :ripple="false">
             <div class="tabText">
               백신 접종자
             </div>
           </v-tab>
-          <v-tab>
+          <v-tab :transition="true" :reverse-transition="true"
+                 :ripple="false">
             <div class="tabText">
               미 접종자
             </div>
@@ -180,18 +184,19 @@ export default Vue.extend({
 }
 
 .exitBtn, .returnHomeBtn{
-  box-shadow: inset 0 -4px 2px rgba(0, 0, 0, 0.13);
+
+  box-shadow: inset 0 -2px 1px rgba(0, 0 ,0, 0.13);
 
 }
 .exitBtn.active {
   border-radius: 0px 10px 0px 0px;
-  box-shadow: 0 -3px 6px 0 rgba(0, 0, 0, 0.13);
+  box-shadow: 0 -7px 1px 0 rgba(0, 0, 0 , 0.02)
 
 }
 
 .returnHomeBtn.active {
   border-radius: 10px 0px 0px 0px;
-  box-shadow: 0 -3px 6px 0 rgba(0, 0, 0, 0.13);
+  box-shadow: 0 -7px 1px 0 rgba(0, 0, 0 , 0.02)
 }
 
 .topTabBar .text {
@@ -227,6 +232,19 @@ export default Vue.extend({
   .contentViewer img {
     width: calc(100vw - 50px);
   }
+}
+
+.theme--light.v-tabs .v-tab--active:hover::before, .theme--light.v-tabs .v-tab--active::before {
+  opacity: 0 !important
+}
+
+.theme--light.v-tabs .v-tab:hover::before {
+  opactiy: 0 !important;
+  transition: none !important;
+}
+
+.v-tab:before {
+  color: white !important;
 }
 
 </style>
