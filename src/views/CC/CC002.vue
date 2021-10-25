@@ -24,6 +24,7 @@ import Vue from "vue"
 import {Editor, EditorCore} from "@toast-ui/editor";
 import {popupPlugin} from "@/toustuiplugin/popupPlugin";
 import {innerLinkPlugin} from "@/toustuiplugin/innerLinkPlugin";
+import "@/assets/common.css"
 import colorSyntax from "@toast-ui/editor-plugin-color-syntax";
 import tableMergedCell from "@toast-ui/editor-plugin-table-merged-cell";
 import FileUploadService from "@/Bis/Common/FileUploadService";

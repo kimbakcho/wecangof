@@ -7,9 +7,8 @@
         </v-icon>
       </div>
 
-      <div class="logo">
-        Logo
-      </div>
+      <img class="logo" src="@/assets/logo.png" >
+
       <div class="alarm" @click="alarmClick">
         <v-icon size="20" class="alarmIcon" color="#2661f1">
           wc-alarmbell
@@ -206,10 +205,11 @@ export default Vue.extend({
 .top {
   width: 100%;
   display: flex;
-  padding-top: 30px;
+  padding-top: 20px;
   justify-content: space-between;
   align-items: center;
   background-color: white;
+  min-height: 70px;
 }
 
 .top .login_ico {
@@ -352,7 +352,7 @@ export default Vue.extend({
 }
 
 .InOutDashContent{
-  height: calc(100vh - 75px);
+  height: calc(100vh - 110px);
   overflow-y: auto;
 }
 
@@ -362,5 +362,14 @@ export default Vue.extend({
 
 .userInfo{
   padding-left: 25px;
+}
+
+.logo{
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  left: 25%;
+  transform: translateX(-50%);
+
 }
 </style>

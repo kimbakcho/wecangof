@@ -16,9 +16,9 @@
 import Vue, {PropType} from "vue"
 import {popupPlugin} from "@/toustuiplugin/popupPlugin";
 import {innerLinkPlugin} from "@/toustuiplugin/innerLinkPlugin";
+import "@/assets/common.css"
 import Viewer from "@toast-ui/editor/dist/toastui-editor-viewer";
 import {DateTime} from "luxon";
-
 import '@toast-ui/editor/dist/toastui-editor.css';
 import 'tui-color-picker/dist/tui-color-picker.css';
 import '@toast-ui/editor-plugin-color-syntax/dist/toastui-editor-plugin-color-syntax.css';
