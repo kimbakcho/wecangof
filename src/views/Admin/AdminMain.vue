@@ -11,6 +11,9 @@
         <v-list-item to="/WCAdmin/CF001">
           알람
         </v-list-item>
+        <v-list-item to="/WCAdmin/CD001">
+          카테고리 관리
+        </v-list-item>
         <v-list-item to="/WCAdmin/CC001">
           관리자 게시물
         </v-list-item>
