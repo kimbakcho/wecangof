@@ -1,5 +1,8 @@
 import axios, {AxiosResponse} from "axios";
 import {MemberManagementSimpleResDto} from "@/Bis/MemberManagement/Dto/MemberManagementSimpleResDto";
+import {MemberSearchReqDto} from "@/Bis/MemberManagement/Dto/MemberSearchReqDto";
+import {PageWrap} from "@/Bis/Common/PageWrap";
+import {MemberManagementResDto} from "@/Bis/MemberManagement/Dto/MemberManagementResDto";
 
 export default class MemberManagementUseCase {
 
@@ -10,5 +13,19 @@ export default class MemberManagementUseCase {
             }
         });
         return data
+    }
+
+    async getMemberList(memberFilter: MemberSearchReqDto): Promise<PageWrap<MemberManagementResDto>>{
+        const { data } = await axios.post<MemberSearchReqDto, AxiosResponse<PageWrap<MemberManagementResDto>>>("/MemberManagement/users/",memberFilter);
+        return data;
+    }
+
+
+    async deleteMember(uid: string): Promise<void> {
+        await axios.delete("/MemberManagement/user",{
+            params:{
+                uid: uid
+            }
+        });
     }
 }

@@ -125,6 +125,11 @@ const routes: Array<RouteConfig> = [
         path: "CD001",
         name: "CD001",
         component: () => import(/* webpackChunkName: "CD001" */ '../views/CD/CD001.vue'),
+      },
+      {
+        path: "CU001",
+        name: "CU001",
+        component: () => import(/* webpackChunkName: "CU001" */ '../views/CU/CU001.vue'),
       }
     ],
     props: true
