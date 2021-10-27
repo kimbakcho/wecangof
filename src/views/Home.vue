@@ -1,7 +1,8 @@
 <template>
   <div class="mainRoot">
     <div class="content" :class="{inOutDash: inoutMode, qAndAMode: qAndAMode }">
-        <InOutDash class="contentItem" :user-book-mark-list="userBookMarkList" :admin-recommend-list="adminRecommendList" :un-read-count="unReadCount">
+        <InOutDash class="contentItem" :user-book-mark-list="userBookMarkList" :admin-recommend-list="adminRecommendList"
+                   :un-read-count="unReadCount" :alarm-docs="alarmDocs">
 
         </InOutDash>
 
@@ -60,6 +61,8 @@ import InOutDash from "@/components/Home/InOutDash.vue";
 import CommunityHome from "@/components/Home/CommunityHome.vue";
 import {QABoardCategoryResDto} from "@/Bis/QABoardCategory/Dto/QABoardCategoryResDto";
 import {QABoardCategoryUseCase} from "@/Bis/QABoardCategory/Domain/QABoardCategoryUseCase";
+import AdminContentUseCase from "@/Bis/AdminContent/Domain/UseCase/AdminContentUseCase";
+import {AdminContentSimpleResDto} from "@/Bis/AdminContent/Dto/AdminContentSimpleResDto";
 
 export default Vue.extend({
   name: 'Home',
@@ -78,6 +81,9 @@ export default Vue.extend({
     },
     qaBoardCategorys: {
       type: Array as PropType<QABoardCategoryResDto[]>,
+    },
+    alarmDocs: {
+      type: Array as PropType<AdminContentSimpleResDto[]>,
     }
   },
   computed:{
@@ -158,6 +164,11 @@ export default Vue.extend({
     params.qaBoardCategorys = [totalCate ,...qaBoardCategorysItems]
 
     params.userBookMarkList = [];
+
+    let adminContentUseCase = new AdminContentUseCase();
+
+    params.alarmDocs = await adminContentUseCase.getMainPageDocs();
+
     if (wSesstion) {
       try{
         const {data} = await axios.get<UserBookMarkingCountryResDto[]>("/UserBookMarkingCountry/BookMarkings");

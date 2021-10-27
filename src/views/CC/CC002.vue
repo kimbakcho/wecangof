@@ -3,6 +3,14 @@
       <h3 class="CC002Title">
         작성하기
       </h3>
+    <div class="options">
+      <v-select label="카테고리" :items="categoryItems" clearable class="categorySelect" v-model="category">
+
+      </v-select>
+      <v-text-field type="number" label="우선 순위" v-model="orderIdx" class="orderIndex">
+
+      </v-text-field>
+    </div>
     <v-text-field label="제목" v-model="title" class="DocTitle">
 
     </v-text-field>
@@ -38,19 +46,22 @@ export default Vue.extend({
 
   props:{
     docNumber: {
-      type: Number,
+      type: String,
     }
   },
   data(){
     return {
       editor: {} as EditorCore,
       title: "",
-      loading: false
+      loading: false,
+      categoryItems: ["메인 공지","Q&A 공지","세부 공지"],
+      category: "",
+      orderIdx: 0,
     }
   },
   computed:{
     mode(): string{
-      if(this.docNumber == -1){
+      if(Number(this.docNumber) == -1){
         return "create"
       }else {
         return "modify"
@@ -64,9 +75,12 @@ export default Vue.extend({
     let initValue = ""
     let adminContentUseCase = new AdminContentUseCase();
     if(this.mode == 'modify'){
-      let adminContentResDto = await adminContentUseCase.doc(this.docNumber);
+      let adminContentResDto = await adminContentUseCase.doc(Number(this.docNumber));
       initValue = adminContentResDto.markDown;
       this.title = adminContentResDto.title;
+      this.category = adminContentResDto.category;
+      this.orderIdx = Number(adminContentResDto.orderIdx);
+      console.log(adminContentResDto)
     }
     this.editor = new Editor({
       el: document.querySelector("#editor") as any,
@@ -102,14 +116,18 @@ export default Vue.extend({
         await adminContentUseCase.save({
           title: this.title,
           markDown:  this.editor.getMarkdown(),
-          html: this.editor.getHTML()
+          html: this.editor.getHTML(),
+          category: this.category,
+          orderIdx: this.orderIdx
         });
       }else {
         await adminContentUseCase.update({
-          id: this.docNumber,
+          id: Number(this.docNumber),
           title: this.title,
           markDown:  this.editor.getMarkdown(),
-          html: this.editor.getHTML()
+          html: this.editor.getHTML(),
+          category: this.category,
+          orderIdx: this.orderIdx
         });
       }
       this.loading = false;
@@ -131,5 +149,16 @@ export default Vue.extend({
 }
 .DocTitle{
   padding: 25px;
+}
+.options{
+  display: flex;
+  margin-left: 25px;
+}
+.categorySelect{
+  max-width: 200px;
+}
+.orderIndex{
+  max-width: 200px;
+  margin-left: 20px;
 }
 </style>

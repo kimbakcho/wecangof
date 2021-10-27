@@ -5,4 +5,6 @@ export interface AdminContentResDto{
     html: string;
     updateTime: string;
     createTime: string;
+    category: string;
+    orderIdx: number;
 }

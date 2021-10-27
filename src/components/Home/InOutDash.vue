@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div >
     <div class="top">
       <div @click="onUserClick">
         <v-icon color="#215DF1" size="18" class="userInfo">
@@ -62,13 +62,17 @@
       <div class="travelTitle2">
         한국인 인기 여행지! 이 나라는 어때?
       </div>
-      <div class="adminTravelCardList">
+      <div class="adminTravelCardList" :class="{alarmDocsActive: alarmDocsActive}">
         <TravelCard3 v-for="item in adminRecommendList" :key="item.id" class="travelItem"
                      :immigration-status-card-dto="item" @tapCard="tapCard">
 
         </TravelCard3>
       </div>
+
     </div>
+    <AdminAlarmContents :alarm-docs="alarmDocs" class="AdminAlarmContents" v-if="alarmDocsActive">
+
+    </AdminAlarmContents>
 
   </div>
 </template>
@@ -82,10 +86,12 @@ import TravelCard3 from "@/components/Common/TravelCard3.vue";
 import {UserBookMarkingCountryResDto} from "@/Bis/UserBookMarkingCountry/Dto/UserBookMarkingCountryResDto";
 import {ImmigrationStatusSimpleResDto} from "@/Bis/ImmigrationStatus/Dto/ImmigrationStatusSimpleResDto";
 import {DateTime} from "luxon";
+import {AdminContentSimpleResDto} from "@/Bis/AdminContent/Dto/AdminContentSimpleResDto";
+import AdminAlarmContents from "@/components/Common/AdminAlarmContents.vue";
 
 export default Vue.extend({
   components: {
-    TravelCard2, NoneTravelCard, NoneBookMarking, UserBookMarkingList, TravelCard3
+    TravelCard2, NoneTravelCard, NoneBookMarking, UserBookMarkingList, TravelCard3, AdminAlarmContents
   },
   props: {
     userBookMarkList: {
@@ -96,6 +102,9 @@ export default Vue.extend({
     },
     unReadCount: {
       type: Number,
+    },
+    alarmDocs: {
+      type: Array as PropType<AdminContentSimpleResDto[]>,
     }
   },
   computed: {
@@ -105,6 +114,13 @@ export default Vue.extend({
         ghostClass: 'ghost'
       };
     },
+    alarmDocsActive(): boolean {
+      if(this.alarmDocs?.length > 0){
+        return true;
+      }else {
+        return false;
+      }
+    }
   },
   data(){
     return {
@@ -340,6 +356,10 @@ export default Vue.extend({
   margin-bottom: 20px;
 }
 
+.adminTravelCardList.alarmDocsActive {
+  margin-bottom: 99px;
+}
+
 .dragger {
   display: flex;
   flex-wrap: nowrap;
@@ -352,7 +372,7 @@ export default Vue.extend({
 }
 
 .InOutDashContent{
-  height: calc(100vh - 110px);
+  height: calc(100vh - 130px);
   overflow-y: auto;
 }
 
@@ -370,6 +390,10 @@ export default Vue.extend({
   height: 50px;
   left: 25%;
   transform: translateX(-50%);
+}
 
+.AdminAlarmContents {
+  position: absolute;
+  bottom: 20px;
 }
 </style>

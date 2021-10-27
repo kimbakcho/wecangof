@@ -18,17 +18,17 @@
     </div>
     <div class="content">
       <v-data-table :items="docs" :headers="tableHeader" item-key="id" :search="search">
-        <template v-slot:item.view="{ item }" >
+        <template v-slot:item.view="{ item }">
           <button @click="view(item)">
             조회
           </button>
         </template>
-        <template v-slot:item.modify="{ item }" >
+        <template v-slot:item.modify="{ item }">
           <button @click="modify(item)">
             수정
           </button>
         </template>
-        <template v-slot:item.delete="{ item }" >
+        <template v-slot:item.delete="{ item }">
           <button @click="docDelete(item)">
             삭제
           </button>
@@ -55,6 +55,13 @@ export default Vue.extend({
         {
           value: "id",
           text: "id"
+        },
+        {
+          value: "category",
+          text: "카테고리"
+        }, {
+          value: "orderIdx",
+          text: "우선 순위"
         }
         , {
           value: "title",
@@ -65,7 +72,7 @@ export default Vue.extend({
         }, {
           value: "updateTime",
           text: "수정 시간"
-        },{
+        }, {
           value: "view",
           text: "조회"
         },
@@ -95,13 +102,13 @@ export default Vue.extend({
         path: `/WCAdmin/CC002/${item.id}`
       })
     },
-    async docDelete(item: AdminContentSimpleResDto){
+    async docDelete(item: AdminContentSimpleResDto) {
       let adminContentUseCase = new AdminContentUseCase();
       await adminContentUseCase.delDoc(item.id);
       this.docs = await adminContentUseCase.docs();
 
     },
-    view(item: AdminContentSimpleResDto){
+    view(item: AdminContentSimpleResDto) {
       this.$router.push({
         path: `/BC001/${item.id}`
       })
@@ -115,10 +122,12 @@ export default Vue.extend({
   justify-content: end;
   padding: 25px;
 }
-.content{
+
+.content {
   padding: 24px;
 }
-.searchBar{
+
+.searchBar {
   display: flex;
   padding: 24px;
 }

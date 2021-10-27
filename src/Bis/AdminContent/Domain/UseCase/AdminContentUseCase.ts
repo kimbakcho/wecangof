@@ -31,7 +31,10 @@ export default class AdminContentUseCase {
                 id: id
             }
         });
+    }
 
-
+    async getMainPageDocs(): Promise<AdminContentSimpleResDto[]>{
+        const { data } = await axios.get("/AdminContent/mainPage");
+        return data;
     }
 }

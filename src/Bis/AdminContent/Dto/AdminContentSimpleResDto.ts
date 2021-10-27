@@ -3,4 +3,6 @@ export interface AdminContentSimpleResDto {
     title: string;
     updateTime: string;
     createTime: string;
+    category: string,
+    orderIdx: number;
 }

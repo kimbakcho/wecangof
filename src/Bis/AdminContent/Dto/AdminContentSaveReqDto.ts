@@ -3,4 +3,6 @@ export interface AdminContentSaveReqDto {
     title: string;
     markDown: string;
     html: string;
+    category: string;
+    orderIdx: number;
 }
