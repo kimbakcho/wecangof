@@ -1,21 +1,16 @@
 <template>
   <div class="root">
     <div class="topFix">
-      <div class="topBar">
-        <div @click="back">
-          <v-icon size="19" color="#323232">
-            wc-backarrow
-          </v-icon>
-        </div>
-        <div>
-          여행 준비하기
-        </div>
-        <div>
-          <v-icon size="16" color="#242424">
-            wc-share
-          </v-icon>
-        </div>
-      </div>
+      <TopBar title="여행 준비하기">
+        <template v-slot:endSlot>
+          <div @click="shareCopy">
+            <v-icon size="16" color="#242424">
+              wc-share
+            </v-icon>
+          </div>
+        </template>
+      </TopBar>
+
       <div class="divider"></div>
     </div>
     <div class="content">
@@ -50,10 +45,11 @@ import UserBookMarkingCountryUseCase from "@/Bis/UserBookMarkingCountry/Domain/U
 import {UserBookMarkingCountryResDto} from "@/Bis/UserBookMarkingCountry/Dto/UserBookMarkingCountryResDto";
 import NationDeatilInfo from "@/components/Common/NationDeatilInfo.vue";
 import AlarmTravelFlagUseCase from "@/Bis/AlarmTravelFlag/Domain/UseCase/AlarmTravelFlagUseCase";
+import TopBar from "@/components/Common/TopBar.vue";
 
 export default Vue.extend({
   components: {
-    TravelCard1, TravelBookMarkBtn, NationDeatilInfo
+    TravelCard1, TravelBookMarkBtn, NationDeatilInfo, TopBar
   },
   props: {
     nationId: {
@@ -91,7 +87,13 @@ export default Vue.extend({
     back() {
       this.$router.back();
     },
-
+    shareCopy(){
+      this.$copyText(window.location.href).then(()=>{
+        this.$swal("주소가 복사 되었습니다.")
+      },()=>{
+        this.$swal("주소에 실패 하였습니다..")
+      })
+    }
   },
   async beforeRouteEnter(to: Route, from: Route, next: any) {
 
@@ -126,9 +128,7 @@ export default Vue.extend({
   width: 100vw;
   background-color: white;
   z-index: 11;
-
 }
-
 .topFix{
   position: fixed;
   top: 0;
@@ -137,24 +137,14 @@ export default Vue.extend({
   background-color: white;
   z-index: 100;
 }
-.topBar {
-  margin-top: 12px;
-  padding-left: 25px;
-  padding-right: 25px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: "Noto Sans KR";
-  font-size: 15px;
-  font-weight: bold;
-}
+
 .content{
   padding-top: 60px;
   overflow-y: auto;
 }
 .divider {
   height: 1px;
-  margin: 24px 0 0;
+  margin: 0px 0 0;
   background-color: #e9ebf4;
 }
 .travelCard{
@@ -163,6 +153,7 @@ export default Vue.extend({
 
 .bookMarkBtn {
   padding: 0 25px 19px;
+  margin: 15px 0px;
 }
 
 </style>

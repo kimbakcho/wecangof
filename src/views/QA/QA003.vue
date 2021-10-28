@@ -2,8 +2,15 @@
   <div class="QA003Root">
     <TopBar title=""> </TopBar>
     <div class="QA003Content">
-      <div class="title">
-        {{ qaBoardResDto.title }}
+      <div class="titleBar">
+        <div class="title">
+          {{ qaBoardResDto.title }}
+        </div>
+        <div class="optionBtn" @click="optionBtn" v-if="isMyDoc()">
+          <v-icon size="20">
+            fas fa-ellipsis-v
+          </v-icon>
+        </div>
       </div>
       <div class="info1">
         <div> {{ qaBoardResDto.classificationQuestions }} </div>
@@ -35,7 +42,7 @@
 
         </div>
       </div>
-      <div class="imageContent">
+      <div class="imageContent" v-viewer>
         <img v-for="(item,index) in getImageMeta()" :src="item.imageUrl" :key="index">
       </div>
       <div class="replyCount">
@@ -54,6 +61,24 @@
         보내기
       </button>
     </div>
+    <v-dialog v-model="optionDialog" max-width="80%">
+      <v-card>
+        <v-list>
+          <v-list-item @click="modifyDoc">
+            수정
+          </v-list-item>
+          <v-list-item @click="deleteDoc">
+            삭제
+          </v-list-item>
+          <v-list-item @click="optionDialog = false">
+            닫기
+          </v-list-item>
+        </v-list>
+
+      </v-card>
+
+    </v-dialog>
+
   </div>
 </template>
 <script lang="ts">
@@ -69,12 +94,14 @@ import {UploadFileResDto} from "@/Bis/Common/UploadFileResDto";
 import QABoardReplyUseCase from "@/Bis/QABoardReply/Domain/UseCase/QABoardReplyUseCase";
 import ReplyComponent, {ReplyComponentRootType} from "@/components/Reply/ReplyComponent.vue";
 import {QABoardReplyResDto} from "@/Bis/QABoardReply/Dto/QABoardReplyResDto";
-
+import 'viewerjs/dist/viewer.css'
+import {MutationTypes} from "@/store/mutations";
 export default (Vue as VueConstructor<Vue & {
   $refs:{
     ReplyComponent: ReplyComponentRootType
   }
 }>).extend({
+
   components:{
     TopBar, UserProfile, ReplyComponent
   },
@@ -94,7 +121,8 @@ export default (Vue as VueConstructor<Vue & {
   },
   data(){
     return {
-      insertReplyText: ""
+      insertReplyText: "",
+      optionDialog: false
     }
   },
   methods:{
@@ -107,6 +135,12 @@ export default (Vue as VueConstructor<Vue & {
     },
     getImageMeta(): UploadFileResDto[]{
       return JSON.parse(this.qaBoardResDto.contentImageUrl);
+    },
+    getImages(): string[]{
+      let images = this.getImageMeta().map(x=>{
+        return x.imageUrl
+      });
+      return images;
     },
     async insertReply(){
       if(!this.insertReplyText){
@@ -125,6 +159,30 @@ export default (Vue as VueConstructor<Vue & {
       this.qaBoardResDto.replyCount++;
       await this.$nextTick();
       this.$refs.ReplyComponent.getLastReplyDom().scrollIntoView();
+    },
+    optionBtn(){
+      this.optionDialog = true;
+    },
+    async deleteDoc(){
+      let qaBoardUseCase = new QABoardUseCase();
+      await qaBoardUseCase.deleteDoc(Number(this.qaBoardId));
+      this.$router.back();
+    },
+    modifyDoc(){
+      this.$router.push({
+        path: `/QA006/${this.qaBoardId}`
+      })
+    },
+    isMyDoc(): boolean{
+      if(this.$store.state.isLogin){
+        if(this.qaBoardResDto.writer.uid == this.$store.state.userInfo.uid){
+          return true;
+        }else if(this.$store.state.userInfo.role.indexOf("Admin")>=0){
+          return true;
+        }
+      }
+      return false;
+
     }
   },
   async beforeRouteEnter(to: Route, from: Route, next: any) {
@@ -146,6 +204,15 @@ export default (Vue as VueConstructor<Vue & {
   display: flex;
   flex-direction: column;
 }
+.titleBar{
+  display: flex;
+  align-items: start;
+  padding: 0px 25px;
+}
+.titleBar .title{
+  flex-grow: 1;
+}
+
 .QA003Content{
   flex-grow: 1;
   overflow-y: auto;
@@ -159,7 +226,10 @@ export default (Vue as VueConstructor<Vue & {
   font-size: 20px;
   text-align: left;
   color: #2f2f2f;
-  padding: 15px 25px;
+
+}
+.optionBtn{
+  margin-left: 20px;
 }
 
 .info1 {
@@ -213,7 +283,7 @@ export default (Vue as VueConstructor<Vue & {
 .imageContent img{
   width: 100%;
   height: 200px;
-  object-fit: fill;
+  object-fit: cover;
   border-radius: 10px;
   margin-bottom: 10px;
 }

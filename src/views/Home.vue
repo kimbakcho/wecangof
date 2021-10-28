@@ -155,6 +155,7 @@ export default Vue.extend({
     qaBoardCategorysItems.map(x=>{
       x.active = false
     })
+
     let totalCate = {
       categoryName: "전체",
       orderIdx: 0,

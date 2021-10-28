@@ -8,11 +8,13 @@
         outlined
         item-text="nationName"
         return-object
-        v-model="selectItem"
+        v-model="value"
         clearable
         background-color="#e9ebf4"
         label="특정 국가에 한하는 질문일 때 선택세요"
         class="nations"
+        hide-details
+        dense
         @change="change"
     ></v-select>
   </div>
@@ -27,12 +29,11 @@ export default Vue.extend({
       type: Array as PropType<NationControlResDto[]>,
       required: true
     },
-  },
-  data(){
-    return {
-      selectItem: null
+    value: {
+      type: Object as PropType<NationControlResDto>,
     }
   },
+
   methods:{
     change(value: NationControlResDto){
       this.$emit("input",value)

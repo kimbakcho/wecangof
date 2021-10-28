@@ -38,10 +38,16 @@ const ImagePreviewUploader = (Vue as VueConstructor<Vue & {
       selectFile: null as File | null,
     }
   },
-  mounted() {
+  async mounted() {
+
     if(this.imagePreviewObj.preImageUrl){
-      this.$refs.preViewImageDiv.style.backgroundImage = `url('${this.imagePreviewObj.preImageUrl}')`;
+      this.previewImageMode = true;
       this.$forceUpdate();
+      await this.$nextTick();
+      this.$refs.preViewImageDiv.style.backgroundImage = `url('${this.imagePreviewObj.preImageUrl}')`;
+      this.$refs.preViewImageDiv.style.backgroundSize = 'cover';
+      this.selectFile = new File([],this.imagePreviewObj.key)
+
     }
   },
   methods: {
@@ -53,6 +59,7 @@ const ImagePreviewUploader = (Vue as VueConstructor<Vue & {
         this.$forceUpdate();
         await this.$nextTick();
         this.$refs.preViewImageDiv.style.backgroundImage = `url('${URL.createObjectURL(this.selectFile)}')`
+        this.$refs.preViewImageDiv.style.backgroundSize = 'cover';
         this.$emit("change",this.selectFile)
       }
     },

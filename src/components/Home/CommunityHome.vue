@@ -70,16 +70,18 @@ export default (Vue as VueConstructor<Vue & {
       qaRepeatResDto: [] as QABoardResDto[],
       bottomLoading: false,
       qaBoardUseCase: new QABoardUseCase(),
-      infiniteId: Date.now()
+      infiniteId: Date.now(),
+      key: Date.now()
     }
   },
   async mounted() {
     this.loading = true
-
+    console.log("Community home mounted")
     await this.getQARepeat();
-    //
-    // await this.getCurrentQAFilterPage();
-
+    let qaBoardFilter = this.$store.state.qaBoardFilter;
+    qaBoardFilter.pageReqDto.page = 0;
+    this.$store.commit(MutationTypes.SET_QACURRENTREPEAT_LIST,[])
+    await this.infiniteHandler(null)
     this.loading = false
   },
   computed:{
@@ -123,12 +125,18 @@ export default (Vue as VueConstructor<Vue & {
     },
     async infiniteHandler($state: any) {
       await this.getCurrentQAFilterPage()
+      console.log("infiniteHandler");
       let pageReqDto = this.$store.state.qaBoardFilter.pageReqDto;
       pageReqDto.page = pageReqDto.page+1
       if(this.$store.state.qaCurrentRepeatPageState.last){
-        $state.complete();
+        if($state){
+          $state.complete();
+        }
       }else {
-        $state.loaded();
+        if($state){
+          $state.loaded();
+        }
+
       }
     },
     async categoryChange(item: QABoardCategoryResDto){

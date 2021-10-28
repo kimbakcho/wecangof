@@ -51,6 +51,12 @@ const routes: Array<RouteConfig> = [
     props: true
   },
   {
+    path: "/QA006/:qaBoardId",
+    name: "QA006",
+    component: () => import(/* webpackChunkName: "QA006" */ '../views/QA/QA006.vue'),
+    props: true
+  },
+  {
     path: "/QA003/:qaBoardId",
     name: "QA003",
     component: () => import(/* webpackChunkName: "QA003" */ '../views/QA/QA003.vue'),

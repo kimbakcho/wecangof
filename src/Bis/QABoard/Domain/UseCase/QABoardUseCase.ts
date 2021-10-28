@@ -3,6 +3,7 @@ import axios, {AxiosResponse} from "axios";
 import {QABoardResDto} from "@/Bis/QABoard/Dto/QABoardResDto";
 import {QABoardFilterReqDto} from "@/Bis/QABoard/Dto/QABoardFilterReqDto";
 import {PageWrap} from "@/Bis/Common/PageWrap";
+import {QABoardUpdateDto} from "@/Bis/QABoard/Dto/QABoardUpdateDto";
 
 export class QABoardUseCase {
 
@@ -41,6 +42,19 @@ export class QABoardUseCase {
 
             }
         })
+    }
+
+    async deleteDoc(id: number): Promise<void>{
+        await axios.delete("/QABoard/doc",{
+            params:{
+                id: id
+            }
+        });
+    }
+
+    async update(reqDto: QABoardUpdateDto): Promise<QABoardResDto>{
+        const { data} = await axios.post<QABoardUpdateDto,AxiosResponse<QABoardResDto>>("/QABoard/update",reqDto);
+        return data;
     }
 
 

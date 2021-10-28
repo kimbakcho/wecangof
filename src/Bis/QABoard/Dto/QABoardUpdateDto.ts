@@ -1,4 +1,7 @@
-export interface QABoardInsertDto{
+export interface QABoardUpdateDto{
+
+    id: number;
+
     classificationQuestions: string;
 
     nationName?: string | null;

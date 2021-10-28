@@ -1,5 +1,5 @@
 <template>
-  <div class="rootBg">
+  <div class="rootBg" @click="noneTravelCardClick">
     <div>
       <img src="@/assets/plane_ico.png">
     </div>
@@ -15,7 +15,13 @@
 import Vue from "vue"
 
 export default Vue.extend({
-
+  methods: {
+    noneTravelCardClick(){
+      this.$router.push({
+        path: "/BM003"
+      })
+    }
+  }
 })
 </script>
 <style scoped>

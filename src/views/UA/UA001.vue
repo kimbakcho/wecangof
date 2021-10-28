@@ -1,58 +1,6 @@
 <template>
-  <div class="root">
-    <div class="topBar">
-      <div class="backBtn" @click="back">
-        <v-icon size="19" color="black">
-          fas fa-arrow-left
-        </v-icon>
-      </div>
-    </div>
-<!--    <div class="title">-->
-<!--      <span>-->
-<!--        이메일 로그인-->
-<!--      </span>-->
-<!--    </div>-->
-<!--    <div class="id">-->
-<!--      <label for="emailId">-->
-<!--        <span>-->
-<!--          아이디-->
-<!--        </span>-->
-<!--      </label>-->
-<!--      <div class="emailId">-->
-<!--        <input type="text" id="emailId" placeholder="이메일을 입력해주세요"/>-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <div class="pw">-->
-<!--      <label for="password">-->
-<!--        <span>-->
-<!--          비밀 번호-->
-<!--        </span>-->
-<!--      </label>-->
-<!--      <div class="password">-->
-<!--        <input type="password" id="password" placeholder="비밀 번호를 입력해 주세요"/>-->
-<!--      </div>-->
-<!--    </div>-->
-
-<!--    <div class="loginBtn">-->
-<!--      <div>-->
-<!--        로그인-->
-<!--      </div>-->
-<!--    </div>-->
-
-<!--    <div class="joinActions">-->
-<!--      <div>-->
-<!--        회원 가입-->
-<!--      </div>-->
-<!--      <div>-->
-<!--        이메일 찾기-->
-<!--      </div>-->
-<!--      <div>-->
-<!--        비밀번호 찾기-->
-<!--      </div>-->
-<!--    </div>-->
-<!--    <div class="snsTitle">-->
-<!--      SNS 로그인-->
-<!--    </div>-->
+  <div class="UA001root">
+    <top-bar title=""></top-bar>
     <div>
       <div class="kakaoTalkLogin" @click="kakaoLogin">
         <img src="@/assets/kakao_ico.png"
@@ -82,6 +30,7 @@
 </template>
 <script lang="ts">
 import Vue from "vue"
+import TopBar from "@/components/Common/TopBar.vue";
 
 function onSignIn(googleUser: any) {
   console.log("googleUser")
@@ -89,6 +38,9 @@ function onSignIn(googleUser: any) {
 }
 
 export default Vue.extend({
+  components:{
+    TopBar
+  },
 
   data() {
     return {
@@ -126,9 +78,9 @@ export default Vue.extend({
     gapi.load('auth2', function() {
       gapi.auth2.init({
         "client_id": process.env.VUE_APP_GOOGLE_CLIENT_ID,
-        "scope": "profile",
+        "scope": "profile email",
         "ux_mode": "redirect",
-        "fetch_basic_profile": true,
+        "fetch_basic_profile": false,
         "redirect_uri": process.env.VUE_APP_GOOGLE_REDIRECT_URL
       })
     });
@@ -136,23 +88,11 @@ export default Vue.extend({
 })
 </script>
 <style scoped>
-.root {
+.UA001root {
   height: 100vh;
   width: 100vw;
   background-color: white;
-  z-index: 10;
-}
-
-.backBtn {
-  margin-top: 15px;
-  margin-left: 25px;
-}
-
-.title {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 16px;
+  z-index: 12;
 }
 
 .title span {
@@ -166,12 +106,6 @@ export default Vue.extend({
   letter-spacing: normal;
   text-align: center;
   color: #242424;
-}
-
-.id, .pw {
-  padding-left: 25px;
-  padding-right: 25px;
-  padding-top: 13px;
 }
 
 .id span, .pw span {
@@ -234,7 +168,7 @@ export default Vue.extend({
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 23px 25px 15px 25px;
+  margin: 0px 25px 15px 25px;
   height: 61px;
   border-radius: 38px;
   font-family: "Noto Sans KR";

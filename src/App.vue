@@ -1,16 +1,17 @@
 <template>
   <v-app>
-      <transition  :name="transitionName">
-        <router-view  class="child-view" v-if="!$root.$data.loading"/>
-        <div class="loadingRoot" v-if="$root.$data.loading">
-          <v-progress-circular
-              :size="70"
-              :width="7"
-              color="#dbe5fd"
-              indeterminate
-          ></v-progress-circular>
-        </div>
+      <transition  :name="transitionName" appear>
+        <router-view  class="child-view"/>
+
       </transition>
+    <div class="loadingRoot" v-if="$root.$data.loading">
+      <v-progress-circular
+          :size="70"
+          :width="7"
+          color="#dbe5fd"
+          indeterminate
+      ></v-progress-circular>
+    </div>
   </v-app>
 </template>
 
@@ -26,33 +27,57 @@ export default Vue.extend({
 
   data: () => ({
     transitionName: 'sliderOutRight',
+    currentHistoryCount: 0,
+    backActive: false,
+    currentFromPath: "/"
   }),
   watch: {
     '$route'(to, from) {
+      const IsItABackButton  = window.popStateDetected;
+      if(IsItABackButton){
+        this.transitionName = 'sliderOutRight'
+        this.backActive = IsItABackButton
+        window.popStateDetected = false
+        this.$forceUpdate()
+        return ;
+      }
+      window.popStateDetected = false
       if(to.path.indexOf("/WCAdmin")>=0 || from.path.indexOf("/WCAdmin")>=0){
         return ;
       }
       if (to.path == "/UA001") {
         this.transitionName = 'sliderInRight'
+        return;
       }
       if (to.path == "/BM003") {
         this.transitionName = 'sliderInRight'
+        return;
       }
       if (to.path == "/AM002") {
         this.transitionName = 'sliderInRight'
+        return;
       }
       if (to.path.indexOf("/BM004")>=0) {
         this.transitionName = 'sliderInRight'
+        return;
+      }
+      if (to.path.indexOf("/BC001")>=0) {
+        this.transitionName = 'sliderInRight'
+        return;
       }
       if (to.path == "/") {
         this.transitionName = 'sliderOutRight'
+        return;
       }
       if(to.path == "/linkBoard"){
         this.transitionName = 'slide-up'
+        return;
       }
       if(from.path == "/linkBoard"){
         this.transitionName = 'slide-down'
+        return;
       }
+
     }
   },
   async mounted() {
@@ -102,31 +127,61 @@ export default Vue.extend({
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 100;
 }
 </style>
 <style>
 .child-view {
   position: absolute;
-  transition: all 1s;
   width: 100vw;
   height: 100vh;
 }
+
 .sliderInRight-enter {
   transform: translate(100%, 0%);
 }
-
-.sliderInRight-leave-active {
-  transform: translate(0%, 0%);
+.sliderInRight-enter-active {
   transition: all 1s;
 }
+.sliderInRight-enter-to{
+  transform: translate(0%, 0%);
+}
 
-.sliderOutRight-enter{
+.sliderInRight-leave {
+  transform: translate(0%, 0%);
+}
+.sliderInRight-leave-active {
+  transition: all 1s;
+}
+.sliderInRight-leave-to {
+  transform: translate(0%, 0%);
+}
+
+
+.sliderOutRight-enter {
+  transform: translate(0%, 0%);
+}
+.sliderOutRight-enter-active {
+  transition: all 1s;
+}
+.sliderOutRight-enter-to {
+  transform: translate(0%, 0%);
+}
+
+.sliderOutRight-leave {
   transform: translate(0%, 0%);
 }
 .sliderOutRight-leave-active {
-  transform: translate(100%, 0%);
   transition: all 1s;
 }
+.sliderOutRight-leave-to {
+  transform: translate(100%, 0%);
+}
+
+/*.sliderOutRight-leave-active {*/
+/*  transform: translate(100%, 0%);*/
+/*  transition: all 20s;*/
+/*}*/
 
 .slide-up-enter, .slide-down-leave-active{
   transform: translate(0, 100%);

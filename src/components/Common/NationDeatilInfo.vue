@@ -183,19 +183,17 @@ export default Vue.extend({
   height: 16px;
 }
 .exitBtn, .returnHomeBtn{
-
-  box-shadow: inset 0 -2px 1px rgba(0, 0 ,0, 0.13);
-
+  box-shadow: inset 0 -3px 6px rgba(0, 0 ,0, 0.13);
+  background-color: #e6e6e6;
 }
 .exitBtn.active {
-  border-radius: 0px 10px 0px 0px;
-  box-shadow: 0 -7px 1px 0 rgba(0, 0, 0 , 0.02)
-
+  box-shadow: 0px -3px 6px rgba(0, 0, 0, 0.13);
+  background-color: white;
 }
 
 .returnHomeBtn.active {
-  border-radius: 10px 0px 0px 0px;
-  box-shadow: 0 -7px 1px 0 rgba(0, 0, 0 , 0.02)
+  box-shadow: 0px -3px 6px rgba(0, 0, 0, 0.13);
+  background-color: white;
 }
 
 .topTabBar .text {

@@ -8,9 +8,11 @@
         outlined
         item-text="categoryName"
         return-object
-        v-model="selectItem"
+        v-model="value"
         clearable
+        dense
         background-color="#e9ebf4"
+        hide-details
         label="카테고리 선택"
         class="qaCategory"
         @change="change"
@@ -27,10 +29,8 @@ export default Vue.extend({
       type: Array as PropType<QABoardCategoryResDto[]>,
       required: true
     },
-  },
-  data(){
-    return {
-      selectItem: null
+    value:{
+      type: Object as PropType<QABoardCategoryResDto | null>,
     }
   },
   methods:{

@@ -14,3 +14,8 @@ declare module "vue/types/options" {
 }
 
 declare module "naver_id_login"
+
+declare global {
+    interface Window { popStateDetected : boolean; }
+}
+

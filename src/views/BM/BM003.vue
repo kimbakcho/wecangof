@@ -1,17 +1,14 @@
 <template>
   <div class="root">
-    <div class="topBar">
-      <img src="@/assets/back_button.png"
-           class="back_button" @click="back">
-      <div>
-        국가별 출입국 현황
-      </div>
-      <div @click="searchNation">
-        <v-icon size="15" color="#323232">
-          wc-search
-        </v-icon>
-      </div>
-    </div>
+    <top-bar title="국가별 출입국 현황">
+      <template v-slot:endSlot>
+        <div @click="searchNation">
+          <v-icon size="15" color="#323232">
+            wc-search
+          </v-icon>
+        </div>
+      </template>
+    </top-bar>
     <div class="divider"></div>
     <div class="filterBar">
       <div class="filterBtn" :class="{active :isTravelFilter}" @click="travelTrueClick">
@@ -46,6 +43,7 @@ import NationControlUseCase from "@/Bis/NationControl/Domain/UseCase/NationContr
 import CountryButton from "@/components/Common/CountryButton.vue";
 import FilterDialog, {FilterDialogType} from "@/components/Common/FilterDialog.vue";
 import {NationControlReqDto} from "@/Bis/NationControl/Dto/NationControlReqDto";
+import TopBar from "@/components/Common/TopBar.vue";
 
 export default (Vue as VueConstructor<Vue & {
   $refs: {
@@ -53,7 +51,7 @@ export default (Vue as VueConstructor<Vue & {
   }
 }>).extend({
   components: {
-    CountryButton, FilterDialog
+    CountryButton, FilterDialog, TopBar
   },
   data() {
     return {
@@ -124,26 +122,10 @@ export default (Vue as VueConstructor<Vue & {
   z-index: 10;
 }
 
-.topBar {
-  margin-top: 12px;
-  padding-left: 25px;
-  padding-right: 25px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-family: "Noto Sans KR";
-  font-size: 15px;
-  font-weight: bold;
-}
 
-.topBar img {
-  width: 19px;
-  height: 15px;
-}
 
 .divider {
   height: 1px;
-  margin: 24px 0 0;
   background-color: #e9ebf4;
 }
 
@@ -188,7 +170,7 @@ export default (Vue as VueConstructor<Vue & {
 .nationList {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+
   align-items: center;
   padding: 25px;
 }

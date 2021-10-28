@@ -1,5 +1,5 @@
 <template>
-  <div class="termsConditions">
+  <div class="termsConditions" @click="gotoLink">
     <div>
       이용약관
     </div>
@@ -10,7 +10,13 @@
 import Vue from "vue"
 
 export default Vue.extend({
-
+  methods:{
+    gotoLink(){
+      this.$router.push({
+        path:"/BC001/7"
+      })
+    }
+  }
 })
 </script>
 <style scoped>

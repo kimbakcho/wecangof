@@ -13,13 +13,13 @@ export default class UserBookMarkingCountryUseCase {
     }
 
     async bookMarking(nationId: number): Promise<UserBookMarkingCountryResDto> {
-        const axiosResponse = await axios.post<null, UserBookMarkingCountryResDto>("/UserBookMarkingCountry/bookMarking", null, {
+        const { data } = await axios.post<null,  AxiosResponse<UserBookMarkingCountryResDto>>("/UserBookMarkingCountry/bookMarking", null, {
             params: {
                 nationId: nationId
             }
         });
-        console.log(axiosResponse)
-        return axiosResponse
+
+        return data
     }
 
     async bookUnMarking(nationId: number): Promise<void> {

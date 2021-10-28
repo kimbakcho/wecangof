@@ -1,19 +1,25 @@
 <template>
   <div>
     <div class="bookMarkBtn" :class="{active: hasBookMark}" @click="bookMarkClick">
+      <v-icon v-if="hasBookMark" color="#545454" size="16">
+        wc-bookmarkingafter
+      </v-icon>
+      <v-icon v-else color="white" size="16">
+        wc-bookmarkingbefore
+      </v-icon>
       {{ getMessage() }}
     </div>
     <v-dialog v-model="dialog" max-width="80%">
       <div class="cardBg">
         <div class="dTitle">
-          내 여행지에 저장되었습니다
+          내 여행지에 저장
         </div>
         <div class="alarmContent">
-          업데이트 소식을 받아보실 수 있어요
+          메인 페이지에서 실시간 소식을 확인할 수 있어요.
         </div>
         <div class="actionBar">
-          <div @click="alarmReceiveClick">
-            소식 받아보기
+          <div @click="gotoMainPage">
+            바로 확인하기
           </div>
           <div @click="dialog=false">
             닫기
@@ -23,22 +29,6 @@
       </div>
     </v-dialog>
 
-    <v-dialog v-model="alarmDialog" max-width="80%">
-      <div class="cardBg">
-        <div class="dTitle1">
-          여행 가능 알림이 신청 되었어요
-        </div>
-        <div class="alarmContent">
-          업데이트 소식을 받아보실 수 있어요
-        </div>
-        <div class="alarmActionBar">
-          <div class="alarmConfirm" @click="alarmDialogConfirm">
-            확인
-          </div>
-        </div>
-
-      </div>
-    </v-dialog>
 
   </div>
 </template>
@@ -46,6 +36,7 @@
 import Vue from "vue"
 import UserBookMarkingCountryUseCase from "@/Bis/UserBookMarkingCountry/Domain/UseCase/UserBookMarkingCountryUseCase";
 import NationChangeAlarmUseCase from "@/Bis/NationChangeAlarm/Domain/NationChangeAlarmUseCase";
+import {UserBookMarkingCountryResDto} from "@/Bis/UserBookMarkingCountry/Dto/UserBookMarkingCountryResDto";
 
 export default Vue.extend({
 
@@ -63,22 +54,22 @@ export default Vue.extend({
     return {
       dialog: false,
       alarmDialog: false,
+      currentBookMarking: {} as UserBookMarkingCountryResDto
     }
   },
   methods:{
     getMessage(){
       if(this.hasBookMark) {
-        return "내 여행지 목록에 추가한 나라"
+        return "관심 여행지로 추가됨"
       }else {
-        return "내 여행지 목록에 추가하기 +"
+        return "관심 여행지 추가하기"
       }
     },
     async bookMarkClick(){
       if(!this.$store.state.isLogin) {
-        this.$swal("로그인이 필요 합니다.").then((x)=>{
-          this.$router.push({
-            path:"/UA001"
-          })
+        await this.$swal("로그인이 필요 합니다.");
+        await this.$router.push({
+          path:"/UA001"
         })
         return ;
       }
@@ -88,22 +79,18 @@ export default Vue.extend({
       let userBookMarkingCountryUseCase = new UserBookMarkingCountryUseCase();
       this.$emit("update:hasBookMark",!this.hasBookMark)
       if(!this.hasBookMark){
-        await userBookMarkingCountryUseCase.bookMarking(this.nationId);
+        this.currentBookMarking = await userBookMarkingCountryUseCase.bookMarking(this.nationId);
       }else {
         await userBookMarkingCountryUseCase.bookUnMarking(this.nationId);
       }
     },
 
-    alarmReceiveClick() {
-      let nationChangeAlarmUseCase = new NationChangeAlarmUseCase();
-      nationChangeAlarmUseCase.save(this.nationId);
-      this.alarmDialog = true;
+    gotoMainPage() {
+      localStorage.setItem("currentSelectNationItem", JSON.stringify(this.currentBookMarking))
+      this.$router.push({
+        path:"/"
+      })
     },
-
-    alarmDialogConfirm(){
-      this.dialog = false;
-      this.alarmDialog = false;
-    }
   }
 
 
@@ -111,24 +98,27 @@ export default Vue.extend({
 </script>
 <style scoped>
 .bookMarkBtn{
-  border-radius: 5px;
-  border: solid 1px #e6e6e6;
-  height: 32px;
+
+  height: 45px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-family: "Noto Sans KR";
   font-size: 14px;
-  color: #545454;
+  color: #fff;
+  background-color: #215df1;
+  border-radius: 5px;
 }
 
 .bookMarkBtn.active {
-  background-color: #215df1;
-  color: #fff;
+  color: #545454;
+  background-color: white;
   border: unset;
+
+  border: solid 1px #e6e6e6;
 }
 .cardBg{
-  height: 217px;
+  height: 250px;
   border-radius: 10px;
   background-color: #fff;
   padding: 25px;
@@ -192,21 +182,6 @@ export default Vue.extend({
   font-size: 12px;
 }
 
-.alarmActionBar{
-  width: 100%;
-
-}
-.alarmConfirm{
-  margin-top: 31px;
-  width: 100%;
-  height: 47px;
-  border-radius: 23.5px;
-  background: #242424;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  color: white;
-}
 </style>
 <style>
 .swal2-title{

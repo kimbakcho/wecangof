@@ -17,10 +17,17 @@ import '@/assets/css/wcg.css'
 
 import '@/assets/common.css'
 
+import VueViewer from 'v-viewer'
+
+import VueClipboard from 'vue-clipboard2'
+
 Vue.use(VueSweetalert2);
 
 Vue.use(VueCookies);
 
+Vue.use(VueViewer)
+
+Vue.use(VueClipboard)
 const axiosp: any = axios
 
 Vue.use(axiosp)
@@ -39,6 +46,11 @@ const app = new Vue({
 }).$mount('#app')
 
 Vue.use(VueKakaoSdk, {apiKey})
+
+window.popStateDetected = false
+window.addEventListener('popstate', () => {
+    window.popStateDetected = true
+})
 
 router.beforeEach((to, from, next) => {
     app.loading = true

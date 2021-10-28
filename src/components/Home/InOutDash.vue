@@ -160,21 +160,16 @@ export default Vue.extend({
         return false;
       }
     },
-    userProfileImageUrl(){
+    async alarmClick(){
       if(this.$store.state.isLogin){
-        if(this.$store.state.userInfo.profileImage){
-          return this.$store.state.userInfo.profileImage
-        }
-      }
-      return require("@/assets/login_ico.png")
-    },
-    alarmClick(){
-      if(this.$store.state.isLogin){
-        this.$router.push({
+        await this.$router.push({
           path: "/BM002",
         })
       }else {
-        this.$swal("로그인이 필요합니다.")
+        await this.$swal("로그인이 필요합니다.")
+        await this.$router.push({
+          path: "/UA001",
+        })
       }
     },
     unReadCountText(){
@@ -188,7 +183,7 @@ export default Vue.extend({
     },
     getCurrentSelect() {
       let item = localStorage.getItem("currentSelectNationItem");
-      if (item != null) {
+      if (item) {
         let selectItem = JSON.parse(item) as UserBookMarkingCountryResDto;
         let lastUpdate = DateTime.fromISO(selectItem.immigrationStatusSimpleResDto.updateDateTime);
         this.lastCardUpdateTime= lastUpdate.toFormat("yyyy-MM-dd");
@@ -198,6 +193,16 @@ export default Vue.extend({
       }
     },
     bookMarkingSelect(item: UserBookMarkingCountryResDto) {
+
+      if(this.getCurrentSelect() != null){
+        let selectItem = this.getCurrentSelect()
+        if(selectItem?.nationId.id === item.nationId.id){
+          this.$router.push({
+            path: `/BM004/${item.nationId.id}`
+          })
+          return ;
+        }
+      }
       localStorage.setItem("currentSelectNationItem", JSON.stringify(item))
       let lastUpdate = DateTime.fromISO(item.immigrationStatusSimpleResDto.updateDateTime);
       this.lastCardUpdateTime= lastUpdate.toFormat("yyyy-MM-dd");

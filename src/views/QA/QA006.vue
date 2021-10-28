@@ -4,19 +4,18 @@
       <TopBar title="글쓰기">
 
       </TopBar>
-      <QaCategoryCombo :qa-categorys="qaCategorys" class="qaCategorySelect" v-model="selectQaCategory">
-
-      </QaCategoryCombo>
-      <NationCombo :nations="nations" v-model="selectNation" class="nationsSelect" >
-
-      </NationCombo>
-
       <div class="divider">
 
       </div>
     </div>
 
     <div class="QA006Content">
+      <QaCategoryCombo :qa-categorys="qaCategorys" class="qaCategorySelect" v-model="selectQaCategory">
+
+      </QaCategoryCombo>
+      <NationCombo :nations="nations" v-model="selectNation" class="nationsSelect" >
+
+      </NationCombo>
       <div>
         제목
       </div>
@@ -45,8 +44,8 @@
       </div>
 
     </div>
-    <div class="actionBtn" @click="write">
-      글쓰기
+    <div class="actionBtn" @click="save">
+      글저장
     </div>
 
   </div>
@@ -66,6 +65,7 @@ import {ImagePreviewObj} from "@/components/QA/ImagePreviewObj";
 import {QABoardUseCase} from "@/Bis/QABoard/Domain/UseCase/QABoardUseCase";
 import FileUploadService from "@/Bis/Common/FileUploadService";
 import {UploadFileResDto} from "@/Bis/Common/UploadFileResDto";
+import {QABoardResDto} from "@/Bis/QABoard/Dto/QABoardResDto";
 
 export default (Vue as VueConstructor<Vue & {
   $refs:{
@@ -76,6 +76,14 @@ export default (Vue as VueConstructor<Vue & {
     TopBar, QaCategoryCombo, NationCombo, ImagePreviewUploader
   },
   props:{
+    qaBoardId:{
+      type: String,
+      required: false
+    },
+    qaBoardResDto:{
+      type: Object as PropType<QABoardResDto>,
+      required: false
+    },
     qaCategorys: {
       type: Array as PropType<QABoardCategoryResDto[]>,
       required: true
@@ -87,18 +95,52 @@ export default (Vue as VueConstructor<Vue & {
   },
   data(){
     return {
-      selectQaCategory: {} as QABoardCategoryResDto,
-      selectNation: {} as NationControlResDto,
+      selectQaCategory: {} as QABoardCategoryResDto | undefined,
+      selectNation: {} as NationControlResDto | undefined,
       attachImageKeys:[] as ImagePreviewObj[],
       title: "",
       contentText: ""
     }
   },
-  created() {
-    this.attachImageKeys.push({
-      key: this.uuidV4(),
-      preImageUrl: null
-    });
+
+  mounted(){
+    if(this.getMode() == 'modify'){
+      this.title = this.qaBoardResDto?.title
+      const cateIndex =  this.qaCategorys.findIndex(x=>{
+        return x.categoryName ==  this.qaBoardResDto?.classificationQuestions
+      });
+
+      if(cateIndex >= 0 ){
+        this.selectQaCategory = this.qaCategorys[cateIndex]
+      }
+      const nationIndex  = this.nations.findIndex(x=>{
+        return x.nationName == this.qaBoardResDto?.nationName?.nationName
+      });
+
+      if(nationIndex >= 0) {
+        this.selectNation = this.nations[nationIndex]
+      }
+      this.contentText = this.qaBoardResDto?.contentText
+
+      let contentImageUrls = JSON.parse(this.qaBoardResDto?.contentImageUrl) as UploadFileResDto[];
+
+      contentImageUrls.forEach(x=>{
+        this.attachImageKeys.push({
+          key: x.fileName,
+          preImageUrl: x.imageUrl
+        })
+      })
+
+      this.attachImageKeys.push({
+        key: this.uuidV4(),
+        preImageUrl: null
+      });
+    }else {
+      this.attachImageKeys.push({
+        key: this.uuidV4(),
+        preImageUrl: null
+      });
+    }
   },
   methods:{
     uuidV4(): string {
@@ -119,7 +161,7 @@ export default (Vue as VueConstructor<Vue & {
       });
       this.attachImageKeys.splice(index,1)
     },
-    async write(){
+    async save(){
       if(!this.selectQaCategory) {
         this.$swal("카테고리 선택이 필요합니다.")
         return ;
@@ -137,6 +179,7 @@ export default (Vue as VueConstructor<Vue & {
               uploadFileResDtos.push(uploadFile);
             }
           }else {
+            console.log("ipu.imagePreviewObj.preImageUrl")
             if(ipu.imagePreviewObj.preImageUrl){
               uploadFileResDtos.push({
                 fileName: ipu.imagePreviewObj.key,
@@ -146,18 +189,40 @@ export default (Vue as VueConstructor<Vue & {
           }
         }
       }
-      let qaBoardResDto = await qaBoardUseCase.insert({
-        title: this.title,
-        contentText: this.contentText,
-        classificationQuestions: this.selectQaCategory.categoryName,
-        nationName: this.selectNation.nationName,
-        contentImageUrl: JSON.stringify(uploadFileResDtos)
-      });
-      await this.$router.replace({
-        path:`/QA003/${qaBoardResDto.id}`
-      })
+      if(this.getMode() == "write"){
+        let qaBoardResDto = await qaBoardUseCase.insert({
+          title: this.title,
+          contentText: this.contentText,
+          classificationQuestions: this.selectQaCategory.categoryName,
+          nationName: this.selectNation?.nationName,
+          contentImageUrl: JSON.stringify(uploadFileResDtos)
+        });
+        await this.$router.replace({
+          path:`/QA003/${qaBoardResDto.id}`
+        })
+      }else {
+        let qaBoardResDto = await qaBoardUseCase.update({
+          id: Number(this.qaBoardId),
+          title: this.title,
+          contentText: this.contentText,
+          classificationQuestions: this.selectQaCategory.categoryName,
+          nationName: this.selectNation?.nationName,
+          contentImageUrl: JSON.stringify(uploadFileResDtos)
+        });
+        await this.$router.replace({
+          path:`/QA003/${qaBoardResDto.id}`
+        })
+      }
+    },
+    getMode(){
+      if(this.qaBoardId){
+        return "modify";
+      }else {
+        return "write";
+      }
     }
   },
+
   async beforeRouteEnter(to: Route, from: Route, next: any) {
 
     let params: any = to.params;
@@ -170,23 +235,26 @@ export default (Vue as VueConstructor<Vue & {
 
     params.nations = await nationControlUseCase.getFilter({})
 
-    next();
+    if(params.qaBoardId){
+      let qaBoardUseCase = new QABoardUseCase();
+      params.qaBoardResDto = await qaBoardUseCase.getDoc(Number(params.qaBoardId));
+    }
 
+    next();
 
   }
 })
 </script>
 <style scoped>
 .qaCategorySelect{
-  margin: 10px 25px;
+  margin: 10px 0px;
 }
 .nationsSelect{
-  margin: 10px 25px;
+  margin: 10px 0px;
 }
 .divider {
   width: 100%;
   height: 1px;
-  margin: 10px 0;
   background-color: #e9ebf4;
 }
 .QA006Root{
@@ -201,10 +269,10 @@ export default (Vue as VueConstructor<Vue & {
 .QA006Content{
   flex-grow: 1;
   overflow-y: auto;
-  padding: 25px;
+  padding: 10px 25px 25px;
 }
 .actionBtn{
-  height: 57px;
+  height: 15vh;
   display: flex;
   align-items: center;
   justify-content: center;

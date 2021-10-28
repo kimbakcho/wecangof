@@ -18,7 +18,7 @@
         <div class="vaccination">
           <div class="vaccinationTitle">
             <div>
-              <v-icon color="#a7aab2" size="5">
+              <v-icon color="#a7aab2" size="15">
                 wc-inject
               </v-icon>
             </div>
@@ -26,8 +26,9 @@
               백신접종
             </div>
           </div>
-          <div class="vaccinationInfo" :class="{ active: immigrationStatusCardDto.vaccinationFlag }">
-            <div class="vaccinationNeed" :class="{ active: immigrationStatusCardDto.vaccinationFlag }">
+          <div class="vaccinationInfo" :class="{ active: immigrationStatusCardDto.vaccinationFlag }"
+               :style="{color: vaccinationColor}">
+            <div class="vaccinationIcon" :style="{backgroundColor: vaccinationColor}">
 
             </div>
             <div class="text">
@@ -39,7 +40,7 @@
         <div class="pcrTest">
           <div class="pcrTestTitle">
             <div>
-              <v-icon color="#a7aab2" size="5">
+              <v-icon color="#a7aab2" size="15">
                 wc-vaccinecard
               </v-icon>
             </div>
@@ -57,7 +58,7 @@
         <div class="mandatoryQuarantine">
           <div class="mandatoryQuarantineTitle">
             <div>
-              <v-icon color="#a7aab2" size="5">
+              <v-icon color="#a7aab2" size="15">
                 wc-calender
               </v-icon>
             </div>
@@ -117,14 +118,23 @@ export default Vue.extend({
   },
   data() {
     return {
-      vaccinationText: ""
+      vaccinationText: "",
+      vaccinationColor: "" as any
     }
   },
   created() {
-    if (this.immigrationStatusCardDto.vaccinationFlag) {
+    if(this.immigrationStatusCardDto.vaccinationFlag == 0){
+      this.vaccinationText = "무관";
+      this.vaccinationColor = '#15171C';
+    }else if(this.immigrationStatusCardDto.vaccinationFlag == 1){
+      this.vaccinationText = "선택"
+      this.vaccinationColor = "#EA9400";
+    }else if(this.immigrationStatusCardDto.vaccinationFlag == 2) {
       this.vaccinationText = "필수"
-    } else {
-      this.vaccinationText = "무관"
+      this.vaccinationColor = "#EF265C";
+    }else {
+      this.vaccinationText = "선택 안됨"
+      this.vaccinationColor = "";
     }
   },
   methods: {
@@ -134,6 +144,7 @@ export default Vue.extend({
     tapCard() {
       this.$emit("tapCard", this.immigrationStatusCardDto)
     },
+
     travelAlarmClick(){
       if(!this.$store.state.isLogin){
         this.$swal("로그인이 필요합니다.")
@@ -202,16 +213,12 @@ export default Vue.extend({
   align-items: center;
   font-family: "Noto Sans KR";
   font-size: 13px;
-  color: #15171c;
 }
 
 .vaccinationInfo .text {
   margin-left: 5px;
 }
 
-.vaccinationInfo.active {
-  color: #ef265c;
-}
 
 .vaccinationTitle, .pcrTestTitle, .mandatoryQuarantineTitle {
   display: flex;
@@ -226,15 +233,10 @@ export default Vue.extend({
   margin-left: 5px;
 }
 
-.vaccinationNeed {
+.vaccinationIcon {
   width: 8px;
   height: 8px;
   border-radius: 15px;
-  background-color: #15171c;
-}
-
-.vaccinationNeed.active {
-  background-color: #ef265c;
 }
 
 .alarmBtn {

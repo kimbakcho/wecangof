@@ -71,9 +71,11 @@ export default Vue.extend({
   width: 100vw;
   display: flex;
   flex-direction: column;
+  z-index: 10;
 }
 .BC001Content{
   flex-grow: 1;
   overflow-y: auto;
+  padding: 25px;
 }
 </style>
