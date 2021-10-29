@@ -63,6 +63,8 @@ import {QABoardCategoryResDto} from "@/Bis/QABoardCategory/Dto/QABoardCategoryRe
 import {QABoardCategoryUseCase} from "@/Bis/QABoardCategory/Domain/QABoardCategoryUseCase";
 import AdminContentUseCase from "@/Bis/AdminContent/Domain/UseCase/AdminContentUseCase";
 import {AdminContentSimpleResDto} from "@/Bis/AdminContent/Dto/AdminContentSimpleResDto";
+import firebase from 'firebase/app'
+import MemberManagementUseCase from "@/Bis/MemberManagement/Domain/UseCase/MemberManagementUseCase";
 
 export default Vue.extend({
   name: 'Home',
@@ -99,6 +101,30 @@ export default Vue.extend({
     const _this: any = this;
     return {
       qaBoardCategorys: _this.qaBoardCategorys
+    }
+  },
+  async mounted() {
+    const messaging = firebase.messaging()
+
+    if(this.$store.state.isLogin){
+      if(window.navigator.userAgent.indexOf("wecango") == -1){
+        let token = await messaging.getToken({vapidKey: "BNi-JqLf5HCbYyGWXxy9-GSHrMru8rtdAdIODhAsYZQsSwH3__MImdnai1ZjXZH_fRt5wNh4KHQCl46OzqBauow"})
+        let memberManagementUseCase = new MemberManagementUseCase();
+        await memberManagementUseCase.updateFcmToken({
+          uid: this.$store.state.userInfo.uid,
+          token: token
+        });
+        messaging.onMessage(payload => {
+
+          let dePay: any = JSON.parse(payload.data.payload);
+
+          this.$swal.fire({
+            title: dePay.title,
+            text: dePay.message,
+          });
+
+        })
+      }
     }
   },
   methods: {

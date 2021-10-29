@@ -3,6 +3,7 @@ import {MemberManagementSimpleResDto} from "@/Bis/MemberManagement/Dto/MemberMan
 import {MemberSearchReqDto} from "@/Bis/MemberManagement/Dto/MemberSearchReqDto";
 import {PageWrap} from "@/Bis/Common/PageWrap";
 import {MemberManagementResDto} from "@/Bis/MemberManagement/Dto/MemberManagementResDto";
+import {FcmTokenUpdateReqDto} from "@/Bis/MemberManagement/Dto/FcmTokenUpdateReqDto";
 
 export default class MemberManagementUseCase {
 
@@ -27,5 +28,9 @@ export default class MemberManagementUseCase {
                 uid: uid
             }
         });
+    }
+
+    async updateFcmToken(reqDto: FcmTokenUpdateReqDto):Promise<void> {
+        await axios.post("/MemberManagement/fcmToken",reqDto);
     }
 }

@@ -21,6 +21,9 @@ import VueViewer from 'v-viewer'
 
 import VueClipboard from 'vue-clipboard2'
 
+import firebase from 'firebase/app'
+import 'firebase/messaging'
+
 Vue.use(VueSweetalert2);
 
 Vue.use(VueCookies);
@@ -60,3 +63,31 @@ router.beforeEach((to, from, next) => {
 router.afterEach(() => {
     app.loading = false
 })
+
+const firebaseConfig = {
+    apiKey: "AIzaSyCiC8m5pNQ9mG5t5iou8NSsk1k7JPk2k68",
+    authDomain: "wecango.firebaseapp.com",
+    projectId: "wecango",
+    storageBucket: "wecango.appspot.com",
+    messagingSenderId: "352727726767",
+    appId: "1:352727726767:web:d0c40a11dc90a941c0f25a",
+    measurementId: "G-9N5WDM9MY4"
+};
+
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig)
+
+const messaging = firebase.messaging()
+
+Notification.requestPermission()
+    .then((permission) => {
+        console.log('permission ', permission)
+        if (permission !== 'granted') {
+            alert('알림을 허용해주세요')
+        }
+    })
+
+
+
+
+
