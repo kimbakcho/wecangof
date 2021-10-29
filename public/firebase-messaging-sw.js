@@ -21,7 +21,7 @@ messaging.onBackgroundMessage((payload) => {
     const notificationTitle = dePay.title;
     const notificationOptions = {
         body: dePay.message,
-        icon: '/firebase-logo.png'
+        icon: 'https://wecango.s3.ap-northeast-2.amazonaws.com/logo111.png'
     };
 
     self.addEventListener('notificationclick', function(event) {
