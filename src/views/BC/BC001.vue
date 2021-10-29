@@ -54,6 +54,7 @@ export default Vue.extend({
       plugins: [[popupPlugin,pluginOption],[innerLinkPlugin,pluginOption]],
       initialValue: this.adminContentResDto.markDown,
     });
+    document.dispatchEvent(new Event('render-event'))
   },
 
   async beforeRouteEnter(to: Route, from: Route, next: any) {

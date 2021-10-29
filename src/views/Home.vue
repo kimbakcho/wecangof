@@ -126,6 +126,7 @@ export default Vue.extend({
         })
       }
     }
+    document.dispatchEvent(new Event('render-event'))
   },
   methods: {
     plusClick() {

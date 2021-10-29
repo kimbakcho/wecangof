@@ -1,12 +1,24 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const path = require('path')
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const PrerenderSPAPlugin = require('prerender-spa-plugin')
+const Renderer = PrerenderSPAPlugin.PuppeteerRenderer
+
 module.exports = {
   transpileDependencies: [
     'vuetify'
   ],
-  publicPath: process.env.VUE_PUBLIC_URL
-
-
-
-
+  publicPath: process.env.VUE_PUBLIC_URL,
+  configureWebpack: {
+    plugins: [new PrerenderSPAPlugin({
+      staticDir: path.join(__dirname, 'dist'),
+      routes: ['/','/BC001/7'],
+      renderer: new Renderer({
+        headless: false,
+        renderAfterDocumentEvent: 'render-event'
+      })
+    })]
+  }
 
   // devServer: {
   //   historyApiFallback: true,

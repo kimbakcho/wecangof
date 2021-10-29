@@ -65,6 +65,7 @@ export default (Vue as VueConstructor<Vue & {
   },
   mounted() {
     this.travelTrueClick();
+
   },
   methods: {
     back() {
