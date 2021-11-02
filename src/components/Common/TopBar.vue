@@ -33,7 +33,6 @@ export default Vue.extend({
   methods:{
     back(){
       if(window !== window.parent){
-        console.log("islinkBoard")
         this.$router.back()
       }else if(this.$root.$data.pageLoadingCount == 1){
         this.$router.replace({

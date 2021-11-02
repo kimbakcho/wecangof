@@ -84,9 +84,10 @@ const messaging = firebase.messaging()
 Notification.requestPermission()
     .then((permission) => {
         console.log('permission ', permission)
-        if (permission !== 'granted') {
-            alert('알림을 허용해주세요')
-        }
+
+        // if (permission !== 'granted') {
+        //     alert('알림을 허용해주세요')
+        // }
     })
 
 
