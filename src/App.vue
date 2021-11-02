@@ -195,15 +195,6 @@ export default Vue.extend({
 /*  transition: all 20s;*/
 /*}*/
 
-.sliderInRight-enter {
-  transform: translate(0%, 100%);
-}
-.sliderInRight-enter-active {
-  transition: all 1s;
-}
-.sliderInRight-enter-to{
-  transform: translate(0%, 0%);
-}
 
 .slideUp-enter {
   transform: translate(0%, 100%);
