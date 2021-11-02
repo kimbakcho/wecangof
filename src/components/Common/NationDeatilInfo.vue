@@ -36,7 +36,7 @@
             <div class="updateTime">
               {{ `최신 업데이트 ${getUpdateDateFormatText(immigrationStatusDetailResDto.vaccinatedLeavesCountry.updateDateTime)}` }}
             </div>
-            <div id="exitVaccinated" class="contentViewer">
+            <div id="exitVaccinated" class="contentViewer" ref="exitVaccinated">
 
             </div>
           </v-tab-item>
@@ -44,7 +44,7 @@
             <div class="updateTime">
               {{ `최신 업데이트 ${getUpdateDateFormatText(immigrationStatusDetailResDto.unvaccinatedLeavesCountry.updateDateTime)}` }}
             </div>
-            <div id="exitNotVaccinated" class="contentViewer">
+            <div id="exitNotVaccinated" class="contentViewer" ref="exitNotVaccinated">
 
             </div>
           </v-tab-item>
@@ -70,7 +70,7 @@
             <div class="updateTime">
               {{ `최신 업데이트 ${ getUpdateDateFormatText(immigrationStatusDetailResDto.vaccinatedReturnHome.updateDateTime)}` }}
             </div>
-            <div id="returnHomeVaccinated" class="contentViewer">
+            <div id="returnHomeVaccinated" class="contentViewer" ref="returnHomeVaccinated">
 
             </div>
           </v-tab-item>
@@ -78,7 +78,7 @@
             <div class="updateTime">
               {{ `최신 업데이트 ${getUpdateDateFormatText(immigrationStatusDetailResDto.unvaccinatedReturnHome.updateDateTime)}` }}
             </div>
-            <div id="returnHomeNotVaccinated" class="contentViewer">
+            <div id="returnHomeNotVaccinated" class="contentViewer" ref="returnHomeNotVaccinated">
 
             </div>
           </v-tab-item>
@@ -88,7 +88,7 @@
   </div>
 </template>
 <script lang="ts">
-import Vue, {PropType} from "vue"
+import Vue, {PropType, VueConstructor} from "vue"
 import {ImmigrationStatusDetailResDto} from "../../Bis/ImmigrationStatus/Dto/ImmigrationStatusDetailResDto";
 import {popupPlugin} from "@/toustuiplugin/popupPlugin";
 import {innerLinkPlugin} from "@/toustuiplugin/innerLinkPlugin";
@@ -102,7 +102,14 @@ import colorSyntax from '@toast-ui/editor-plugin-color-syntax';
 import '@toast-ui/editor-plugin-table-merged-cell/dist/toastui-editor-plugin-table-merged-cell.css';
 import tableMergedCell from '@toast-ui/editor-plugin-table-merged-cell';
 
-export default Vue.extend({
+export default (Vue as VueConstructor<Vue & {
+  $refs:{
+    exitVaccinated: HTMLDivElement,
+    exitNotVaccinated: HTMLDivElement,
+    returnHomeVaccinated: HTMLDivElement,
+    returnHomeNotVaccinated: HTMLDivElement
+  }
+}>).extend({
   props:{
     immigrationStatusDetailResDto:{
       type: Object as PropType<ImmigrationStatusDetailResDto>,
@@ -123,27 +130,29 @@ export default Vue.extend({
     }
 
     const vaccinatedLeavesCountryViewer = new Viewer({
-      el: document.querySelector('#exitVaccinated') as any,
+      el: this.$refs.exitVaccinated,
       plugins: [[popupPlugin,pluginOption],[innerLinkPlugin,pluginOption]],
       initialValue: this.immigrationStatusDetailResDto.vaccinatedLeavesCountry.contentMarkDown,
     });
+    console.log(vaccinatedLeavesCountryViewer)
     const unVaccinatedLeavesCountryViewer = new Viewer({
-      el: document.querySelector('#exitNotVaccinated') as any,
+      el: this.$refs.exitNotVaccinated,
       plugins: [[popupPlugin,pluginOption],[innerLinkPlugin,pluginOption]],
       initialValue: this.immigrationStatusDetailResDto.unvaccinatedLeavesCountry.contentMarkDown,
     });
 
     const vaccinatedReturnHomeViewer = new Viewer({
-      el: document.querySelector('#returnHomeVaccinated') as any,
+      el: this.$refs.returnHomeVaccinated,
       plugins: [[popupPlugin,pluginOption],[innerLinkPlugin,pluginOption]],
       initialValue: this.immigrationStatusDetailResDto.vaccinatedReturnHome.contentMarkDown,
     });
 
     const unvaccinatedReturnHomeViewer = new Viewer({
-      el: document.querySelector('#returnHomeNotVaccinated') as any,
+      el: this.$refs.returnHomeNotVaccinated,
       plugins: [[popupPlugin,pluginOption],[innerLinkPlugin,pluginOption]],
       initialValue: this.immigrationStatusDetailResDto.unvaccinatedReturnHome.contentMarkDown,
     });
+    this.$forceUpdate()
   },
   methods:{
     exitModeClick(){

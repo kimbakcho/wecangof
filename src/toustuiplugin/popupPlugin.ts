@@ -3,7 +3,7 @@ import {MdNode, PluginContext, PluginInfo} from "@toast-ui/editor";
 export function popupPlugin (context: PluginContext,options: any ): PluginInfo{
     const _this = options.context;
     function popupClick(title: string,value: string){
-        console.log(value)
+
         _this.$swal.fire({
             title: title,
             // text: value,
@@ -20,12 +20,13 @@ export function popupPlugin (context: PluginContext,options: any ): PluginInfo{
                 let content = ""
 
                 setTimeout(() => {
-                    const querySelector: NodeListOf<HTMLDivElement> = document.querySelectorAll(".popupBox");
-                    querySelector.forEach(elem =>{
-                        elem.addEventListener('click',evt => {
+                    const querySelector1 = document.querySelector(`.popupBox${node.id}`);
+                    if(querySelector1){
+                        querySelector1.addEventListener('click',evt => {
                             popupClick(title,content)
                         });
-                    })
+
+                    }
                 });
                 const split = node.literal!.split("\n");
 
@@ -44,7 +45,7 @@ export function popupPlugin (context: PluginContext,options: any ): PluginInfo{
                     }
                 })
                 return [
-                    {type: 'openTag', tagName: 'span', outerNewLine: true, classNames: ['popupBox']},
+                    {type: 'openTag', tagName: 'span', outerNewLine: true, classNames: [`popupBox${node.id}`,'popupBox']},
                     {type: 'html', content: `<span class="popup"> ${text} </span>`},
                     {type: 'closeTag', tagName: 'span', outerNewLine: true}
                 ]

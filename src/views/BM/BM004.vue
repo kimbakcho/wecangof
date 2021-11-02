@@ -72,7 +72,7 @@ export default Vue.extend({
   data(){
     return {
       bookMarkingFlag: false,
-      hasAlarmTravelFlag: false
+      hasAlarmTravelFlag: false,
     }
   },
   created() {
@@ -83,6 +83,7 @@ export default Vue.extend({
       this.hasAlarmTravelFlag = true;
     }
   },
+
   methods: {
     back() {
       this.$router.back();

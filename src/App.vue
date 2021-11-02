@@ -45,6 +45,15 @@ export default Vue.extend({
       if(to.path.indexOf("/WCAdmin")>=0 || from.path.indexOf("/WCAdmin")>=0){
         return ;
       }
+      if(to.path == "/linkBoard"){
+        window.scrollTo(0,0)
+        this.transitionName = 'slideUp'
+        return;
+      }
+      if(from.path == "/linkBoard"){
+        this.transitionName = 'slideDown'
+        return;
+      }
       if (to.path == "/UA001") {
         this.transitionName = 'sliderInRight'
         return;
@@ -69,14 +78,7 @@ export default Vue.extend({
         this.transitionName = 'sliderOutRight'
         return;
       }
-      if(to.path == "/linkBoard"){
-        this.transitionName = 'slide-up'
-        return;
-      }
-      if(from.path == "/linkBoard"){
-        this.transitionName = 'slide-down'
-        return;
-      }
+
 
     }
   },
@@ -178,14 +180,50 @@ export default Vue.extend({
   transform: translate(100%, 0%);
 }
 
+.sliderInRight-enter {
+  transform: translate(100%, 0%);
+}
+.sliderInRight-enter-active {
+  transition: all 1s;
+}
+.sliderInRight-enter-to{
+  transform: translate(0%, 0%);
+}
+
 /*.sliderOutRight-leave-active {*/
 /*  transform: translate(100%, 0%);*/
 /*  transition: all 20s;*/
 /*}*/
 
-.slide-up-enter, .slide-down-leave-active{
-  transform: translate(0, 100%);
-  transition: all 1s cubic-bezier(.55,0,.1,1);
+.sliderInRight-enter {
+  transform: translate(0%, 100%);
 }
+.sliderInRight-enter-active {
+  transition: all 1s;
+}
+.sliderInRight-enter-to{
+  transform: translate(0%, 0%);
+}
+
+.slideUp-enter {
+  transform: translate(0%, 100%);
+}
+.slideUp-enter-active {
+  transition: all 1s;
+}
+.slideUp-enter-to{
+  transform: translate(0%, 0%);
+}
+
+.slideUp-leave {
+  transform: translate(0%, 0%);
+}
+.slideUp-leave-active {
+  transition: all 1s;
+}
+.slideUp-leave-to {
+  transform: translate(0%, 0%);
+}
+
 </style>
 

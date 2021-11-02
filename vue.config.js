@@ -9,7 +9,7 @@ module.exports = {
     'vuetify'
   ],
   publicPath: process.env.VUE_PUBLIC_URL,
-  configureWebpack: {
+  configureWebpack:   process.env.NODE_ENV === 'production' ?  {
     plugins: [new PrerenderSPAPlugin({
       staticDir: path.join(__dirname, 'dist'),
       routes: ['/','/BC001/7'],
@@ -18,7 +18,7 @@ module.exports = {
         renderAfterDocumentEvent: 'render-event'
       })
     })]
-  }
+  }: {}
 
   // devServer: {
   //   historyApiFallback: true,
