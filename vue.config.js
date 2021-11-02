@@ -8,6 +8,14 @@ module.exports = {
   transpileDependencies: [
     'vuetify'
   ],
+  chainWebpack: config => {
+    config
+        .plugin('html')
+        .tap(args => {
+          args[0].title = "위캔고- 위드 코로나 시대";
+          return args;
+        })
+  },
   publicPath: process.env.VUE_PUBLIC_URL,
   configureWebpack:   process.env.NODE_ENV === 'production' ?  {
     plugins: [new PrerenderSPAPlugin({

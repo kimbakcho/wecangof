@@ -35,13 +35,14 @@ const axiosp: any = axios
 
 Vue.use(axiosp)
 
-
 const apiKey = process.env.VUE_APP_KAKAOAPIKEY
+
+
 
 Vue.config.productionTip = false
 
 const app = new Vue({
-    data: { loading: false },
+    data: { loading: false, pageLoadingCount: 0 },
     router,
     store,
     vuetify,
@@ -62,6 +63,7 @@ router.beforeEach((to, from, next) => {
 
 router.afterEach(() => {
     app.loading = false
+    app.pageLoadingCount++;
 })
 
 const firebaseConfig = {
