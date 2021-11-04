@@ -53,16 +53,19 @@ export default Vue.extend({
       return this.$router.back()
     },
     kakaoLogin() {
+      this.$gtag.event('login', { method: 'kakao' })
       this.$kakao.Auth.authorize({
         redirectUri: process.env.VUE_APP_KAKAOREDIRECT
       })
     },
     naverLoginClick() {
+      this.$gtag.event('login', { method: 'naver' })
       let naver_id_loginTag: any = document.getElementById("naver_id_login");
       let btnNaverLogin = naver_id_loginTag.firstChild;
       btnNaverLogin.click();
     },
     googleLoginClick(){
+      this.$gtag.event('login', { method: 'Google' })
       let win: any = window
       let gapi: any = win.gapi;
       let auth2 = gapi.auth2.getAuthInstance()

@@ -92,6 +92,7 @@ export default Vue.extend({
       }
     },
     async bookMarkClick() {
+      this.$gtag.event('bookMarkingBtnClick', { nationId: this.nationId, tryBookMarking: !this.hasBookMark })
       if (!this.$store.state.isLogin) {
         await this.$swal("로그인이 필요 합니다.");
         await this.$router.push({
@@ -102,6 +103,7 @@ export default Vue.extend({
       if (!this.hasBookMark) {
         this.dialog = true
       }
+
       let userBookMarkingCountryUseCase = new UserBookMarkingCountryUseCase();
       this.$emit("update:hasBookMark", !this.hasBookMark)
       if (!this.hasBookMark) {

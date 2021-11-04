@@ -23,7 +23,7 @@ import VueClipboard from 'vue-clipboard2'
 
 import firebase from 'firebase/app'
 import 'firebase/messaging'
-
+import VueGtag from "vue-gtag";
 Vue.use(VueSweetalert2);
 
 Vue.use(VueCookies);
@@ -35,11 +35,15 @@ const axiosp: any = axios
 
 Vue.use(axiosp)
 
+
 const apiKey = process.env.VUE_APP_KAKAOAPIKEY
 
-
-
 Vue.config.productionTip = false
+
+Vue.use(VueGtag, {
+    config: { id: "G-9N5WDM9MY4" }
+},router);
+
 
 const app = new Vue({
     data: { loading: false, pageLoadingCount: 0 },
@@ -66,6 +70,8 @@ router.afterEach(() => {
     app.pageLoadingCount++;
 })
 
+
+
 const firebaseConfig = {
     apiKey: "AIzaSyCiC8m5pNQ9mG5t5iou8NSsk1k7JPk2k68",
     authDomain: "wecango.firebaseapp.com",
@@ -89,7 +95,6 @@ Notification.requestPermission()
         //     alert('알림을 허용해주세요')
         // }
     })
-
 
 
 

@@ -75,6 +75,9 @@ export default Vue.extend({
       hasAlarmTravelFlag: false,
     }
   },
+  mounted(){
+    this.$gtag.event('BM004ViewPage', { nationId: this.nationId,nationIdName: this.immigrationStatusDetailResDto.nation.nationName })
+  },
   created() {
     if(this.bookMarking){
       this.bookMarkingFlag = true
