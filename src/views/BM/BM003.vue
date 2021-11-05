@@ -117,7 +117,7 @@ export default (Vue as VueConstructor<Vue & {
 </script>
 <style scoped>
 .root {
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   width: 100vw;
   background-color: white;
   z-index: 10;

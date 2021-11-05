@@ -63,7 +63,7 @@ export default Vue.extend({
 <style scoped>
 .bm0031Root{
   width: 100vw;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
 }
 .bm0031content{
   width: 100%;

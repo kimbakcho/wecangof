@@ -242,13 +242,12 @@ export default Vue.extend({
 </script>
 <style scoped>
 .mainRoot {
-  height: calc(100vh);
-  overflow: hidden;
+  height: calc(var(--vh, 1vh) * 100);
 }
 
 .content {
-  height: calc(100vh - 35px);
-  overflow-y: auto;
+  height: calc(calc(var(--vh, 1vh) * 100) - 35px);
+  overflow-y: hidden;
   display: flex;
   flex-wrap: nowrap;
   overflow-x: hidden;
@@ -344,13 +343,15 @@ export default Vue.extend({
 
 .content.inOutDash{
   transform: translateX(0vw);
-  transition: all 1s ease;
+  transition: transform 1s;
+
 }
 .content.qAndAMode{
   transform: translateX(-100vw);
-  transition: all 1s ease;
+  transition: transform 1s;
 }
 .contentItem::-webkit-scrollbar {
   display: none;
 }
 </style>
+

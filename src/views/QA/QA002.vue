@@ -132,7 +132,7 @@ export default QA002;
 <style scoped>
 .QA002Root{
   width: 100vw;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   display: flex;
   flex-direction: column;
 }

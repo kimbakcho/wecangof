@@ -125,7 +125,7 @@ export default Vue.extend({
 <style scoped>
 .loadingRoot{
   width: 100vw;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -133,10 +133,17 @@ export default Vue.extend({
 }
 </style>
 <style>
+body {
+  overflow: hidden;
+  width: 100vw;
+  height: calc(var(--vh, 1vh) * 100);
+}
 .child-view {
   position: absolute;
   width: 100vw;
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .sliderInRight-enter {

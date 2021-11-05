@@ -44,6 +44,13 @@ Vue.use(VueGtag, {
     config: { id: "G-9N5WDM9MY4" }
 },router);
 
+//mobile 에서 100vh 대응
+document.documentElement.style.setProperty('--vh', `${window.innerHeight/100}px`);
+
+window.addEventListener('resize', () => {
+    // We execute the same script as before
+    document.documentElement.style.setProperty('--vh', `${window.innerHeight/100}px`);
+});
 
 const app = new Vue({
     data: { loading: false, pageLoadingCount: 0 },

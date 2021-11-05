@@ -17,6 +17,22 @@ module.exports = {
         })
   },
   publicPath: process.env.VUE_PUBLIC_URL,
+  pluginOptions: {
+    sitemap: {
+      urls: [
+          'https://wecango.org',
+          'https://wecango.org/BM002',
+          'https://wecango.org/BM003',
+          'https://wecango.org/BM004',
+          'https://wecango.org/BM0031',
+          'https://wecango.org/BC001',
+          'https://wecango.org/UA001',
+          'https://wecango.org/QA001',
+          'https://wecango.org/QA003',
+          'https://wecango.org/QA006',
+      ]
+    }
+  },
   configureWebpack:   process.env.NODE_ENV === 'production' ?  {
     plugins: [new PrerenderSPAPlugin({
       staticDir: path.join(__dirname, 'dist'),

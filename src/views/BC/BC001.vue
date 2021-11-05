@@ -68,7 +68,7 @@ export default Vue.extend({
 </script>
 <style scoped>
 .BC001Root{
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   width: 100vw;
   display: flex;
   flex-direction: column;

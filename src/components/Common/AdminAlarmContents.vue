@@ -34,6 +34,7 @@ export default Vue.extend({
   align-items: center;
   flex-wrap: nowrap;
   overflow-x: auto;
+  transition: none !important;
 }
 .AdminAlarmContents::-webkit-scrollbar{
   display: none;

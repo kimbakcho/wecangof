@@ -377,7 +377,7 @@ export default Vue.extend({
 }
 
 .InOutDashContent{
-  height: calc(100vh - 130px);
+  height: calc(calc(var(--vh, 1vh) * 100) - 130px);
   overflow-y: auto;
 }
 
@@ -400,5 +400,6 @@ export default Vue.extend({
 .AdminAlarmContents {
   position: absolute;
   bottom: 20px;
+  transition: none !important;
 }
 </style>

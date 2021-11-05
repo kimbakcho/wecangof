@@ -43,14 +43,14 @@ export default (Vue as VueConstructor<Vue & {
 </script>
 <style scoped>
 .root {
-  height: 100vh;
+  height: calc(var(--vh, 1vh) * 100);
   width: 100vw;
   background-color: white;
   z-index: 10;
 }
 
 .amContent{
-  height: calc(100vh - 63px);
+  height: calc(calc(var(--vh, 1vh) * 100) - 63px);
   width: 100%;
   background-color: #F4F5FC;
   padding: 40px 25px;
