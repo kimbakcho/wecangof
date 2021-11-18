@@ -78,7 +78,6 @@ export default Vue.extend({
         this.transitionName = 'sliderOutRight'
         return;
       }
-
     }
   },
   async mounted() {
