@@ -226,7 +226,6 @@ export default Vue.extend({
               console.log("wecangochannel")
               console.log(e)
             }
-
           }
         }else {
           vm.$store.commit(MutationTypes.SET_ISLOGIN, false)
@@ -344,7 +343,6 @@ export default Vue.extend({
 .content.inOutDash{
   transform: translateX(0vw);
   transition: transform 1s;
-
 }
 .content.qAndAMode{
   transform: translateX(-100vw);

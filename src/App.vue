@@ -79,7 +79,6 @@ export default Vue.extend({
         return;
       }
 
-
     }
   },
   async mounted() {
@@ -116,9 +115,7 @@ export default Vue.extend({
         this.$store.commit(MutationTypes.SET_ISLOGIN,false)
       }
     }
-
   }
-
 });
 
 </script>
