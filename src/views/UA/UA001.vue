@@ -9,6 +9,7 @@
           카카오톡으로 로그인
         </div>
       </div>
+
       <div id="naver_id_login"></div>
       <div class="naverLogin" @click="naverLoginClick">
         <img src="@/assets/naver_ico.png"
@@ -25,6 +26,7 @@
           구글로 로그인
         </div>
       </div>
+
     </div>
   </div>
 </template>
@@ -54,9 +56,7 @@ export default Vue.extend({
     },
     kakaoLogin() {
       this.$gtag.event('login', { method: 'kakao' })
-      this.$kakao.Auth.authorize({
-        redirectUri: process.env.VUE_APP_KAKAOREDIRECT
-      })
+      location.href=`https://kauth.kakao.com/oauth/authorize?client_id=b99d3c5a3a2d0b73fd79172539d710e5&redirect_uri=${process.env.VUE_APP_KAKAOREDIRECT}&response_type=code`
     },
     naverLoginClick() {
       this.$gtag.event('login', { method: 'naver' })
@@ -66,27 +66,20 @@ export default Vue.extend({
     },
     googleLoginClick(){
       this.$gtag.event('login', { method: 'Google' })
-      let win: any = window
-      let gapi: any = win.gapi;
-      let auth2 = gapi.auth2.getAuthInstance()
-      auth2.signIn()
+      location.href="https://accounts.google.com/o/oauth2/v2/auth?" +
+          "scope=https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile openid&" +
+          "access_type=offline&" +
+          "include_granted_scopes=true&" +
+          "state=state_parameter_passthrough_value&" +
+          `redirect_uri=${process.env.VUE_APP_GOOGLE_REDIRECT_URL}&` +
+          "response_type=code&" +
+          "client_id=352727726767-nuvi74gsk08hf746r14c1i2j2s7l6d2o.apps.googleusercontent.com";
     }
   },
   mounted() {
-    let win: any = window
-    let naver_id_login: any = new win.naver_id_login(process.env.VUE_APP_NAVER_CLIENT_ID, process.env.VUE_APP_NAVER_CALLBACK_URL);
+    let naver_id_login: any = new window.naver_id_login(process.env.VUE_APP_NAVER_CLIENT_ID, process.env.VUE_APP_NAVER_CALLBACK_URL);
     naver_id_login.setDomain(process.env.VUE_APP_NAVER_SERVICE_URL);
     naver_id_login.init_naver_id_login();
-    let gapi: any = win.gapi;
-    gapi.load('auth2', function() {
-      gapi.auth2.init({
-        "client_id": process.env.VUE_APP_GOOGLE_CLIENT_ID,
-        "scope": "profile email",
-        "ux_mode": "redirect",
-        "fetch_basic_profile": false,
-        "redirect_uri": process.env.VUE_APP_GOOGLE_REDIRECT_URL
-      })
-    });
   }
 })
 </script>

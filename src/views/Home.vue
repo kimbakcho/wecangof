@@ -106,26 +106,7 @@ export default Vue.extend({
   async mounted() {
     const messaging = firebase.messaging()
 
-    if(this.$store.state.isLogin){
-      if(window.navigator.userAgent.indexOf("wecango") == -1){
-        let token = await messaging.getToken({vapidKey: "BNi-JqLf5HCbYyGWXxy9-GSHrMru8rtdAdIODhAsYZQsSwH3__MImdnai1ZjXZH_fRt5wNh4KHQCl46OzqBauow"})
-        let memberManagementUseCase = new MemberManagementUseCase();
-        await memberManagementUseCase.updateFcmToken({
-          uid: this.$store.state.userInfo.uid,
-          token: token
-        });
-        messaging.onMessage(payload => {
 
-          let dePay: any = JSON.parse(payload.data.payload);
-
-          this.$swal.fire({
-            title: dePay.title,
-            text: dePay.message,
-          });
-
-        })
-      }
-    }
     document.dispatchEvent(new Event('render-event'))
   },
   methods: {
@@ -215,13 +196,11 @@ export default Vue.extend({
         if(data){
           let userInfo = {};
           Object.assign(userInfo, data);
-
           vm.$store.commit(MutationTypes.SET_ISLOGIN, true)
           vm.$store.commit(MutationTypes.SET_ISUSERINFO, userInfo as UserInfo)
           if(window.navigator.userAgent.indexOf("wecango") > 0){
-            let win: any = window
             try{
-              win.wecango.postMessage(JSON.stringify(userInfo))
+              window.wecango.postMessage(JSON.stringify(userInfo))
             }catch (e) {
               console.log("wecangochannel")
               console.log(e)

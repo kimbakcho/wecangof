@@ -14,6 +14,7 @@ export default Vue.extend({
     location.href= `${process.env.VUE_APP_NAVER_BACKEND_REDIRECT_URL}?token=${naver_id_login.oauthParams.access_token}`
   }
 
+
 })
 </script>
 <style scoped>

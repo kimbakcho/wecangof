@@ -28,6 +28,21 @@ const routes: Array<RouteConfig> = [
     component: () => import(/* webpackChunkName: "UA001" */ '../views/UA/UA001.vue')
   },
   {
+    path: '/UA002',
+    component: () => import(/* webpackChunkName: "UA002" */ '../views/UA/UA002.vue'),
+    props: (route) => ({
+      uid: route.query.uid,
+      profileImage: route.query.profileImage,
+      nickName: route.query.nickName,
+      signToken: route.query.signToken,
+      fromJoin: route.query.fromJoin
+    })
+  },
+  {
+    path: "/UA003",
+    component: () => import(/* webpackChunkName: "UA003" */ '../views/UA/UA003.vue'),
+  },
+  {
     path: '/BM003',
     name: 'BM003',
     component: () => import(/* webpackChunkName: "BM003" */ '../views/BM/BM003.vue')
@@ -145,16 +160,8 @@ const routes: Array<RouteConfig> = [
     name: 'naverRedirect',
     component: () => import(/* webpackChunkName: "naverRedirect" */ '../views/NaverLoginRedirect.vue'),
   },
-  {
-    path: '/googleRedirect',
-    name: 'googleRedirect',
-    component: () => import(/* webpackChunkName: "googleRedirect" */ '../views/GoogleLoginRedirect.vue'),
-  },
-  {
-    path: '/kakaoLoginRedirect',
-    name: 'kakaoLoginRedirect',
-    component: () => import(/* webpackChunkName: "kakaoLoginRedirect" */ '../views/KakaoLoginRedirect.vue'),
-  }
+
+
 
 ]
 

@@ -16,6 +16,10 @@ declare module "vue/types/options" {
 declare module "naver_id_login"
 
 declare global {
-    interface Window { popStateDetected : boolean; }
+    interface Window { popStateDetected : boolean;
+        vmApp: any,
+        wecango: any,
+        naver_id_login: any,
+    }
 }
 

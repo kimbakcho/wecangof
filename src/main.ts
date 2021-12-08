@@ -24,6 +24,8 @@ import VueClipboard from 'vue-clipboard2'
 import firebase from 'firebase/app'
 import 'firebase/messaging'
 import VueGtag from "vue-gtag";
+import {MutationTypes} from "@/store/mutations";
+import UserInfo from "@/Bis/Common/UserInfo";
 Vue.use(VueSweetalert2);
 
 Vue.use(VueCookies);
@@ -34,7 +36,6 @@ Vue.use(VueClipboard)
 const axiosp: any = axios
 
 Vue.use(axiosp)
-
 
 const apiKey = process.env.VUE_APP_KAKAOAPIKEY
 
@@ -49,7 +50,10 @@ document.documentElement.style.setProperty('--vh', `${window.innerHeight/100}px`
 
 window.addEventListener('resize', () => {
     // We execute the same script as before
-    document.documentElement.style.setProperty('--vh', `${window.innerHeight/100}px`);
+    if (window.navigator.userAgent.indexOf("wecango") == -1) {
+        document.documentElement.style.setProperty('--vh', `${window.innerHeight/100}px`);
+    }
+
 });
 
 const app = new Vue({
@@ -58,7 +62,37 @@ const app = new Vue({
     store,
     vuetify,
     render: h => h(App)
-}).$mount('#app')
+});
+
+(async function start() {
+    function getCookie(name: string) {
+        const value = `; ${document.cookie}`;
+        const parts: any = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+    const headers: any = axios.defaults.headers;
+    const wSesstion = getCookie("wSesstion");
+    if(wSesstion){
+        headers['Authorization'] = 'Bearer ' + wSesstion
+        try{
+            const { data } = await axios.get("/MemberManagement/me");
+            if(data){
+                const userInfo = {};
+                Object.assign(userInfo, data);
+                app.$store.commit(MutationTypes.SET_ISLOGIN,true)
+                app.$store.commit(MutationTypes.SET_ISUSERINFO,userInfo as UserInfo)
+            }else {
+                app.$store.commit(MutationTypes.SET_ISLOGIN, false)
+            }
+        }catch (e) {
+            app.$store.commit(MutationTypes.SET_ISLOGIN,false)
+        }finally {
+            app.$mount('#app')
+        }
+    }else {
+        app.$mount('#app')
+    }
+})();
 
 Vue.use(VueKakaoSdk, {apiKey})
 
@@ -77,22 +111,6 @@ router.afterEach(() => {
     app.pageLoadingCount++;
 })
 
-
-
-const firebaseConfig = {
-    apiKey: "AIzaSyCiC8m5pNQ9mG5t5iou8NSsk1k7JPk2k68",
-    authDomain: "wecango.firebaseapp.com",
-    projectId: "wecango",
-    storageBucket: "wecango.appspot.com",
-    messagingSenderId: "352727726767",
-    appId: "1:352727726767:web:d0c40a11dc90a941c0f25a",
-    measurementId: "G-9N5WDM9MY4"
-};
-
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig)
-
-const messaging = firebase.messaging()
 
 Notification.requestPermission()
     .then((permission) => {

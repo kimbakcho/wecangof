@@ -31,6 +31,7 @@
 <script lang="ts">
 import Vue from "vue"
 import NationControlUseCase from "@/Bis/NationControl/Domain/UseCase/NationControlUseCase";
+import MemberManagementUseCase from "@/Bis/MemberManagement/Domain/UseCase/MemberManagementUseCase";
 
 const NickNameSheet = Vue.extend({
   data(){
@@ -48,12 +49,12 @@ const NickNameSheet = Vue.extend({
       this.dialog = false
     },
     async setNickName(){
-      let nationControlUseCase = new NationControlUseCase();
-      let check = await nationControlUseCase.checkNickName(this.nickName);
+      let memberManagementUseCase = new MemberManagementUseCase();
+      let check = await memberManagementUseCase.checkNickName(this.nickName);
       if(check) {
         this.$swal("현재 다른 사람이 사용중인 별명입니다")
       }else {
-        await nationControlUseCase.changeNickName(this.nickName);
+        await memberManagementUseCase.changeNickName(this.nickName);
         this.$store.state.userInfo.nickName = this.nickName;
         this.$forceUpdate()
         this.dialog=false

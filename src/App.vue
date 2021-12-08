@@ -21,7 +21,8 @@ import axios from "axios";
 import {MutationTypes} from "@/store/mutations";
 import UserInfo from "@/Bis/Common/UserInfo";
 import {QABoardFilterReqDto} from "@/Bis/QABoard/Dto/QABoardFilterReqDto";
-
+import MemberManagementUseCase from "@/Bis/MemberManagement/Domain/UseCase/MemberManagementUseCase";
+import firebase from "firebase";
 export default Vue.extend({
   name: 'App',
 
@@ -29,7 +30,16 @@ export default Vue.extend({
     transitionName: 'sliderOutRight',
     currentHistoryCount: 0,
     backActive: false,
-    currentFromPath: "/"
+    currentFromPath: "/",
+    firebaseConfig : {
+      apiKey: "AIzaSyCiC8m5pNQ9mG5t5iou8NSsk1k7JPk2k68",
+      authDomain: "wecango.firebaseapp.com",
+      projectId: "wecango",
+      storageBucket: "wecango.appspot.com",
+      messagingSenderId: "352727726767",
+      appId: "1:352727726767:web:d0c40a11dc90a941c0f25a",
+      measurementId: "G-9N5WDM9MY4"
+    }
   }),
   watch: {
     '$route'(to, from) {
@@ -91,27 +101,30 @@ export default Vue.extend({
         }]
       }
     } as QABoardFilterReqDto)
-    function getCookie(name: string) {
-      const value = `; ${document.cookie}`;
-      const parts: any = value.split(`; ${name}=`);
-      if (parts.length === 2) return parts.pop().split(';').shift();
-    }
-    let headers: any = axios.defaults.headers;
-    let wSesstion = getCookie("wSesstion");
-    if(wSesstion){
-      headers['Authorization'] = 'Bearer ' + wSesstion
-      try{
-        let { data } = await axios.get("/MemberManagement/me");
-        if(data){
-          let userInfo = {};
-          Object.assign(userInfo, data);
-          this.$store.commit(MutationTypes.SET_ISLOGIN,true)
-          this.$store.commit(MutationTypes.SET_ISUSERINFO,userInfo as UserInfo)
-        }else {
-          this.$store.commit(MutationTypes.SET_ISLOGIN, false)
-        }
-      }catch (e) {
-        this.$store.commit(MutationTypes.SET_ISLOGIN,false)
+
+    window.vmApp = this;
+
+    firebase.initializeApp(this.firebaseConfig);
+
+    const messaging = firebase.messaging()
+    if(this.$store.state.isLogin){
+      if(window.navigator.userAgent.indexOf("wecango") == -1){
+        let token = await messaging.getToken({vapidKey: "BNi-JqLf5HCbYyGWXxy9-GSHrMru8rtdAdIODhAsYZQsSwH3__MImdnai1ZjXZH_fRt5wNh4KHQCl46OzqBauow"})
+        let memberManagementUseCase = new MemberManagementUseCase();
+        await memberManagementUseCase.updateFcmToken({
+          uid: this.$store.state.userInfo.uid,
+          token: token
+        });
+        messaging.onMessage(payload => {
+
+          let dePay: any = JSON.parse(payload.data.payload);
+
+          this.$swal.fire({
+            title: dePay.title,
+            text: dePay.message,
+          });
+
+        })
       }
     }
   }
