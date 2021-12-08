@@ -1,45 +1,42 @@
 <template>
   <div class="mainRoot">
-    <div class="content" :class="{inOutDash: inoutMode, qAndAMode: qAndAMode }">
-        <InOutDash class="contentItem" :user-book-mark-list="userBookMarkList" :admin-recommend-list="adminRecommendList"
-                   :un-read-count="unReadCount" :alarm-docs="alarmDocs">
-
-        </InOutDash>
-
-        <CommunityHome class="contentItem" >
-
-        </CommunityHome>
-    </div>
-    <div class="bottom">
-      <div class="bottomNav">
-        <div class="inout" :class="{ active: inoutMode }" @click="inModeClick">
-          <v-icon>
-            wc-inandout
+    <div class="content">
+      <div class="top">
+        <div @click="onUserClick">
+          <v-icon color="#215DF1" size="18" class="userInfo">
+            wc-userinfo
           </v-icon>
-          <div class="menuText">
-            IN & OUT
-          </div>
-        </div>
-        <div class="plusBtn" @click="plusClick">
-          <div class="inPlusBtn">
-            <v-icon v-if="inoutMode" color="white" size="30">
-              wc-plus
-            </v-icon>
-            <v-icon v-if="qAndAMode" color="white" size="30">
-              wc-writepen
-            </v-icon>
-          </div>
         </div>
 
-        <div class="qAnda" :class="{ active: qAndAMode }" @click="qAndAModeClick">
-          <v-icon >
-            wc-commnuity
+        <img class="logo" src="@/assets/logo.png">
+
+        <div class="alarm" @click="alarmClick">
+          <v-icon size="20" class="alarmIcon" color="#2661f1">
+            wc-alarmbell
           </v-icon>
-          <div class="menuText">
-            Q & A
+          <div class="alarmCount" v-if="unReadCount > 0">
+          <span>
+           {{ unReadCountText() }}
+          </span>
           </div>
         </div>
       </div>
+      <div class="InOutDashContent">
+
+        <div class="divider">
+
+        </div>
+        <div class="travelTitle2">
+          한국인 인기 여행지! 이 나라는 어때?
+        </div>
+        <div class="adminTravelCardList" >
+          <TravelCard3 v-for="item in adminRecommendList" :key="item.id" class="travelItem"
+                       :immigration-status-card-dto="item" @tapCard="tapCard">
+
+          </TravelCard3>
+        </div>
+      </div>
+
     </div>
   </div>
 </template>
@@ -50,91 +47,61 @@ import {Route} from "vue-router";
 import axios from "axios";
 import {MutationTypes} from "@/store/mutations";
 import UserInfo from "@/Bis/Common/UserInfo";
-
 import {ImmigrationStatusSimpleResDto} from "@/Bis/ImmigrationStatus/Dto/ImmigrationStatusSimpleResDto";
-import {UserBookMarkingCountryResDto} from "@/Bis/UserBookMarkingCountry/Dto/UserBookMarkingCountryResDto";
-
 import ImmigrationStatusUseCase from "@/Bis/ImmigrationStatus/Domain/UseCase/ImmigrationStatusUseCase";
-
 import UserAlarmUseCase from "@/Bis/UserAlarm/Domain/UseCase/UserAlarmUseCase";
-import InOutDash from "@/components/Home/InOutDash.vue";
-import CommunityHome from "@/components/Home/CommunityHome.vue";
-import {QABoardCategoryResDto} from "@/Bis/QABoardCategory/Dto/QABoardCategoryResDto";
-import {QABoardCategoryUseCase} from "@/Bis/QABoardCategory/Domain/QABoardCategoryUseCase";
-import AdminContentUseCase from "@/Bis/AdminContent/Domain/UseCase/AdminContentUseCase";
-import {AdminContentSimpleResDto} from "@/Bis/AdminContent/Dto/AdminContentSimpleResDto";
-import firebase from 'firebase/app'
-import MemberManagementUseCase from "@/Bis/MemberManagement/Domain/UseCase/MemberManagementUseCase";
+import TravelCard3 from "@/components/Common/TravelCard3.vue";
+
 
 export default Vue.extend({
   name: 'Home',
-  components:{
-    InOutDash, CommunityHome
+  components: {
+    TravelCard3
   },
   props: {
-    userBookMarkList: {
-      type: Array as PropType<UserBookMarkingCountryResDto[]>,
-    },
     adminRecommendList: {
       type: Array as PropType<ImmigrationStatusSimpleResDto[]>,
     },
     unReadCount: {
       type: Number,
     },
-    qaBoardCategorys: {
-      type: Array as PropType<QABoardCategoryResDto[]>,
-    },
-    alarmDocs: {
-      type: Array as PropType<AdminContentSimpleResDto[]>,
-    }
-  },
-  computed:{
-    inoutMode(): boolean{
-      return this.$store.state.inoutMode
-    },
-    qAndAMode(): boolean{
-      return this.$store.state.qAndAMode
-    }
-  },
-  provide () {
-    // eslint-disable-next-line @typescript-eslint/no-this-alias
-    const _this: any = this;
-    return {
-      qaBoardCategorys: _this.qaBoardCategorys
-    }
-  },
-  async mounted() {
-    const messaging = firebase.messaging()
-
-
-    document.dispatchEvent(new Event('render-event'))
   },
   methods: {
-    plusClick() {
-      if(this.inoutMode){
-        this.$router.push({
-          path: "/BM003"
+    async alarmClick() {
+      if (this.$store.state.isLogin) {
+        await this.$router.push({
+          path: "/BM002",
         })
-      } else if(this.qAndAMode) {
-        if(this.$store.state.isLogin){
-          this.$router.push({
-            path: "/QA006"
-          })
-        }else {
-          this.$swal("로그인이 필요합니다.")
-        }
+      } else {
+        await this.$swal("로그인이 필요합니다.")
+        await this.$router.push({
+          path: "/UA001",
+        })
       }
     },
-    inModeClick() {
-      this.$store.commit(MutationTypes.SET_INOUTMODE)
+    tapCard(item: ImmigrationStatusSimpleResDto) {
+      this.$router.push({
+        path: `/BM004/${item.nation.id}`,
+      })
     },
-    qAndAModeClick() {
-      // if(process.env.NODE_ENV == "production"){
-      //   this.$swal("준비중")
-      //   return ;
-      // }
-      this.$store.commit(MutationTypes.SET_QANDAMODE)
+    unReadCountText() {
+      if (this.unReadCount == 0) {
+        return ""
+      }
+      if (this.unReadCount >= 10) {
+        return "9+"
+      }
+      return this.unReadCount;
     },
+    onUserClick() {
+      this.$router.push({
+        path: "/AM002"
+      })
+    },
+  },
+
+  async mounted() {
+    document.dispatchEvent(new Event('render-event'))
   },
   async beforeRouteEnter(to: Route, from: Route, next: any) {
     function getCookie(name: string) {
@@ -145,7 +112,7 @@ export default Vue.extend({
 
     let headers: any = axios.defaults.headers;
     let wSesstion = getCookie("wSesstion");
-    if(wSesstion){
+    if (wSesstion) {
       headers['Authorization'] = 'Bearer ' + wSesstion
     }
     let immigrationStatusUseCase = new ImmigrationStatusUseCase();
@@ -153,39 +120,15 @@ export default Vue.extend({
 
     let immigrationStatusSimpleResDtos = await immigrationStatusUseCase.getAdminMainRecommend();
     params.adminRecommendList = []
-    if(immigrationStatusSimpleResDtos){
+    if (immigrationStatusSimpleResDtos) {
       params.adminRecommendList = immigrationStatusSimpleResDtos;
     }
 
-    let qaBoardCategoryUseCase = new QABoardCategoryUseCase();
-
-    let qaBoardCategorysItems = await qaBoardCategoryUseCase.getList();
-    qaBoardCategorysItems.map(x=>{
-      x.active = false
-    })
-
-    let totalCate = {
-      categoryName: "전체",
-      orderIdx: 0,
-      active: true
-    } as QABoardCategoryResDto;
-
-    params.qaBoardCategorys = [totalCate ,...qaBoardCategorysItems]
-
-    params.userBookMarkList = [];
-
-    let adminContentUseCase = new AdminContentUseCase();
-
-    params.alarmDocs = await adminContentUseCase.getMainPageDocs();
-
     if (wSesstion) {
-      try{
-        const {data} = await axios.get<UserBookMarkingCountryResDto[]>("/UserBookMarkingCountry/BookMarkings");
-        params.userBookMarkList = data;
+      try {
         let userAlarmUseCase = new UserAlarmUseCase();
         params.unReadCount = await userAlarmUseCase.unReadCount();
-
-      }catch (ex) {
+      } catch (ex) {
         console.log(ex);
       }
     }
@@ -193,25 +136,25 @@ export default Vue.extend({
     next(async (vm: Vue) => {
       try {
         let {data} = await axios.get("/MemberManagement/me");
-        if(data){
+        if (data) {
           let userInfo = {};
           Object.assign(userInfo, data);
           vm.$store.commit(MutationTypes.SET_ISLOGIN, true)
           vm.$store.commit(MutationTypes.SET_ISUSERINFO, userInfo as UserInfo)
-          if(window.navigator.userAgent.indexOf("wecango") > 0){
-            try{
+          if (window.navigator.userAgent.indexOf("wecango") > 0) {
+            try {
               window.wecango.postMessage(JSON.stringify(userInfo))
-            }catch (e) {
+            } catch (e) {
               console.log("wecangochannel")
               console.log(e)
             }
           }
-        }else {
+        } else {
           vm.$store.commit(MutationTypes.SET_ISLOGIN, false)
         }
       } catch (e) {
         vm.$store.commit(MutationTypes.SET_ISLOGIN, false)
-      }finally {
+      } finally {
         next()
       }
     });
@@ -223,112 +166,102 @@ export default Vue.extend({
   height: calc(var(--vh, 1vh) * 100);
 }
 
-.content {
-  height: calc(calc(var(--vh, 1vh) * 100) - 35px);
-  overflow-y: hidden;
-  display: flex;
-  flex-wrap: nowrap;
-  overflow-x: hidden;
-  width: 200vw;
-}
-
-
-.notice {
-  display: flex;
-  align-items: center;
-  overflow-x: auto;
-  height: 119px;
-  padding: 30px 0 30px 25px;
-  background-color: #f5f7f8;
-}
-
-.bottom {
+.top {
   width: 100%;
+  display: flex;
+  padding-top: 20px;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  min-height: 70px;
+}
+.content {
+  height: calc(var(--vh, 1vh) * 100);
+  overflow-y: hidden;
+
+  width: 100vw;
+}
+.top .login_ico {
+  width: 18px;
+  height: 18px;
+  margin-left: 26px;
+  object-fit: contain;
+}
+
+.alarm {
+  margin-right: 25px;
+  position: relative;
+}
+
+.alarmCount {
   position: absolute;
   bottom: 0;
-  left: 0;
-}
-
-.bottomNav {
-  position: relative;
-  height: 60px;
-  background-color: #fff;
-  display: flex;
-  justify-content: space-between;
-}
-
-.bottomNav .plusBtn {
-  height: 60px;
-  width: 60px;
-  text-align: center;
-  position: absolute;
-  background-color: #2661f150;
-  bottom: 50%;
-  left: 50%;
-  border-radius: 50%;
-  transform: translate(-50%, 0%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.inPlusBtn {
-  height: 50px;
-  width: 50px;
-  background-color: #2661f1;
+  left: 60%;
+  width: 12px;
+  height: 12px;
+  background-color: #f5b400;
   border-radius: 50%;
   display: flex;
   justify-content: center;
   align-items: center;
-
 }
-
-.inout {
-  width: 93px;
-  height: 60px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.inout.active .v-icon {
-  color: #205bf0;
-}
-
-.qAnda {
-  width: 93px;
-  height: 60px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-.qAnda.active .v-icon {
-  color: #205bf0;
-}
-
-.menuText {
-  margin-top: 5px;
-  font-family: "Noto Sans KR";
+.alarmCount span {
+  font-family: NotoSansCJKKR;
   font-size: 8px;
+  font-weight: 500;
+  line-height: 8px;
+
+  color: #fff;
 }
-.contentItem{
-  width: 100vw;
-  overflow-x: hidden;
+.divider {
+  width: 100%;
+  height: 1px;
+  margin: 30px 0;
+  background-color: #e9ebf4;
+}
+.travelTitle2 {
+  padding-left: 25px;
+  height: 29px;
+  margin: 10px 0 0;
+  font-family: "Noto Sans KR";
+  font-size: 20px;
+  font-weight: bold;
+  font-stretch: normal;
+  font-style: normal;
+  line-height: normal;
+  letter-spacing: normal;
+  text-align: left;
+  color: #242424;
 }
 
-.content.inOutDash{
-  transform: translateX(0vw);
-  transition: transform 1s;
+.adminTravelCardList {
+  padding: 20px;
 }
-.content.qAndAMode{
-  transform: translateX(-100vw);
-  transition: transform 1s;
+
+.adminTravelCardList .travelItem {
+  margin-bottom: 20px;
 }
-.contentItem::-webkit-scrollbar {
+
+.userInfo{
+  padding-left: 25px;
+}
+
+.logo{
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.InOutDashContent{
+  height: calc(calc(var(--vh, 1vh) * 100) - 50px);
+  overflow-y: auto;
+}
+
+.InOutDashContent::-webkit-scrollbar {
   display: none;
 }
+
+
 </style>
 
