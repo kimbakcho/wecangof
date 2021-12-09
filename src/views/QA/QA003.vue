@@ -6,7 +6,7 @@
         <div class="title">
           {{ qaBoardResDto.title }}
         </div>
-        <div class="optionBtn" @click="optionBtn" v-if="isMyDoc()">
+        <div class="optionBtn" @click="optionBtn">
           <v-icon size="20">
             fas fa-ellipsis-v
           </v-icon>
@@ -61,23 +61,22 @@
         보내기
       </button>
     </div>
-    <v-dialog v-model="optionDialog" max-width="80%">
-      <v-card>
-        <v-list>
-          <v-list-item @click="modifyDoc">
-            수정
-          </v-list-item>
-          <v-list-item @click="deleteDoc">
-            삭제
-          </v-list-item>
-          <v-list-item @click="optionDialog = false">
-            닫기
-          </v-list-item>
-        </v-list>
-
-      </v-card>
-
-    </v-dialog>
+    <v-bottom-sheet v-model="optionDialog" max-width="80%"  inset content-class="QA003optionSheet">
+      <v-sheet class="QA003optionSheet">
+        <div @click="modifyDoc" class="optionItem" v-if="isMyDoc()">
+          수정하기
+        </div>
+        <div @click="deleteDoc" class="optionItem" v-if="isMyDoc()">
+          삭제하기
+        </div>
+        <div @click="qaBadReport" class="optionItem qaBadReport" v-if="canBadReport()" >
+          신고하기
+        </div>
+        <div @click="optionDialog = false" class="optionItem">
+          닫기
+        </div>
+      </v-sheet>
+    </v-bottom-sheet>
 
   </div>
 </template>
@@ -96,6 +95,7 @@ import ReplyComponent, {ReplyComponentRootType} from "@/components/Reply/ReplyCo
 import {QABoardReplyResDto} from "@/Bis/QABoardReply/Dto/QABoardReplyResDto";
 import 'viewerjs/dist/viewer.css'
 import {MutationTypes} from "@/store/mutations";
+import QABadReportUseCase from "@/Bis/QABadReport/Domain/UseCase/QABadReportUseCase";
 export default (Vue as VueConstructor<Vue & {
   $refs:{
     ReplyComponent: ReplyComponentRootType
@@ -182,6 +182,30 @@ export default (Vue as VueConstructor<Vue & {
         }
       }
       return false;
+    },
+    canBadReport(){
+      if(!this.$store.state.isLogin){
+        return true;
+      }else {
+        if(this.$store.state.userInfo.uid != this.qaBoardResDto.writer.uid) {
+          return true;
+        }
+      }
+      return false;
+
+    },
+    async qaBadReport() {
+      if(!this.$store.state.isLogin){
+        this.$swal("로그인이 필요 합니다.")
+      }else {
+        let qaBadReportUseCase = new QABadReportUseCase();
+        await qaBadReportUseCase.report({
+          qaDodId: this.qaBoardResDto.id
+        })
+        await this.$swal("신고 처리 되었습니다. 운영진 검토후 처리 하겠습니다.");
+        this.optionDialog = false;
+
+      }
 
     }
   },
@@ -204,6 +228,7 @@ export default (Vue as VueConstructor<Vue & {
   display: flex;
   flex-direction: column;
 }
+
 .titleBar{
   display: flex;
   align-items: start;
@@ -306,9 +331,30 @@ export default (Vue as VueConstructor<Vue & {
   font-size: 15px;
   color: #2f2f2f;
 }
+.optionItem{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 51px;
+  border-bottom: solid 1px gray;
+  margin: 0px 16px;
+  font-weight: bold;
+  font-family: "Noto Sans KR";
+
+}
+.optionItem:last-child{
+  border-bottom: unset;
+}
+.qaBadReport {
+  color: crimson;
+}
 </style>
 <style>
 .replyWriter fieldset{
   border: unset !important;
+}
+.QA003optionSheet {
+  border-top-left-radius: 15px !important;
+  border-top-right-radius: 15px !important;;
 }
 </style>

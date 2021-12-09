@@ -56,7 +56,7 @@ export default Vue.extend({
     },
     kakaoLogin() {
       this.$gtag.event('login', { method: 'kakao' })
-      location.href=`https://kauth.kakao.com/oauth/authorize?client_id=b99d3c5a3a2d0b73fd79172539d710e5&redirect_uri=${process.env.VUE_APP_KAKAOREDIRECT}&response_type=code`
+      location.href=`https://kauth.kakao.com/oauth/authorize?client_id=5d05158ad07bfeafee833eef80a02935&redirect_uri=${process.env.VUE_APP_KAKAOREDIRECT}&response_type=code`
     },
     naverLoginClick() {
       this.$gtag.event('login', { method: 'naver' })

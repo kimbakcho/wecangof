@@ -10,10 +10,33 @@
           {{ getCreateTimeText(item) }}
         </div>
       </div>
-      <div v-html="getReplyText(item)">
+      <div class="replyContentRow">
+        <div v-html="getReplyText(item)" class="replyContent">
 
+        </div>
+        <div class="options" @click="onOpenOption(item)">
+          <v-icon size="15">
+            fas fa-ellipsis-v
+          </v-icon>
+        </div>
       </div>
     </div>
+    <v-bottom-sheet v-model="optionDialog" max-width="80%"  inset content-class="QA003optionSheet">
+      <v-sheet class="QA003optionSheet">
+        <div @click="modifyReply" class="optionItem" v-if="isMyReply()">
+          수정하기
+        </div>
+        <div @click="deleteReply" class="optionItem" v-if="isMyReply()">
+          삭제하기
+        </div>
+        <div @click="qaReplyReport" class="optionItem qaBadReplyReport" v-if="canBadReplyReport()" >
+          신고하기
+        </div>
+        <div @click="optionDialog = false" class="optionItem">
+          닫기
+        </div>
+      </v-sheet>
+    </v-bottom-sheet>
 
   </div>
 </template>
@@ -40,6 +63,12 @@ const ReplyComponentRoot = (Vue as VueConstructor<Vue & {
       required: true
     }
   },
+  data(){
+    return {
+      currentOptionClickItem: null as QABoardReplyResDto| null,
+      optionDialog: false
+    }
+  },
   computed:{
     isAdmin(): boolean{
       if(this.$store.state.isLogin){
@@ -60,6 +89,38 @@ const ReplyComponentRoot = (Vue as VueConstructor<Vue & {
     getLastReplyDom(): HTMLDivElement{
       return this.$refs.row.reverse()[0]
     },
+    onOpenOption(optionItem: QABoardReplyResDto){
+      this.currentOptionClickItem = optionItem;
+      this.optionDialog = true
+      this.$forceUpdate()
+
+    },
+    isMyReply(){
+      if(this.currentOptionClickItem != null){
+        if(this.$store.state.isLogin ){
+          if(this.currentOptionClickItem.writer.uid == this.$store.state.userInfo.uid){
+            return true;
+          }
+          if(this.$store.state.userInfo.role == "Admin"){
+            return true;
+          }
+        }
+      }
+      return false;
+    },
+    canBadReplyReport(){
+      if(!this.$store.state.isLogin){
+        return true;
+      }else {
+        if(this.currentOptionClickItem != null){
+          if(this.currentOptionClickItem.writer.uid != this.$store.state.userInfo.uid){
+            return true;
+          }
+        }
+
+      }
+      return false;
+    },
     async setRepresentativeComment(event: any,item: QABoardReplyResDto){
       if (event.stopPropagation)
         event.stopPropagation();
@@ -77,6 +138,49 @@ const ReplyComponentRoot = (Vue as VueConstructor<Vue & {
         item.representativeComment = Number(result.value);
         this.$forceUpdate()
       }
+    },
+    async modifyReply(){
+
+      let result = await this.$swal({
+        title: "댓글 수정 내용을 입력 하세요.",
+        input: "text",
+        showCancelButton: true,
+        confirmButtonText: '수정',
+        cancelButtonText: '취소'
+      })
+      if(result.isConfirmed){
+        if(this.currentOptionClickItem != null){
+          let qaBoardReplyUseCase = new QABoardReplyUseCase();
+          let resultResDto = await qaBoardReplyUseCase.updateReply({
+            replyId: this.currentOptionClickItem.id,
+            replyText: result.value
+          })
+          this.currentOptionClickItem.content = resultResDto.content;
+          this.currentOptionClickItem.updateDateTime = resultResDto.updateDateTime
+          this.optionDialog = false;
+        }
+      }
+
+    },
+    async deleteReply(){
+      let result = await this.$swal({
+        title: "댓글을 삭제 하시겠습니까?",
+        showCancelButton: true,
+        confirmButtonText: '삭제',
+        cancelButtonText: '취소'
+      })
+      if(result.isConfirmed){
+        if(this.currentOptionClickItem != null){
+          let qaBoardReplyUseCase = new QABoardReplyUseCase();
+          await qaBoardReplyUseCase.delete(this.currentOptionClickItem.id)
+          let findIndex =this.qaBoardReplyResDtos.findIndex(value => this.currentOptionClickItem?.id == value.id);
+          this.qaBoardReplyResDtos.splice(findIndex,1)
+          this.optionDialog = false;
+        }
+      }
+    },
+    qaReplyReport(){
+      console.log("modifyReply")
     }
   }
 })
@@ -99,5 +203,27 @@ export default ReplyComponentRoot;
   margin-bottom: 12px;
   justify-content: space-between;
 }
+.replyContentRow{
+  display: flex;
+}
+.replyContent{
+  flex-grow: 1;
+}
+.optionItem{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 51px;
+  border-bottom: solid 1px gray;
+  margin: 0px 16px;
+  font-weight: bold;
+  font-family: "Noto Sans KR";
 
+}
+.optionItem:last-child{
+  border-bottom: unset;
+}
+.qaBadReplyReport {
+  color: crimson;
+}
 </style>

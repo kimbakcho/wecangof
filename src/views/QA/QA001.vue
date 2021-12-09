@@ -21,13 +21,16 @@
       >
         <div class="Drawer">
 
-          <div class="Home">
+          <div class="Home" @click="goToHome">
             <v-icon color="white">
               fas fa-home
             </v-icon>
           </div>
           <div class="categoryRoot">
-            <QACategoryItem v-for="item in qaBoardCategoryResDto" :key="item.categoryName" :item="item">
+            <QACategoryItem >
+
+            </QACategoryItem>
+            <QACategoryItem v-for="item in qaBoardCategoryResDtos" :key="item.categoryName" :item="item" @clickItem="categoryChange">
 
             </QACategoryItem>
           </div>
@@ -126,7 +129,7 @@ export default (Vue as VueConstructor<Vue & {
       key: Date.now(),
       drawer: false,
       filterNationInfo: null as NationControlResDto | null,
-      qaBoardCategoryResDto: [] as QABoardCategoryResDto[]
+      qaBoardCategoryResDtos: [] as QABoardCategoryResDto[]
     }
   },
   async mounted() {
@@ -135,7 +138,11 @@ export default (Vue as VueConstructor<Vue & {
       await this.setNationInfoFilter(this.$store.state.qaBoardFilter.nation)
     }
     let qaBoardCategoryUseCase = new QABoardCategoryUseCase();
-    this.qaBoardCategoryResDto = await qaBoardCategoryUseCase.getList();
+    this.qaBoardCategoryResDtos = [{
+      categoryName: "전체",
+      orderIdx: -1,
+      active: true
+    } ,...await qaBoardCategoryUseCase.getList()];
     await this.getQARepeat();
     let qaBoardFilter = this.$store.state.qaBoardFilter;
     qaBoardFilter.pageReqDto.page = 0;
@@ -246,6 +253,7 @@ export default (Vue as VueConstructor<Vue & {
       }
       await this.getQARepeat()
       await this.getCurrentQAFilterPage()
+      this.drawer = false;
     },
     searchTextPage(){
       this.$refs.SearchTextDialog.open();
@@ -269,6 +277,9 @@ export default (Vue as VueConstructor<Vue & {
       await this.getQARepeat()
       await this.getCurrentQAFilterPage()
 
+    },
+    goToHome(){
+      this.$router.replace("/")
     }
   },
 
@@ -286,6 +297,7 @@ export default (Vue as VueConstructor<Vue & {
 .CommunityHomeRoot {
   display: flex;
   flex-direction: column;
+  z-index: 10;
 }
 
 .CommunityContent {
