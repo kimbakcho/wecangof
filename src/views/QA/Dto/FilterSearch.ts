@@ -1,5 +1,5 @@
 export interface FilterSearch {
     searchMode: string,
-    text: string,
-    nationId: number
+    text: string | null,
+    nationId: number | null
 }

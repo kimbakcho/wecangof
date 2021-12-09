@@ -21,14 +21,37 @@
           </div>
         </div>
       </div>
+
+      <div class="QAMoveBtn" @click="onGotoCommunity">
+        <div>
+          <div class="title1">
+            WE GO WE WENT WE ARE IN
+          </div>
+          <div class="title2">
+            이미 다녀온 사람들의 선택한 답변!
+          </div>
+        </div>
+        <div class="wetalkSymbol">
+          <div class="icon1">
+            <v-icon color="#2661f1">
+              fas fa-comment-dots
+            </v-icon>
+          </div>
+          <div class="title1">
+            위캔톡 입장하기
+          </div>
+        </div>
+      </div>
+
+      <div class="homeSubTitle">
+        <div >
+          복잡한 공식 자료를 누구나 쏙쏙 이해하도록 정리한
+        </div>
+        <div >
+          동남아시아 출입국 정보
+        </div>
+      </div>
       <div class="InOutDashContent">
-
-        <div class="divider">
-
-        </div>
-        <div class="travelTitle2">
-          한국인 인기 여행지! 이 나라는 어때?
-        </div>
         <div class="adminTravelCardList" >
           <TravelCard3 v-for="item in adminRecommendList" :key="item.id" class="travelItem"
                        :immigration-status-card-dto="item" @tapCard="tapCard">
@@ -98,6 +121,11 @@ export default Vue.extend({
         path: "/AM002"
       })
     },
+    onGotoCommunity(){
+      this.$router.push({
+        path: "/QA001"
+      })
+    }
   },
 
   async mounted() {
@@ -213,26 +241,7 @@ export default Vue.extend({
 
   color: #fff;
 }
-.divider {
-  width: 100%;
-  height: 1px;
-  margin: 30px 0;
-  background-color: #e9ebf4;
-}
-.travelTitle2 {
-  padding-left: 25px;
-  height: 29px;
-  margin: 10px 0 0;
-  font-family: "Noto Sans KR";
-  font-size: 20px;
-  font-weight: bold;
-  font-stretch: normal;
-  font-style: normal;
-  line-height: normal;
-  letter-spacing: normal;
-  text-align: left;
-  color: #242424;
-}
+
 
 .adminTravelCardList {
   padding: 20px;
@@ -261,7 +270,58 @@ export default Vue.extend({
 .InOutDashContent::-webkit-scrollbar {
   display: none;
 }
-
-
+.QAMoveBtn{
+  background-color: #2661f1;
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 20px;
+  padding: 16px;
+}
+.QAMoveBtn .title1{
+  color: #3B6FF0;
+  font-size: 13px;
+  font-family: "Noto Sans KR";
+}
+.QAMoveBtn .title2{
+  color: white;
+  font-size: 13px;
+  font-family: "Noto Sans KR";
+}
+.wetalkSymbol{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+.wetalkSymbol .title1{
+  color: white;
+  font-size: 11px;
+  font-family: "Noto Sans KR";
+}
+.wetalkSymbol .icon1{
+  background-color: white;
+  border-radius: 50%;
+  padding: 8px;
+}
+.homeSubTitle{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+.homeSubTitle div:nth-child(1){
+  color: #3B6FF0;
+  font-size: 10px;
+  font-family: "Noto Sans KR";
+}
+.homeSubTitle div:nth-child(2){
+  color: black;
+  font-size: 18px;
+  font-weight: bold;
+  font-family: "Noto Sans KR";
+}
 </style>
 

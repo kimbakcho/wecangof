@@ -75,7 +75,6 @@ import Vue from "vue"
 import "vue-scroll-picker/dist/style.css"
 import { ScrollPicker } from "vue-scroll-picker"
 import NationControlUseCase from "@/Bis/NationControl/Domain/UseCase/NationControlUseCase";
-import {NationControlResDto} from "@/Bis/NationControl/Dto/NationControlResDto";
 import {FilterSearch} from "@/views/QA/Dto/FilterSearch";
 
 const QA002 = Vue.extend({
@@ -109,15 +108,13 @@ const QA002 = Vue.extend({
       });
       this.loaded = true;
       this.dialog = true
-
-
     },
     filterSearch(){
       let filterSearch = {} as FilterSearch;
       if(this.tabIndex == 0){
         filterSearch.searchMode = this.textSearchMode
         filterSearch.text = this.searchText
-      }else if(this.tabIndex == 1){
+      } else if(this.tabIndex == 1) {
         filterSearch.searchMode = "nation"
         filterSearch.nationId = this.selectId
       }

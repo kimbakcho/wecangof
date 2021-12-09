@@ -9,6 +9,15 @@ export default class NationControlUseCase {
         return data;
     }
 
+    async getNationInfo(id: number): Promise<NationControlResDto> {
+        const { data } = await axios.get("/NationControl/nationInfo",{
+            params:{
+                id: id
+            }
+        });
+        return data;
+    }
+
     async setDisplayFlag(id: number,flag: boolean){
         await axios.post("/NationControl/displayFlag",null,{
             params:{

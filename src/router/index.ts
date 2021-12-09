@@ -78,6 +78,12 @@ const routes: Array<RouteConfig> = [
     props: true
   },
   {
+    path: "/QA001",
+    name: "QA001",
+    component: () => import(/* webpackChunkName: "QA001" */ '../views/QA/QA001.vue'),
+    props: true
+  },
+  {
     path: '/AM002',
     name: 'AM002',
     component: () => import(/* webpackChunkName: "AM002" */ '../views/AM/AM002.vue')

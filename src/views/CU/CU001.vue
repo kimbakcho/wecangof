@@ -75,7 +75,7 @@ export default Vue.extend({
     }
   },
   methods:{
-    async searchPage(value: DataOptions){
+    async searchTextPage(value: DataOptions){
       this.loading = true;
       let sortReqDtos = [] as SortReqDto[];
 
@@ -102,7 +102,7 @@ export default Vue.extend({
       this.loading = false;
     },
     changeFilter(){
-      this.searchPage(this.options);
+      this.searchTextPage(this.options);
     },
     async deleteItem(item: MemberManagementResDto){
       let result: any =await this.$swal(
@@ -117,13 +117,13 @@ export default Vue.extend({
       if(result.isConfirmed){
         let memberManagementUseCase = new MemberManagementUseCase();
         await memberManagementUseCase.deleteMember(item.uid)
-        await this.searchPage(this.options);
+        await this.searchTextPage(this.options);
       }
     }
   },
   watch:{
     options(value: DataOptions) {
-      this.searchPage(value);
+      this.searchTextPage(value);
     }
   }
 

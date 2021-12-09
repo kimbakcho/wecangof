@@ -1,17 +1,61 @@
 <template>
   <div class="CommunityHomeRoot">
     <div class="top">
-      <div class="search" @click="searchPage">
-        <v-icon size="13">
-          fas fa-search
-        </v-icon>
+      <div class="actions">
+        <div @click="drawer = true">
+          <v-icon color="white">
+            fas fa-bars
+          </v-icon>
+        </div>
+        <div class="search" @click="searchTextPage">
+          <v-icon size="18" color="white">
+            fas fa-search
+          </v-icon>
+        </div>
       </div>
-      <QCategoryList @change="categoryChange">
+      <v-navigation-drawer
+          v-model="drawer"
+          absolute
+          temporary
+          color="#2661f1"
+      >
+        <div class="Drawer">
 
-      </QCategoryList>
-      <div class="divider">
+          <div class="Home">
+            <v-icon color="white">
+              fas fa-home
+            </v-icon>
+          </div>
+          <div class="categoryRoot">
+            <QACategoryItem v-for="item in qaBoardCategoryResDto" :key="item.categoryName" :item="item">
+
+            </QACategoryItem>
+          </div>
+
+        </div>
+
+      </v-navigation-drawer>
+    </div>
+    <div>
+      <div class="nationSelect" @click="onGotoSelectNation">
+        <div class="noneSelect" v-if="selectedNations() == -1 || !selectedNations()">
+          <div class="nationImage">
+
+          </div>
+          <div class="nationText">
+            국가 선택
+          </div>
+        </div>
+        <div v-else class="nationSelectInfo">
+          <img :src="filterNationInfo.flagImage" class="nationImage">
+          <div class="nationText">
+            {{ filterNationInfo.nationName }}
+          </div>
+        </div>
+
       </div>
     </div>
+
     <div class="CommunityContent">
 
       <div class="topDot dot">
@@ -19,7 +63,7 @@
       </div>
 
       <div class="qnaTitle">
-        자주 묻는 질문
+        위캔고 인기 게시글
       </div>
       <div class="QARepeat">
         <QARepeat :items="qaRepeatResDto">
@@ -36,14 +80,15 @@
       <div class="bottomLoading">
       </div>
     </div>
-    <QA002 ref="QA002" @filterSearch="filterSearch">
+    <NationSelectorDialog ref="NationSelectorDialog" @selectNation="onSelectNation">
 
-    </QA002>
+    </NationSelectorDialog>
+    <SearchTextDialog ref="SearchTextDialog" @searchText="onSearchText"> </SearchTextDialog>
   </div>
 </template>
 <script lang="ts">
 import Vue, {VueConstructor} from "vue"
-import QCategoryList from "@/components/Home/QCategoryList.vue";
+
 import {QABoardResDto} from "@/Bis/QABoard/Dto/QABoardResDto";
 import {QABoardUseCase} from "@/Bis/QABoard/Domain/UseCase/QABoardUseCase";
 import QARepeat from "@/components/Home/QARepeat.vue";
@@ -53,16 +98,23 @@ import {MutationTypes} from "@/store/mutations";
 import {QABoardFilterReqDto} from "@/Bis/QABoard/Dto/QABoardFilterReqDto";
 import {PageWrap} from "@/Bis/Common/PageWrap";
 import {QABoardCategoryResDto} from "@/Bis/QABoardCategory/Dto/QABoardCategoryResDto";
-import QA002, {QA002Type} from "@/views/QA/QA002.vue";
 import {FilterSearch} from "@/views/QA/Dto/FilterSearch";
+import NationSelectorDialog,{ NationSelectorDialogType } from "@/components/QA/NationSelectorDialog.vue";
+import SearchTextDialog, { SearchTextDialogType } from "@/components/QA/SearchTextDialog.vue";
+import {SearchTextReqDto} from "@/components/QA/Dto/SearchTextReqDto";
+import {NationControlResDto} from "@/Bis/NationControl/Dto/NationControlResDto";
+import NationControlUseCase from "@/Bis/NationControl/Domain/UseCase/NationControlUseCase";
+import {QABoardCategoryUseCase} from "@/Bis/QABoardCategory/Domain/QABoardCategoryUseCase";
+import QACategoryItem from "@/components/QA/QACategoryItem.vue";
 
 export default (Vue as VueConstructor<Vue & {
   $refs:{
-    QA002: QA002Type
+    NationSelectorDialog: NationSelectorDialogType,
+    SearchTextDialog: SearchTextDialogType
   }
 }>).extend({
   components: {
-    QCategoryList, QARepeat, QACurrentRepeat, InfiniteLoading, QA002
+    QARepeat, QACurrentRepeat, InfiniteLoading, NationSelectorDialog, SearchTextDialog, QACategoryItem
   },
   data() {
     return {
@@ -71,12 +123,19 @@ export default (Vue as VueConstructor<Vue & {
       bottomLoading: false,
       qaBoardUseCase: new QABoardUseCase(),
       infiniteId: Date.now(),
-      key: Date.now()
+      key: Date.now(),
+      drawer: false,
+      filterNationInfo: null as NationControlResDto | null,
+      qaBoardCategoryResDto: [] as QABoardCategoryResDto[]
     }
   },
   async mounted() {
     this.loading = true
-    console.log("Community home mounted")
+    if(this.$store.state.qaBoardFilter.nation != -1 && this.$store.state.qaBoardFilter.nation){
+      await this.setNationInfoFilter(this.$store.state.qaBoardFilter.nation)
+    }
+    let qaBoardCategoryUseCase = new QABoardCategoryUseCase();
+    this.qaBoardCategoryResDto = await qaBoardCategoryUseCase.getList();
     await this.getQARepeat();
     let qaBoardFilter = this.$store.state.qaBoardFilter;
     qaBoardFilter.pageReqDto.page = 0;
@@ -87,7 +146,8 @@ export default (Vue as VueConstructor<Vue & {
   computed:{
     qaCurrentRepeatList(): QABoardResDto[]{
         return this.$store.state.qaCurrentRepeatList
-    }
+    },
+
   },
   methods: {
     async getQARepeat() {
@@ -105,6 +165,9 @@ export default (Vue as VueConstructor<Vue & {
       }
       reqDto.withComment = false;
       this.qaRepeatResDto = (await this.qaBoardUseCase.getFilterDoc(reqDto)).content;
+    },
+    selectedNations(): number{
+      return this.$store.state.qaBoardFilter.nation
     },
     async getCurrentQAFilterPage(): Promise<PageWrap<QABoardResDto>> {
       let qaBoardFilter = this.$store.state.qaBoardFilter;
@@ -139,6 +202,33 @@ export default (Vue as VueConstructor<Vue & {
 
       }
     },
+    onGotoSelectNation(){
+      this.$refs.NationSelectorDialog.open();
+    },
+    async setNationInfoFilter(id: number)  {
+      let nationControlUseCase = new NationControlUseCase();
+      let nationControlResDto = await nationControlUseCase.getNationInfo(id);
+      this.filterNationInfo = nationControlResDto;
+      this.$forceUpdate()
+    },
+    async onSelectNation(selectNationId: number){
+      let qaBoardFilter = this.$store.state.qaBoardFilter;
+      qaBoardFilter.nation = selectNationId;
+      await this.setNationInfoFilter(selectNationId)
+      if(selectNationId == -1){
+        await this.filterSearch({
+          nationId: null,
+          searchMode: "",
+          text: null
+        })
+      }else {
+        await this.filterSearch({
+          nationId: selectNationId,
+          searchMode: "nation",
+          text: null
+        })
+      }
+    },
     async categoryChange(item: QABoardCategoryResDto){
       let qaBoardFilter = this.$store.state.qaBoardFilter;
       let pageReqDto = qaBoardFilter.pageReqDto;
@@ -157,8 +247,15 @@ export default (Vue as VueConstructor<Vue & {
       await this.getQARepeat()
       await this.getCurrentQAFilterPage()
     },
-    searchPage(){
-      this.$refs.QA002.open();
+    searchTextPage(){
+      this.$refs.SearchTextDialog.open();
+    },
+    onSearchText(searchTextReqDto: SearchTextReqDto){
+      this.filterSearch({
+        searchMode: searchTextReqDto.textSearchMode,
+        text: searchTextReqDto.searchText,
+        nationId: this.$store.state.qaBoardFilter.nation
+      })
     },
     async filterSearch(payload: FilterSearch) {
       let qaBoardFilter = this.$store.state.qaBoardFilter;
@@ -173,10 +270,19 @@ export default (Vue as VueConstructor<Vue & {
       await this.getCurrentQAFilterPage()
 
     }
-  }
+  },
+
+
 })
 </script>
 <style scoped>
+.Drawer{
+  padding: 60px 16px 0px 24px;
+}
+.categoryRoot{
+  margin-top: 24px;
+}
+
 .CommunityHomeRoot {
   display: flex;
   flex-direction: column;
@@ -195,24 +301,17 @@ export default (Vue as VueConstructor<Vue & {
   width: 100%;
 }
 
-.top .search {
+.top .actions{
   display: flex;
-  height: 43px;
-  justify-content: flex-end;
   align-items: center;
-  padding: 0px 25px;
+  justify-content: space-between;
+  padding: 16px;
+  background-color: #2661f1;
 }
 
-.divider {
-  height: 1px;
-  margin: 24px 0 0;
-  background-color: #e9ebf4;
+.topDot{
+  margin-left: 24px;
 }
-
-.topDot {
-  margin: 30px 0px 10px 25px;
-}
-
 .dot {
   width: 10px;
   height: 10px;
@@ -246,5 +345,30 @@ export default (Vue as VueConstructor<Vue & {
 
 .bottomLoading {
   margin-bottom: 40px;
+}
+
+.nationSelect {
+  margin: 16px 24px 24px 25px;
+  display: inline-block;
+}
+.nationSelect .noneSelect,.nationSelect .nationSelectInfo{
+  border-radius: 4px;
+  display: flex;
+  border: 1px solid #a7aab2;;
+  align-items: center;
+  padding: 4px;
+}
+.nationSelect .nationImage{
+  width: 40px;
+  height: 20px;
+  background-color: #a7aab2;
+  border-radius: 4px;
+  margin-right: 4px;
+}
+.nationSelect .nationText{
+  margin-right: 50px;
+  font-size: 13px;
+  font-family: "Noto Sans KR";
+  font-weight: bold;
 }
 </style>
