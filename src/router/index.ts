@@ -157,6 +157,16 @@ const routes: Array<RouteConfig> = [
         path: "CU001",
         name: "CU001",
         component: () => import(/* webpackChunkName: "CU001" */ '../views/CU/CU001.vue'),
+      },
+      {
+        path:"CG001",
+        name:"CG001",
+        component: () => import(/* webpackChunkName: "CG001" */ '../views/CG/CG001.vue'),
+      },
+      {
+        path:"CG002",
+        name:"CG002",
+        component: () => import(/* webpackChunkName: "CG002" */ '../views/CG/CG002.vue'),
       }
     ],
     props: true
@@ -166,8 +176,6 @@ const routes: Array<RouteConfig> = [
     name: 'naverRedirect',
     component: () => import(/* webpackChunkName: "naverRedirect" */ '../views/NaverLoginRedirect.vue'),
   },
-
-
 
 ]
 

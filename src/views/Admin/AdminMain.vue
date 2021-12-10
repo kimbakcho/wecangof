@@ -20,6 +20,12 @@
         <v-list-item to="/WCAdmin/CC001">
           관리자 게시물
         </v-list-item>
+        <v-list-item to="/WCAdmin/CG001">
+          신고 게시물
+        </v-list-item>
+        <v-list-item to="/WCAdmin/CG002">
+          신고 댓글
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
 
