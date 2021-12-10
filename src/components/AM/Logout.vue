@@ -20,6 +20,7 @@ export default Vue.extend({
       let headers: any = axios.defaults.headers;
       headers['Authorization'] = ''
       this.$cookies.remove("wSesstion","/",process.env.VUE_APP_COOKIE_DOMAIN)
+      this.$cookies.remove("wSesstion","/")
       this.$router.push({
         path: "/"
       })

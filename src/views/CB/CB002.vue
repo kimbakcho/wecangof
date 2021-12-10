@@ -127,6 +127,11 @@
 
         </v-text-field>
       </div>
+      <div class="publicAnnouncementText">
+        <v-text-field label="공시 정보" v-model="igsd.publicAnnouncement">
+
+        </v-text-field>
+      </div>
     </div>
 
     <div class="detailContent">

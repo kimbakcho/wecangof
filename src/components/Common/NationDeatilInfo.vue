@@ -22,6 +22,9 @@
             <div id="exitVaccinated" class="contentViewer" ref="exitVaccinated">
 
             </div>
+            <div class="publicAnnouncement">
+              {{ immigrationStatusDetailResDto.publicAnnouncement }}
+            </div>
             <div class="updateTime">
               {{ `최신 업데이트 ${getUpdateDateFormatText(immigrationStatusDetailResDto.vaccinatedLeavesCountry.updateDateTime)}` }}
             </div>
@@ -30,6 +33,9 @@
 
             <div id="returnHomeVaccinated" class="contentViewer" ref="returnHomeVaccinated">
 
+            </div>
+            <div class="publicAnnouncement">
+              {{ immigrationStatusDetailResDto.publicAnnouncement }}
             </div>
             <div class="updateTime">
               {{ `최신 업데이트 ${getUpdateDateFormatText(immigrationStatusDetailResDto.unvaccinatedLeavesCountry.updateDateTime)}` }}
@@ -149,7 +155,7 @@ export default (Vue as VueConstructor<Vue & {
   font-size: 12px;
   color: #15171c;
 }
-.updateTime{
+.updateTime, .publicAnnouncement{
   display: flex;
   justify-content: right;
   font-family: "Noto Sans KR";

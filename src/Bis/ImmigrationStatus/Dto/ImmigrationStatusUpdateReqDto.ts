@@ -16,4 +16,5 @@ export default class  ImmigrationStatusUpdateReqDto {
     covidTest?: boolean;
     benefitsVaccination?: string;
     possibleExempted!: boolean;
+    publicAnnouncement?: string;
 }

@@ -23,4 +23,5 @@ export interface ImmigrationStatusDetailResDto {
     vaccinatedReturnHome: ImmigrationInfoManagementResDto ;
     unvaccinatedLeavesCountry: ImmigrationInfoManagementResDto ;
     unvaccinatedReturnHome: ImmigrationInfoManagementResDto ;
+    publicAnnouncement: string;
 }

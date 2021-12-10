@@ -6,7 +6,8 @@
     <div class="amContent">
       <div>
         <UserInfoLogin @reqNickNameOpen="nickNameOpen"></UserInfoLogin>
-        <TermsConditions class="termsConditions"></TermsConditions>
+        <TermsConditions text="이용약관" link="/BC001/7" class="termsConditions"></TermsConditions>
+        <TermsConditions text="사용자 제작 콘텐츠 이용 약관" link="/BC001/22" class="termsConditions"></TermsConditions>
         <Logout v-if="isLogin()" class="logout"></Logout>
       </div>
     </div>

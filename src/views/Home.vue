@@ -206,6 +206,8 @@ export default Vue.extend({
 .content {
   height: calc(var(--vh, 1vh) * 100);
   overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
 
   width: 100vw;
 }
@@ -263,7 +265,7 @@ export default Vue.extend({
   transform: translateX(-50%);
 }
 .InOutDashContent{
-  height: calc(calc(var(--vh, 1vh) * 100) - 50px);
+  flex-grow: 1;
   overflow-y: auto;
 }
 

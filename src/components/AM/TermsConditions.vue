@@ -1,7 +1,7 @@
 <template>
   <div class="termsConditions" @click="gotoLink">
     <div>
-      이용약관
+      {{this.text}}
     </div>
     <img src="@/assets/userlefticon.png">
   </div>
@@ -10,10 +10,20 @@
 import Vue from "vue"
 
 export default Vue.extend({
+  props:{
+    text:{
+      type: String,
+      required: true
+    },
+    link: {
+      type: String,
+      required: true
+    }
+  },
   methods:{
     gotoLink(){
       this.$router.push({
-        path:"/BC001/7"
+        path: this.link
       })
     }
   }
