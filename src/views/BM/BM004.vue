@@ -19,11 +19,7 @@
 
         </TravelCard1>
       </div>
-      <div class="bookMarkBtn">
-        <TravelBookMarkBtn :nation-id="Number(nationId)" :has-book-mark.sync="bookMarkingFlag">
 
-        </TravelBookMarkBtn>
-      </div>
       <NationDeatilInfo :immigration-status-detail-res-dto="immigrationStatusDetailResDto">
 
       </NationDeatilInfo>
@@ -46,7 +42,7 @@ import TopBar from "@/components/Common/TopBar.vue";
 
 export default Vue.extend({
   components: {
-    TravelCard1, TravelBookMarkBtn, NationDeatilInfo, TopBar
+    TravelCard1, NationDeatilInfo, TopBar
   },
   props: {
     nationId: {

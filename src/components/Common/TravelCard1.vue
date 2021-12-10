@@ -15,28 +15,6 @@
         </div>
       </div>
       <div v-if="immigrationStatusCardDto.travelFlag">
-        <div class="vaccination">
-          <div class="vaccinationTitle">
-            <div>
-              <v-icon color="#a7aab2" size="15">
-                wc-inject
-              </v-icon>
-            </div>
-            <div class="text">
-              백신접종
-            </div>
-          </div>
-          <div class="vaccinationInfo" :class="{ active: immigrationStatusCardDto.vaccinationFlag }"
-               :style="{color: vaccinationColor}">
-            <div class="vaccinationIcon" :style="{backgroundColor: vaccinationColor}">
-
-            </div>
-            <div class="text">
-              {{ vaccinationText }}
-            </div>
-          </div>
-        </div>
-
         <div class="pcrTest">
           <div class="pcrTestTitle">
             <div>
@@ -120,21 +98,6 @@ export default Vue.extend({
     return {
       vaccinationText: "",
       vaccinationColor: "" as any
-    }
-  },
-  created() {
-    if(this.immigrationStatusCardDto.vaccinationFlag == 0){
-      this.vaccinationText = "무관";
-      this.vaccinationColor = '#15171C';
-    }else if(this.immigrationStatusCardDto.vaccinationFlag == 1){
-      this.vaccinationText = "선택"
-      this.vaccinationColor = "#EA9400";
-    }else if(this.immigrationStatusCardDto.vaccinationFlag == 2) {
-      this.vaccinationText = "필수"
-      this.vaccinationColor = "#EF265C";
-    }else {
-      this.vaccinationText = "선택 안됨"
-      this.vaccinationColor = "";
     }
   },
   methods: {

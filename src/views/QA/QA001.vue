@@ -27,16 +27,12 @@
             </v-icon>
           </div>
           <div class="categoryRoot">
-            <QACategoryItem >
-
-            </QACategoryItem>
             <QACategoryItem v-for="item in qaBoardCategoryResDtos" :key="item.categoryName" :item="item" @clickItem="categoryChange">
 
             </QACategoryItem>
           </div>
 
         </div>
-
       </v-navigation-drawer>
     </div>
     <div>
@@ -87,6 +83,14 @@
 
     </NationSelectorDialog>
     <SearchTextDialog ref="SearchTextDialog" @searchText="onSearchText"> </SearchTextDialog>
+    <div class="writeBtnRoot" @click="onGotoWritePage">
+      <div class="writeBtn">
+        <v-icon color="white">
+          wc-writepen
+        </v-icon>
+      </div>
+
+    </div>
   </div>
 </template>
 <script lang="ts">
@@ -280,6 +284,9 @@ export default (Vue as VueConstructor<Vue & {
     },
     goToHome(){
       this.$router.replace("/")
+    },
+    onGotoWritePage(){
+      this.$router.push("/QA006")
     }
   },
 
@@ -382,5 +389,30 @@ export default (Vue as VueConstructor<Vue & {
   font-size: 13px;
   font-family: "Noto Sans KR";
   font-weight: bold;
+}
+
+.writeBtn{
+  background-color: #2661f1;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+}
+.writeBtnRoot{
+  border-radius: 50%;
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 8px;
+  background-color: #2661f130;
+
+  z-index: 1;
+
 }
 </style>

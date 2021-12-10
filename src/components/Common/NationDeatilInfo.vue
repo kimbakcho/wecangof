@@ -1,85 +1,38 @@
 <template>
   <div>
-    <div class="topTabBar">
-      <div class="exitBtn" :class="{ active: isExit }" @click="exitModeClick">
-        🛫
-        <div class="text">
-          출국하기
-        </div>
-
-      </div>
-      <div class="returnHomeBtn" :class="{ active: isReturnHome }" @click="returnHomeModeClick">
-        🛬
-        <div class="text">
-          귀국하기
-        </div>
-      </div>
-    </div>
     <div class="contentBody">
-      <div v-show="isExit">
-        <v-tabs fixed-tabs v-model="exitTab" background-color="white" color="#15171c" slider-color="#215df1" slider-size="5">
+      <div>
+        <v-tabs fixed-tabs v-model="tabIdx" background-color="white" color="#15171c" slider-color="#215df1" slider-size="5">
           <v-tab :transition="true" :reverse-transition="true"
                  :ripple="false">
             <div class="tabText">
-              백신 접종자
+              출국
             </div>
           </v-tab>
           <v-tab :transition="true" :reverse-transition="true"
                  :ripple="false">
             <div class="tabText">
-              미 접종자
+              귀국
             </div>
           </v-tab>
         </v-tabs>
-        <v-tabs-items v-model="exitTab" >
+        <v-tabs-items v-model="tabIdx" >
           <v-tab-item eager>
-            <div class="updateTime">
-              {{ `최신 업데이트 ${getUpdateDateFormatText(immigrationStatusDetailResDto.vaccinatedLeavesCountry.updateDateTime)}` }}
-            </div>
+
             <div id="exitVaccinated" class="contentViewer" ref="exitVaccinated">
 
             </div>
+            <div class="updateTime">
+              {{ `최신 업데이트 ${getUpdateDateFormatText(immigrationStatusDetailResDto.vaccinatedLeavesCountry.updateDateTime)}` }}
+            </div>
           </v-tab-item>
           <v-tab-item eager>
-            <div class="updateTime">
-              {{ `최신 업데이트 ${getUpdateDateFormatText(immigrationStatusDetailResDto.unvaccinatedLeavesCountry.updateDateTime)}` }}
-            </div>
-            <div id="exitNotVaccinated" class="contentViewer" ref="exitNotVaccinated">
 
-            </div>
-          </v-tab-item>
-        </v-tabs-items>
-      </div>
-      <div v-show="isReturnHome">
-        <v-tabs fixed-tabs v-model="returnHome" background-color="white" color="#15171c" slider-color="#215df1" slider-size="5">
-          <v-tab :transition="true" :reverse-transition="true"
-                 :ripple="false">
-            <div class="tabText">
-              백신 접종자
-            </div>
-          </v-tab>
-          <v-tab :transition="true" :reverse-transition="true"
-                 :ripple="false">
-            <div class="tabText">
-              미 접종자
-            </div>
-          </v-tab>
-        </v-tabs>
-        <v-tabs-items v-model="returnHome" >
-          <v-tab-item eager >
-            <div class="updateTime">
-              {{ `최신 업데이트 ${ getUpdateDateFormatText(immigrationStatusDetailResDto.vaccinatedReturnHome.updateDateTime)}` }}
-            </div>
             <div id="returnHomeVaccinated" class="contentViewer" ref="returnHomeVaccinated">
 
             </div>
-          </v-tab-item>
-          <v-tab-item eager >
             <div class="updateTime">
-              {{ `최신 업데이트 ${getUpdateDateFormatText(immigrationStatusDetailResDto.unvaccinatedReturnHome.updateDateTime)}` }}
-            </div>
-            <div id="returnHomeNotVaccinated" class="contentViewer" ref="returnHomeNotVaccinated">
-
+              {{ `최신 업데이트 ${getUpdateDateFormatText(immigrationStatusDetailResDto.unvaccinatedLeavesCountry.updateDateTime)}` }}
             </div>
           </v-tab-item>
         </v-tabs-items>
@@ -105,9 +58,7 @@ import tableMergedCell from '@toast-ui/editor-plugin-table-merged-cell';
 export default (Vue as VueConstructor<Vue & {
   $refs:{
     exitVaccinated: HTMLDivElement,
-    exitNotVaccinated: HTMLDivElement,
     returnHomeVaccinated: HTMLDivElement,
-    returnHomeNotVaccinated: HTMLDivElement
   }
 }>).extend({
   props:{
@@ -118,10 +69,7 @@ export default (Vue as VueConstructor<Vue & {
   },
   data(){
     return {
-      isExit: true,
-      isReturnHome: false,
-      exitTab: 0,
-      returnHome: 0
+      tabIdx: 0,
     }
   },
   mounted(){
@@ -134,38 +82,19 @@ export default (Vue as VueConstructor<Vue & {
       plugins: [[popupPlugin,pluginOption],[innerLinkPlugin,pluginOption]],
       initialValue: this.immigrationStatusDetailResDto.vaccinatedLeavesCountry.contentMarkDown,
     });
-    console.log(vaccinatedLeavesCountryViewer)
-    const unVaccinatedLeavesCountryViewer = new Viewer({
-      el: this.$refs.exitNotVaccinated,
-      plugins: [[popupPlugin,pluginOption],[innerLinkPlugin,pluginOption]],
-      initialValue: this.immigrationStatusDetailResDto.unvaccinatedLeavesCountry.contentMarkDown,
-    });
+
 
     const vaccinatedReturnHomeViewer = new Viewer({
       el: this.$refs.returnHomeVaccinated,
       plugins: [[popupPlugin,pluginOption],[innerLinkPlugin,pluginOption]],
       initialValue: this.immigrationStatusDetailResDto.vaccinatedReturnHome.contentMarkDown,
     });
-
-    const unvaccinatedReturnHomeViewer = new Viewer({
-      el: this.$refs.returnHomeNotVaccinated,
-      plugins: [[popupPlugin,pluginOption],[innerLinkPlugin,pluginOption]],
-      initialValue: this.immigrationStatusDetailResDto.unvaccinatedReturnHome.contentMarkDown,
-    });
     this.$forceUpdate()
   },
   methods:{
-    exitModeClick(){
-      this.isExit = true;
-      this.isReturnHome = false;
-    },
-    returnHomeModeClick(){
-      this.isExit = false;
-      this.isReturnHome = true;
-    },
+
     getUpdateDateFormatText(dateStr: string){
       return DateTime.fromISO(dateStr).toFormat("yyyy-MM-dd")
-
     },
 
   }

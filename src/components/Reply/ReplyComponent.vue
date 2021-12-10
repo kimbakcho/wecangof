@@ -48,6 +48,7 @@ import WCTimeUtil from "@/Bis/Common/WCTimeUtil";
 import {DateTime} from "luxon";
 import {QABoardUseCase} from "@/Bis/QABoard/Domain/UseCase/QABoardUseCase";
 import QABoardReplyUseCase from "@/Bis/QABoardReply/Domain/UseCase/QABoardReplyUseCase";
+import QABoardBadReplyReportUseCase from "@/Bis/QABoardBadReplyReport/Domain/UseCase/QABoardBadReplyReportUseCase";
 
 const ReplyComponentRoot = (Vue as VueConstructor<Vue & {
   $refs:{
@@ -179,8 +180,19 @@ const ReplyComponentRoot = (Vue as VueConstructor<Vue & {
         }
       }
     },
-    qaReplyReport(){
-      console.log("modifyReply")
+    async qaReplyReport(){
+      if(!this.$store.state.isLogin){
+        await this.$swal("로그인이 필요 합니다.")
+        return ;
+      }
+
+      if(this.currentOptionClickItem != null){
+        let qaBoardBadReplyReportUseCase = new QABoardBadReplyReportUseCase();
+        await qaBoardBadReplyReportUseCase.report(this.currentOptionClickItem.id);
+        await this.$swal("신고처리가 완료 되었습니다. 운영진 검토후 처리 하겠습니다.")
+        this.optionDialog = false;
+      }
+
     }
   }
 })
